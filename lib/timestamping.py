@@ -30,4 +30,4 @@ def millis_to_datetime(ms):
 
 def now_to_millis():
     """Converts the current timestamp to millis since epoch"""
-    return seconds_from_epoch(mktime(dt.datetime.now().timetuple())) * 1000
+    return mktime(datetime.now().timetuple()) * 1000
