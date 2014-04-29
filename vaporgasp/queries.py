@@ -17,17 +17,19 @@ AUDIO_EVENTS_COLL = 'audio_events'
 ANNOTATIONS_COLL = 'annotations'
 
 indexes = {
-    ## Indexes for the email collection
     UTTERANCES_COLL: [
-        [('pts',pymongo.ASCENDING)]
+        [('pts',pymongo.ASCENDING)],
+        [('eng_labels',pymongo.ASCENDING)]
     ],
     PSEUDOTERMS_COLL: [
-        [('audio_events',pymongo.ASCENDING)],
         [('eng_display',pymongo.ASCENDING)],
         [('native_display',pymongo.ASCENDING)]
     ],
     AUDIO_EVENTS_COLL: [
-        [('duration',pymongo.DESCENDING)]
+        [('duration',pymongo.DESCENDING)],
+        [('zr_pt_id',pymongo.ASCENDING)],
+        [('pt_id',pymongo.ASCENDING)],
+        [('utterance_id',pymongo.ASCENDING)]
     ],
     ANNOTATIONS_COLL: [
         [('ref_obj_id',pymongo.ASCENDING)],
@@ -107,8 +109,8 @@ def _find_by_common(collection, fields=None,  count=50,
 ###
 """
     Field specification, [* indicates indexed]:
-    * pts: [pt1_obj_id, pt2_obj_id, ...]
-    annotations: [annotation1_obj_id, annotation2_obj_id, ...]
+    * pts: [pt1_obj_id, pt2_obj_id, ...] #Mongo Object IDs
+    * eng_labels: ["eng_label1", "eng_label2",...]
     hltcoe_audio_path: string, path to audio file on hltcoe system
     <other>_audio_path: string, path to audio file on someone else's system [many possible]
 """
@@ -133,10 +135,9 @@ def insert_utterance(db, utterance):
 ###
 """    
     Field specification, [* indicates indexed]:
-    * audio_events: [ae1_obj_id, ae2_obj_id, ...]
-    annotations: [annotation1_obj_id, annotation2_obj_id, ...]
     * eng_display: string, the latest English annotated with this file (pt# until annotated)
     * native_display: string, the latest annotation on this file, in the native script
+    zr_pt_id: Aren's zero resource ID
     (again, pt# until annotated)
 """
 
@@ -165,6 +166,8 @@ def insert_pseudoterm(db, pseudoterm):
     end_offset: int, in frames
     * duration: int, in frames
     annotations: [annotation1_obj_id, annotation2_obj_id, ...]
+    pt_id: mongoID of pseudoterm this refers to
+    utterance_id: mongoID of the utterance this PT came from
 """
 
 def find_audio_events(db, **kwargs):

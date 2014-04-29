@@ -10,8 +10,8 @@ db = init_dbconn()
 
 dummy_utterance = {
     'pts' : ["objid1","objid2"],
-    'annotations': ["objid1","objid2"],
-    'hltcoe_audio_path':'/export/projects/vaporengine/blahlbahlbah/lskjdlfkjsdf.mu'
+    'eng_labels': ['there','are','fools','being','pitied'],
+    'hltcoe_audio_path':'/export/projects/vaporengine/blahlbahlbah/lskjdlfkjsdf.wav'
     }
 
 print "Inserting:", insert_utterance(db, dummy_utterance)
@@ -22,8 +22,7 @@ print "Finding:", find_utterances(db).next()
 #Test pseudoterms
 
 dummy_pseudoterm = {
-    'audio_events' : ["objid1","objid2"],
-    'annotations': ["objid1","objid2"],
+    'zr_pt_id': 123123,
     'eng_display': 'I pity the fool',
     'native_display': 'ah pity da foo'
     }
@@ -38,7 +37,9 @@ dummy_audio_event = {
     'start_offset': 1234,
     'end_offset':1239,
     'duration':5,
-    'annotations': ["objid1","objid2"],
+    'zr_pt_id':123123,
+    'pt_id':"123234-23423-234234",
+    'utterance_id':"23909-2098-23098234"
     }
 
 print "Inserting:", insert_audio_event(db, dummy_audio_event)
