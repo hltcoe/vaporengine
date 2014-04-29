@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gasp Test</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">script></script>
+  <script>
+   function playClip() {
+     var mediaElement = document.getElementById('player');
+
+     // Audio clip offsets from Aren were 388 and 470
+     mediaElement.src = '/gujarati/answers/0003.wav#t=3.88,4.70';
+
+     // load() must be called after updating src
+     mediaElement.load();
+     mediaElement.play();
+   }
+  </script>
+</head>
+<body>
+  <div>
+    <h1>Audio Test - Gujarati</h1>
+
+    <audio id="player">
+      <p>Your browser does not support the audio element</p>
+    </audio>
+    <button onclick="playClip();">Play</button>
+  </div>
+
+  <div>
+    <h1>Audio Test - English</h1>
+
+    <audio src="/BUCKEYE/s01/s0101a.wav" controls>
+      <p>Your browser does not support the audio element</p>
+    </audio>
+  </div>
+
+</body>
+</html>

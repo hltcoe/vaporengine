@@ -1,4 +1,4 @@
-from bottle import route, run, request, response
+from bottle import route, run, request, response, static_file
 
 import argparse
 import datetime as dt
@@ -126,6 +126,18 @@ def find_pseudoterms_handler():
     results = generic_find( find_pseudoterms, metadata_filters)
     print "Results:", results
     return results
+
+
+@route('/gujarati/<filepath:path>')
+def audio_static(filepath):
+    # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
+    return static_file(filepath, root='/home/hltcoe/ajansen/QASW/audio', mimetype='audio/wav')
+
+
+@route('/BUCKEYE/<filepath:path>')
+def audio_static(filepath):
+    # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
+    return static_file(filepath, root='/home/hltcoe/ajansen/aren_local/BUCKEYE', mimetype='audio/wav')
 
 
 
