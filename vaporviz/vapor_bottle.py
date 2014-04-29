@@ -1,5 +1,6 @@
 from bottle import route, run, request, response
 
+import argparse
 import datetime as dt
 
 try:
@@ -88,6 +89,9 @@ def find_annotation_handler():
     return results
 
 
-"""Now actually start the webserver"""
-run(host='0.0.0.0', port=12321, debug=True)
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--port", default=12321)
+args = parser.parse_args()
 
+"""Now actually start the webserver"""
+run(host='0.0.0.0', port=args.port, debug=True)
