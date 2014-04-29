@@ -151,6 +151,66 @@ def audio_static(filepath):
     # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
     return static_file(filepath, root='/home/hltcoe/ajansen/aren_local/BUCKEYE', mimetype='audio/wav')
 
+@route('/pt_combine_test')
+def pt_combine_test():
+    """
+    Creates a WAV file from multiple audio samples of a single pseudoterm
+    """
+    db = init_dbconn(name='buckeye', host='localhost')
+    first_pseudoterm = find_pseudoterms(db)[0]
+    audio_events = find_audio_events(db, pt_id=first_pseudoterm['_id'])
+
+    # Create a temporary directory
+    tmp_directory = tempfile.mkdtemp()
+    tmp_filename = os.path.join(tmp_directory, 'combined_clips.wav')
+
+    # The first argument to CSoxStream must be a filename with a '.wav' extension.
+    #
+    # If the output file does not have a '.wav' extension, pysox will raise
+    # an "IOError: No such file" exception.
+    outfile = pysox.CSoxStream(
+        tmp_filename,
+        'w',
+        pysox.CSignalInfo(8000.0,1,14))  # TODO: Don't hard-code sample rate
+
+    # TODO: Allow number of audio events to be specified as parameter, instead
+    #       of hard-coded to 10
+    for audio_event in audio_events[:10]:
+        START_OFFSET = bytes("%f" % (audio_event['start_offset'] / 100.0))
+        DURATION = bytes("%f" % (audio_event['duration'] / 100.0))
+
+        utterance = find_utterances(db, _id=audio_event['utterance_id'])[0]
+        input_filename = utterance['hltcoe_audio_path']
+
+#        print "START: %f, DURATION: %f, filename: %s" % (
+#            audio_event['start_offset'] / 100.0,
+#            audio_event['duration'] / 100.0,
+#            input_filename)
+
+        infile = pysox.CSoxStream(input_filename)
+        chain = pysox.CEffectsChain(infile, outfile)
+        chain.add_effect(pysox.CEffect('trim', [START_OFFSET, DURATION]))
+        chain.flow_effects()
+        infile.close()
+
+    outfile.close()
+
+    # Read in audio data from temporary file
+#    wav_data = open(tmp_filename, 'rb').read()
+
+    # Clean up temporary files
+#    os.remove(tmp_filename)
+#    os.rmdir(tmp_directory)
+
+#    return wav_data
+
+    # TODO: How do we return a bytestring with a specific mimetype using Bottle?
+    #       Bottle's static_file() allows us to specify a mime-type for an
+    #       existing file, but we want to return a byte-array that was created
+    #       in memory.
+    return static_file(tmp_filename, root="/", mimetype='audio/wav')
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", default=12321)
 args = parser.parse_args()
