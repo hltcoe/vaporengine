@@ -128,6 +128,13 @@ def insert_utterance(db, utterance):
     utterance_id = db[UTTERANCES_COLL].insert(utterance)
     return utterance_id
 
+from bson import ObjectId
+def update_utterance(db, utterance_id, **updates):
+    """update an utterance entry"""
+    match_dict = {'_id':ObjectId(utterance_id)}
+    update_dict = { '$set': updates}
+    print 'updating', match_dict, 'with', update_dict
+    db[UTTERANCES_COLL].update(match_dict,update_dict,multi=False)
 
 
 ###

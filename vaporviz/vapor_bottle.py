@@ -80,7 +80,11 @@ def generic_find(find_function, metadata_filters):
     #Accumulate results
     results = []
     for result in cursor:
+        #stringify mongoIDs (bson ids) before we pass it on
         result['_id'] = str(result['_id'])
+        for bson_id_type in ['pt_id','utterance_id']:
+            if bson_id_type in result:
+                result[bson_id_type] = str(result[bson_id_type])
         results.append(result)
     print "Results:", results
     return results
