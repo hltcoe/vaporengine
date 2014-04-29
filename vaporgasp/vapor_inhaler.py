@@ -1,3 +1,5 @@
+import os
+
 from ZRLoader import ZRLoader
 
 zrl = ZRLoader('/home/hltcoe/ajansen/discovery/exp/buckeye-T25/matches/')
@@ -17,9 +19,19 @@ db = init_dbconn(host=dbhost,name=dbname)
 pt_to_mongo_id = {}
 
 for docid in zrl.AllUtterances():
-    utterance = {}
-    utterance_mongo_id = insert_utterance(db, utterance )
-    #TODO -- utterance audio path?
+
+    # TODO: Don't hardcode audio path to use BUCKEYE path
+    AUDIO_PATH_PREFIX = "/home/hltcoe/ajansen/aren_local/BUCKEYE"
+    utterance = {
+        # For the BUCKEYE dataset, docid's have the form:
+        #   s0401a
+        #   s1102b
+        # which correspond to the files:
+        #   /home/hltcoe/ajansen/aren_local/BUCKEYE/s04/s0401a.wav
+        #   /home/hltcoe/ajansen/aren_local/BUCKEYE/s11/s1102b.wav
+        'hltcoe_audio_path': os.path.join(AUDIO_PATH_PREFIX, docid[0:3], docid + ".wav")
+        }
+    utterance_mongo_id = insert_utterance(db, utterance)
 
     this_utterance_pts = []
     
