@@ -1,13 +1,19 @@
-from bottle import route, run, request, response, static_file
-
+# Python standard library modules
 import argparse
 import datetime as dt
+import os
+import tempfile
 
+# Third party modules
+from bottle import route, run, request, response, static_file
+import bson.json_util
+import pysox
 try:
     import ujson as json
 except:
     import json
 
+# Local modules
 from lib.database import init_dbconn
 from vaporgasp.queries import (find_annotations, find_utterances,
                                find_pseudoterms, find_audio_events)
@@ -30,7 +36,9 @@ def json_wrapper(method):
     def rapper(*a, **kw):
         resp = method(*a, **kw)
         response.content_type = 'application/json'
-        return json.dumps(resp)
+
+        # bson.json_util.dumps() knows how to convert Mongo ObjectId's to JSON
+        return bson.json_util.dumps(resp)
     return rapper
 
 
@@ -142,8 +150,6 @@ def audio_static(filepath):
 def audio_static(filepath):
     # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
     return static_file(filepath, root='/home/hltcoe/ajansen/aren_local/BUCKEYE', mimetype='audio/wav')
-
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", default=12321)
