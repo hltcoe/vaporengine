@@ -28,6 +28,12 @@
        "ID_to_use_for_new_DOM_elements",
        "/audio/pseudoterm/" + pseudotermID + ".wav");
 
+     var audioContextPlayerDiv = $('#pt_snippets_with_context_audio_player');
+     addControlsForPlayer(
+       audioContextPlayerDiv,
+       "another_ID_to_use_for_new_DOM_elements",
+       "/audio/pseudoterm/context/" + pseudotermID + ".wav");
+
      $("#pt_eng_display")
        .focusout(function(){
          annotate_pt_eng_label();

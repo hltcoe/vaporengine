@@ -183,13 +183,13 @@ def static_files(filepath):
 
 
 @route('/audio/gujarati/<filepath:path>')
-def audio_static(filepath):
+def audio_static_gujarati(filepath):
     # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
     return static_file(filepath, root='/home/hltcoe/ajansen/QASW/audio', mimetype='audio/wav')
 
 
 @route('/audio/BUCKEYE/<filepath:path>')
-def audio_static(filepath):
+def audio_static_buckeye(filepath):
     # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
     return static_file(filepath, root='/home/hltcoe/ajansen/aren_local/BUCKEYE', mimetype='audio/wav')
 
@@ -278,6 +278,82 @@ def audio_for_pseudoterm(pseudoterm_id):
         infile = pysox.CSoxStream(input_filename)
         chain = pysox.CEffectsChain(infile, outfile)
         chain.add_effect(pysox.CEffect('trim', [START_OFFSET, DURATION]))
+        chain.flow_effects()
+        infile.close()
+
+    outfile.close()
+
+    # Read in audio data from temporary file
+#    wav_data = open(tmp_filename, 'rb').read()
+
+    # Clean up temporary files
+#    os.remove(tmp_filename)
+#    os.rmdir(tmp_directory)
+
+#    return wav_data
+
+    # TODO: How do we return a bytestring with a specific mimetype using Bottle?
+    #       Bottle's static_file() allows us to specify a mime-type for an
+    #       existing file, but we want to return a byte-array that was created
+    #       in memory.
+    return static_file(tmp_filename, root="/", mimetype='audio/wav')
+
+
+@route('/audio/pseudoterm/context/<pseudoterm_id>.wav')
+def audio_for_pseudoterm_with_context(pseudoterm_id):
+    """
+    Creates a WAV file from multiple audio samples of a single pseudoterm
+    """
+    # TODO: Get seconds of context from HTTP parameter
+    SECONDS_OF_CONTEXT = 0.5
+
+    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
+    audio_events = find_audio_events(db, pt_id=pseudoterm['_id'])
+
+    # Create a temporary directory
+    tmp_directory = tempfile.mkdtemp()
+    tmp_filename = os.path.join(tmp_directory, 'combined_clips.wav')
+
+    # The first argument to CSoxStream must be a filename with a '.wav' extension.
+    #
+    # If the output file does not have a '.wav' extension, pysox will raise
+    # an "IOError: No such file" exception.
+    outfile = pysox.CSoxStream(
+        tmp_filename,
+        'w',
+        pysox.CSignalInfo(8000.0,1,14))  # TODO: Don't hard-code sample rate
+
+    # TODO: Allow number of audio events to be specified as parameter, instead
+    #       of hard-coded to 10
+    for audio_event in audio_events[:10]:
+        initial_start_offset = audio_event['start_offset'] / 100.0
+        initial_duration = audio_event['duration'] / 100.0
+
+        if initial_start_offset < SECONDS_OF_CONTEXT:
+            start_offset = 0.0
+            prefix_duration = initial_start_offset
+        else:
+            start_offset = initial_start_offset - SECONDS_OF_CONTEXT
+            prefix_duration = SECONDS_OF_CONTEXT
+
+        # TODO: Handle case where audio file is too short for requested context length
+        suffix_duration = SECONDS_OF_CONTEXT
+
+        duration = prefix_duration + initial_duration + suffix_duration
+
+        print "INITIAL DURATION: %f" % initial_duration
+        print "DURATION: %f" % duration
+
+        utterance = find_utterances(db, _id=audio_event['utterance_id'])[0]
+        input_filename = utterance['hltcoe_audio_path']
+
+        start_offset = bytes("%f" % start_offset)
+        duration = bytes("%f" % duration)
+
+        infile = pysox.CSoxStream(input_filename)
+        chain = pysox.CEffectsChain(infile, outfile)
+        chain.add_effect(pysox.CEffect('trim', [start_offset, duration]))
         chain.flow_effects()
         infile.close()
 
