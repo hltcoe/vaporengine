@@ -6,6 +6,7 @@ import tempfile
 
 # Third party modules
 from bottle import route, run, request, response, static_file, template
+from bson import ObjectId
 import bson.json_util
 import pysox
 try:
@@ -16,8 +17,15 @@ except:
 # Local modules
 from lib.database import init_dbconn
 from vaporgasp.queries import (find_annotations, find_utterances,
+<<<<<<< HEAD
                                find_pseudoterms, find_audio_events,
                                update_pseudoterm)
+=======
+                               find_pseudoterms, find_audio_events)
+# TODO: Don't hard-code database settings to 'buckeye'
+from settings import buckeye as settings
+
+>>>>>>> dedb1940566853fa4822c327adc641addeb8c445
     
 # the decorator to ease some javascript pain (if memory serves)
 def enable_cors(fn):
@@ -56,6 +64,7 @@ def widget_handler(path):
         page = open( source_path ) .read()
     print "Returning what was found at:", source_path
     return page
+
 
 """Template testing"""
 @route('/template_test')
@@ -149,6 +158,7 @@ def find_pseudoterms_handler():
     return results
 
 
+<<<<<<< HEAD
 @route('/update_pseudoterm',method=['OPTIONS','POST'])
 @json_wrapper
 @enable_cors
@@ -169,24 +179,78 @@ def update_pseudoterm_header():
 
 
 @route('/gujarati/<filepath:path>')
+=======
+@route('/audio/gujarati/<filepath:path>')
+>>>>>>> dedb1940566853fa4822c327adc641addeb8c445
 def audio_static(filepath):
     # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
     return static_file(filepath, root='/home/hltcoe/ajansen/QASW/audio', mimetype='audio/wav')
 
 
-@route('/BUCKEYE/<filepath:path>')
+@route('/audio/BUCKEYE/<filepath:path>')
 def audio_static(filepath):
     # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
     return static_file(filepath, root='/home/hltcoe/ajansen/aren_local/BUCKEYE', mimetype='audio/wav')
 
-@route('/pt_combine_test')
-def pt_combine_test():
+
+@route('/audio/audio_event/<audio_event_id>.wav')
+def audio_for_audio_event(audio_event_id):
+    """
+    """
+    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    audio_event = find_audio_events(db, _id=ObjectId(audio_event_id))[0]
+
+    # Create a temporary directory
+    tmp_directory = tempfile.mkdtemp()
+    tmp_filename = os.path.join(tmp_directory, 'combined_clips.wav')
+
+    # The first argument to CSoxStream must be a filename with a '.wav' extension.
+    #
+    # If the output file does not have a '.wav' extension, pysox will raise
+    # an "IOError: No such file" exception.
+    outfile = pysox.CSoxStream(
+        tmp_filename,
+        'w',
+        pysox.CSignalInfo(8000.0,1,14))  # TODO: Don't hard-code sample rate
+
+    START_OFFSET = bytes("%f" % (audio_event['start_offset'] / 100.0))
+    DURATION = bytes("%f" % (audio_event['duration'] / 100.0))
+
+    utterance = find_utterances(db, _id=audio_event['utterance_id'])[0]
+    input_filename = utterance['hltcoe_audio_path']
+
+    infile = pysox.CSoxStream(input_filename)
+    chain = pysox.CEffectsChain(infile, outfile)
+    chain.add_effect(pysox.CEffect('trim', [START_OFFSET, DURATION]))
+    chain.flow_effects()
+    infile.close()
+
+    outfile.close()
+
+    # Read in audio data from temporary file
+#    wav_data = open(tmp_filename, 'rb').read()
+
+    # Clean up temporary files
+#    os.remove(tmp_filename)
+#    os.rmdir(tmp_directory)
+
+#    return wav_data
+
+    # TODO: How do we return a bytestring with a specific mimetype using Bottle?
+    #       Bottle's static_file() allows us to specify a mime-type for an
+    #       existing file, but we want to return a byte-array that was created
+    #       in memory.
+    return static_file(tmp_filename, root="/", mimetype='audio/wav')
+
+
+@route('/audio/pseudoterm/<pseudoterm_id>.wav')
+def audio_for_pseudoterm(pseudoterm_id):
     """
     Creates a WAV file from multiple audio samples of a single pseudoterm
     """
-    db = init_dbconn(name='buckeye', host='localhost')
-    first_pseudoterm = find_pseudoterms(db)[0]
-    audio_events = find_audio_events(db, pt_id=first_pseudoterm['_id'])
+    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
+    audio_events = find_audio_events(db, pt_id=pseudoterm['_id'])
 
     # Create a temporary directory
     tmp_directory = tempfile.mkdtemp()
@@ -210,11 +274,6 @@ def pt_combine_test():
         utterance = find_utterances(db, _id=audio_event['utterance_id'])[0]
         input_filename = utterance['hltcoe_audio_path']
 
-#        print "START: %f, DURATION: %f, filename: %s" % (
-#            audio_event['start_offset'] / 100.0,
-#            audio_event['duration'] / 100.0,
-#            input_filename)
-
         infile = pysox.CSoxStream(input_filename)
         chain = pysox.CEffectsChain(infile, outfile)
         chain.add_effect(pysox.CEffect('trim', [START_OFFSET, DURATION]))
@@ -237,6 +296,16 @@ def pt_combine_test():
     #       existing file, but we want to return a byte-array that was created
     #       in memory.
     return static_file(tmp_filename, root="/", mimetype='audio/wav')
+
+
+@route('/audio/utterance/<utterance_id>.wav')
+def audio_for_utterance(utterance_id):
+    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+
+    utterance = find_utterances(db, _id=ObjectId(utterance_id))[0]
+    utterance_filename = utterance['hltcoe_audio_path']
+
+    return static_file(utterance_filename, root="/", mimetype='audio/wav')
 
 
 parser = argparse.ArgumentParser()
