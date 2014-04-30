@@ -17,15 +17,10 @@ except:
 # Local modules
 from lib.database import init_dbconn
 from vaporgasp.queries import (find_annotations, find_utterances,
-<<<<<<< HEAD
                                find_pseudoterms, find_audio_events,
                                update_pseudoterm)
-=======
-                               find_pseudoterms, find_audio_events)
 # TODO: Don't hard-code database settings to 'buckeye'
 from settings import buckeye as settings
-
->>>>>>> dedb1940566853fa4822c327adc641addeb8c445
     
 # the decorator to ease some javascript pain (if memory serves)
 def enable_cors(fn):
@@ -178,10 +173,7 @@ def update_pseudoterm_header():
 
 
 
-@route('/gujarati/<filepath:path>')
-=======
 @route('/audio/gujarati/<filepath:path>')
->>>>>>> dedb1940566853fa4822c327adc641addeb8c445
 def audio_static(filepath):
     # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
     return static_file(filepath, root='/home/hltcoe/ajansen/QASW/audio', mimetype='audio/wav')
