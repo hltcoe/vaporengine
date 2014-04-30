@@ -153,7 +153,6 @@ def find_pseudoterms_handler():
     return results
 
 
-<<<<<<< HEAD
 @route('/update_pseudoterm',method=['OPTIONS','POST'])
 @json_wrapper
 @enable_cors
