@@ -1,47 +1,51 @@
-<HTML>
+<!DOCTYPE html>
+<html>
 <head>
-<script>
-//Global vars
-var active_pseudoterm;
-</script>
+  <script src="/static/jquery-1.11.0.js"></script>
+  <script src="/www/vapor_audio.js"></script>
+  <script src="/www/prettyprint.js"></script>
 
-<script src="http://localhost:12321/www/jquery-1.8.3.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js">script></script> <!--TODO: move this to offline_source-->
-<script src="http://localhost:12321/www/prettyprint.js"></script>
-<!--<script src="http://localhost:12321/www/data_handler.js"></script>-->
-
+  <script>
+   //Global vars
+   var active_pseudoterm;
+  </script>
 </head>
-<BODY>
-<div id="pt_template_landing_zone"></p>
+<body>
+  <div id="pt_template_landing_zone"></div>
 
-<script>
+  <script>
+   $.get("/www/pseudoterm_template.html", function(data){
+     $("#pt_template_landing_zone").html(data);
+   });
 
-$.get("http://localhost:12321/www/pseudoterm_template.html",
-  function(data){
-  $("#pt_template_landing_zone").html(data);
-});
+   $.getScript("/www/data_handler.js", function(){
+     var pseudotermID = "5360d6c0fedd526522c43934";
+     get_pseudoterm(pseudotermID); //Also posts to the global variable
 
-$.getScript("http://localhost:12321/www/data_handler.js",function(){
-get_pseudoterm("5360d6c0fedd526522c43934"); //Also posts to the global variable
-    $("#pt_eng_display")
-        .focusout(function(){
-                annotate_pt_eng_label();
-            })
-        /*.blur(function(){
-                annotate_pt_eng_label();
-            })*/
+     var audioPlayerDiv = $('#pt_snippets_audio_player');
+     addControlsForPlayer(
+       audioPlayerDiv,
+       "ID_to_use_for_new_DOM_elements",
+       "/audio/pseudoterm/" + pseudotermID + ".wav");
 
-    $("#pt_native_display")
-        .focusout(function(){
-                annotate_pt_native_label();
-            })
-        /*.blur(function(){
-                annotate_pt_native_label();
-            })*/
+     $("#pt_eng_display")
+       .focusout(function(){
+         annotate_pt_eng_label();
+       });
+       /*.blur(function(){
+       annotate_pt_eng_label();
+       })*/
 
-//get_audio_events_from_pseudoterm("5360d6c0fedd526522c43934",3);
+     $("#pt_native_display")
+       .focusout(function(){
+         annotate_pt_native_label();
+       });
+       /*.blur(function(){
+       annotate_pt_native_label();
+       })*/
 
-});
+     //get_audio_events_from_pseudoterm("5360d6c0fedd526522c43934",3);
+   });
 </script>
-</BODY>
-</HTML>
+</body>
+</html>
