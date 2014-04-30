@@ -5,7 +5,7 @@ import os
 import tempfile
 
 # Third party modules
-from bottle import route, run, request, response, static_file, template
+from bottle import HTTPResponse, route, run, request, response, static_file, template
 from bson import ObjectId
 import bson.json_util
 import pysox
@@ -229,19 +229,13 @@ def audio_for_audio_event(audio_event_id):
     outfile.close()
 
     # Read in audio data from temporary file
-#    wav_data = open(tmp_filename, 'rb').read()
+    wav_data = open(tmp_filename, 'rb').read()
 
     # Clean up temporary files
-#    os.remove(tmp_filename)
-#    os.rmdir(tmp_directory)
+    os.remove(tmp_filename)
+    os.rmdir(tmp_directory)
 
-#    return wav_data
-
-    # TODO: How do we return a bytestring with a specific mimetype using Bottle?
-    #       Bottle's static_file() allows us to specify a mime-type for an
-    #       existing file, but we want to return a byte-array that was created
-    #       in memory.
-    return static_file(tmp_filename, root="/", mimetype='audio/wav')
+    return bytestring_as_file_with_mimetype(wav_data, 'audio/wav')
 
 
 @route('/audio/pseudoterm/<pseudoterm_id>.wav')
@@ -284,19 +278,13 @@ def audio_for_pseudoterm(pseudoterm_id):
     outfile.close()
 
     # Read in audio data from temporary file
-#    wav_data = open(tmp_filename, 'rb').read()
+    wav_data = open(tmp_filename, 'rb').read()
 
     # Clean up temporary files
-#    os.remove(tmp_filename)
-#    os.rmdir(tmp_directory)
+    os.remove(tmp_filename)
+    os.rmdir(tmp_directory)
 
-#    return wav_data
-
-    # TODO: How do we return a bytestring with a specific mimetype using Bottle?
-    #       Bottle's static_file() allows us to specify a mime-type for an
-    #       existing file, but we want to return a byte-array that was created
-    #       in memory.
-    return static_file(tmp_filename, root="/", mimetype='audio/wav')
+    return bytestring_as_file_with_mimetype(wav_data, 'audio/wav')
 
 
 @route('/audio/pseudoterm/context/<pseudoterm_id>.wav')
@@ -360,19 +348,13 @@ def audio_for_pseudoterm_with_context(pseudoterm_id):
     outfile.close()
 
     # Read in audio data from temporary file
-#    wav_data = open(tmp_filename, 'rb').read()
+    wav_data = open(tmp_filename, 'rb').read()
 
     # Clean up temporary files
-#    os.remove(tmp_filename)
-#    os.rmdir(tmp_directory)
+    os.remove(tmp_filename)
+    os.rmdir(tmp_directory)
 
-#    return wav_data
-
-    # TODO: How do we return a bytestring with a specific mimetype using Bottle?
-    #       Bottle's static_file() allows us to specify a mime-type for an
-    #       existing file, but we want to return a byte-array that was created
-    #       in memory.
-    return static_file(tmp_filename, root="/", mimetype='audio/wav')
+    return bytestring_as_file_with_mimetype(wav_data, 'audio/wav')
 
 
 @route('/audio/utterance/<utterance_id>.wav')
@@ -383,6 +365,17 @@ def audio_for_utterance(utterance_id):
     utterance_filename = utterance['hltcoe_audio_path']
 
     return static_file(utterance_filename, root="/", mimetype='audio/wav')
+
+
+def bytestring_as_file_with_mimetype(bytestring, mimetype):
+    """
+    Based on static_file() in bottle.py
+    """
+    headers = dict()
+    headers['Content-Length'] = len(bytestring)
+    headers['Content-Type'] = mimetype
+    return HTTPResponse(bytestring, **headers)
+
 
 
 parser = argparse.ArgumentParser()
