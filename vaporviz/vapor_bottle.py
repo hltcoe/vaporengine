@@ -16,7 +16,8 @@ except:
 # Local modules
 from lib.database import init_dbconn
 from vaporgasp.queries import (find_annotations, find_utterances,
-                               find_pseudoterms, find_audio_events)
+                               find_pseudoterms, find_audio_events,
+                               update_pseudoterm)
     
 # the decorator to ease some javascript pain (if memory serves)
 def enable_cors(fn):
@@ -88,6 +89,8 @@ def generic_find(find_function, metadata_filters):
     if 'sort_by' in metadata_filters:
         sort_by = metadata_filters['sort_by'] #Or do we need a conversion here
 
+    
+        
     print metadata_filters
     cursor = find_function(db, **metadata_filters)
 
@@ -142,8 +145,27 @@ def find_pseudoterms_handler():
     metadata_filters = json.load(request.body)
     print metadata_filters
     results = generic_find( find_pseudoterms, metadata_filters)
-    print "Results:", results
+    print "Results*:", results
     return results
+
+
+@route('/update_pseudoterm',method=['OPTIONS','POST'])
+@json_wrapper
+@enable_cors
+def update_pseudoterm_header():
+    update = json.load(request.body)
+    _id = update['_id']
+    del update['_id']
+
+    dataset = update['dataset']
+    del update['dataset']
+    
+    db = init_dbconn(name = dataset, host='r4n7')
+    res = update_pseudoterm(db, _id, **update)
+    
+    return res
+
+
 
 
 @route('/gujarati/<filepath:path>')
