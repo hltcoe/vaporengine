@@ -48,10 +48,11 @@ indexes = {
 ### Argument Handling
 ###
 
+object_id_fields = ['_id','pt_id','utterance_id'] #Recast these as ObjectIds automagically
 def _find_by_common(collection, fields=None,  count=50,
                     start_date=None, end_date=None,
                     page=0, sort_by=None, exists=None,
-                    does_not_exist=None, 
+                    does_not_exist=None,
                     **kw):
     """A `find` query handling system for the `twitter` collection.
 
@@ -86,6 +87,11 @@ def _find_by_common(collection, fields=None,  count=50,
     date_args = gen_date_args(start_date, end_date)
     if len(date_args.keys()) > 0:
         query_dict['time'] = date_args
+
+    #Cast these properly as ObjectIds
+    for obj_id in object_id_fields:
+        if obj_id in query_dict:
+            query_dict[obj_id] = ObjectId( query_dict[obj_id] )
 
         
     # Support sorting, run the query
@@ -164,14 +170,14 @@ def insert_pseudoterm(db, pseudoterm):
     pseudoterm_id = db[PSEUDOTERMS_COLL].insert(pseudoterm)
     return pseudoterm_id
 
-def update_utterance(db, pseudoterm_id, **updates):
+def update_pseudoterm(db, pseudoterm_id, **updates):
     """update an pseudoterm entry"""
     match_dict = {'_id':ObjectId(pseudoterm_id)}
     if '_id' in updates: # Mongo doesn't like this and refuses to update if we do this
         del updates['_id']
     update_dict = { '$set': updates}
     print 'updating', match_dict, 'with', update_dict
-    db[UTTERANCES_COLL].update(match_dict,update_dict,multi=False)
+    db[PSEUDOTERMS_COLL].update(match_dict,update_dict,multi=False)
 
 
 ###
@@ -242,7 +248,7 @@ def update_annotation(db, annotation_id, **updates):
         del updates['_id']
     update_dict = { '$set': updates}
     print 'updating', match_dict, 'with', update_dict
-    db[UTTERANCES_COLL].update(match_dict,update_dict,multi=False)
+    db[ANNOTATIONS_COLL].update(match_dict,update_dict,multi=False)
 
 
 

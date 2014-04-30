@@ -23,6 +23,19 @@ function display_audio_events(audio_events){
 };
 
 
+function playClip() {
+     var mediaElement = document.getElementById('player');
+
+     // Audio clip offsets from Aren were 388 and 470
+     mediaElement.src = '/gujarati/answers/0003.wav#t=3.88,4.70';
+
+     // load() must be called after updating src
+     mediaElement.load();
+     mediaElement.play();
+}
+
+
+
 function get_annotation(){
     //dataset_name = $('#dataset_dropdown').val();
 
@@ -107,11 +120,45 @@ function get_audio_events(){
 }
 
 
-function get_pseudoterms(){
+function get_pseudoterm(pt_id){
 
     send = {};
     send.dataset='buckeye' // HARDCODE
-    send.count = 10; //TODO: pull from some element
+    send.count = 1;
+    send._id=(pt_id);
+    
+    console.log(send)
+
+    $.ajaxSetup({
+            contentType: "application/json; charset=utf-8",
+                dataType: "json"
+                });
+
+    $.ajax({
+            url: "http://localhost:12321/find_pseudoterms",
+                type: "POST",
+                data: JSON.stringify(send),
+                error: function(xhr, error) {
+                alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
+            },
+                success: function(data) {
+                active_pseudoterm = data[0]; //Global var
+                $('#pt_eng_display')
+                    .val(active_pseudoterm.eng_display);
+                $('#pt_native_display')
+                    .val(active_pseudoterm.native_display);
+                $('#pt_stats_landing_zone')
+                    .html(prettyPrint(active_pseudoterm));
+                console.log('done');
+                //Also get audioevents and snippets
+            } 
+        });
+};
+function get_pseudoterms(count){
+
+    send = {};
+    send.dataset='buckeye' // HARDCODE
+    send.count = count || 10; //TODO: pull from some element
     console.log(send)
 
     $.ajaxSetup({
@@ -128,10 +175,81 @@ function get_pseudoterms(){
             },
                 success: function(data) {
                 current_pseudoterms = data;
-                display_pseudoterms(data);
+                //display_pseudoterms(data);
+                active_pseudoterm = data[0]; //Global var
             } 
         });
-}
+};
+
+function get_audio_events_from_pseudoterm(pseudoterm_id, count){
+
+    send = {};
+    send.dataset='buckeye'; //HARDCODE
+    send.pt_id=pseudoterm_id;
+    send.count= count || 10; //10 if nothing is specified in the call
+    console.log(send);
+    $.ajax({
+            url: "http://localhost:12321/find_audio_events",
+                type: "POST",
+                data: JSON.stringify(send),
+                error: function(xhr, error) {
+                alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
+            },
+                success: function(data) {
+                display_audio_events(data)
+
+            } 
+        });
+    
+
+    
+};
+
+
+function annotate_pt_eng_label(){
+    active_pt_id = active_pseudoterm._id;
+    annotation = $('#pt_eng_display').val();
+    send = {};
+    send.dataset='buckeye'; //HARDCODE
+    send._id=active_pt_id;
+    send.eng_display = annotation;
+    $.ajax({
+            url: "http://localhost:12321/update_pseudoterm",
+                type: "POST",
+                data: JSON.stringify(send),
+                error: function(xhr, error) {
+                alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
+            },
+                success: function(data) {
+                console.log('Eng display should ahve been updated');
+            } 
+        });
+
+};
+
+
+function annotate_pt_native_label(){
+    active_pt_id = active_pseudoterm._id;
+    annotation = $('#pt_native_display').val();
+    send = {};
+    send.dataset='buckeye'; //HARDCODE
+    send._id=active_pt_id;
+    send.native_display = annotation;
+    $.ajax({
+            url: "http://localhost:12321/update_pseudoterm",
+                type: "POST",
+                data: JSON.stringify(send),
+                error: function(xhr, error) {
+                alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
+            },
+                success: function(data) {
+                console.log('Native display should ahve been updated');
+            } 
+        });
+    //Reload the PT now to see the changes reflected
+    get_pseudoterm( active_pt_id );
+    
+};
 
 
 
