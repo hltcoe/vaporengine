@@ -212,7 +212,7 @@ def audio_for_audio_event(audio_event_id):
     outfile = pysox.CSoxStream(
         tmp_filename,
         'w',
-        pysox.CSignalInfo(8000.0,1,14))  # TODO: Don't hard-code sample rate
+        settings['SOX_SIGNAL_INFO'])
 
     START_OFFSET = bytes("%f" % (audio_event['start_offset'] / 100.0))
     DURATION = bytes("%f" % (audio_event['duration'] / 100.0))
@@ -264,7 +264,7 @@ def audio_for_pseudoterm(pseudoterm_id):
     outfile = pysox.CSoxStream(
         tmp_filename,
         'w',
-        pysox.CSignalInfo(8000.0,1,14))  # TODO: Don't hard-code sample rate
+        settings['SOX_SIGNAL_INFO'])
 
     # TODO: Allow number of audio events to be specified as parameter, instead
     #       of hard-coded to 10
@@ -322,7 +322,7 @@ def audio_for_pseudoterm_with_context(pseudoterm_id):
     outfile = pysox.CSoxStream(
         tmp_filename,
         'w',
-        pysox.CSignalInfo(8000.0,1,14))  # TODO: Don't hard-code sample rate
+        settings['SOX_SIGNAL_INFO'])
 
     # TODO: Allow number of audio events to be specified as parameter, instead
     #       of hard-coded to 10
