@@ -23,44 +23,6 @@ function display_audio_events(audio_events){
 };
 
 
-//Begin Audio
-   function playClip() {
-     var mediaElement = document.getElementById('player');
-
-     // Audio clip offsets from Aren were 388 and 470
-     mediaElement.src = '/audio/gujarati/answers/0003.wav#t=3.88,4.70';
-
-     // load() must be called after updating src
-     mediaElement.load();
-     mediaElement.play();
-   }
-
-   function playAudioEvent(playerElementID, audioEventID) {
-     var mediaElement = document.getElementById(playerElementID);
-     mediaElement.src = '/audio/audio_event/' + audioEventID + '.wav';
-     // load() must be called after updating src
-     mediaElement.load();
-     mediaElement.play();
-   }
-
-   function playPseudoterm(playerElementID, pseudotermID) {
-     var mediaElement = document.getElementById(playerElementID);
-     mediaElement.src = '/audio/pseudoterm/' + pseudotermID + '.wav';
-     // load() must be called after updating src
-     mediaElement.load();
-     mediaElement.play();
-   }
-
-   function playUtterance(playerElementID, utteranceID) {
-     var mediaElement = document.getElementById(playerElementID);
-     mediaElement.src = '/audio/utterance/' + utteranceID + '.wav';
-     // load() must be called after updating src
-     mediaElement.load();
-     mediaElement.play();
-   }
-//End Audio
-
-
 function get_annotation(){
     //dataset_name = $('#dataset_dropdown').val();
 
