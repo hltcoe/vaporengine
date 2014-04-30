@@ -170,6 +170,10 @@ def update_pseudoterm_header():
     return res
 
 
+@route('/static/<filepath:path>')
+def static_files(filepath):
+    vaporviz_path = os.path.dirname(os.path.realpath(__file__))
+    return static_file(filepath, root=os.path.join(vaporviz_path, 'static'))
 
 
 @route('/audio/gujarati/<filepath:path>')
