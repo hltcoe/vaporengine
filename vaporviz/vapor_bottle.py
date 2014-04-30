@@ -170,6 +170,12 @@ def update_pseudoterm_header():
     return res
 
 
+@route('/')
+def index_page():
+    vaporviz_path = os.path.dirname(os.path.realpath(__file__))
+    return static_file('index.html', root=os.path.join(vaporviz_path, 'page_source'))
+
+
 @route('/static/<filepath:path>')
 def static_files(filepath):
     vaporviz_path = os.path.dirname(os.path.realpath(__file__))
