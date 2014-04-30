@@ -78,7 +78,7 @@ def generic_find(find_function, metadata_filters):
     del metadata_filters['dataset']
 
     #SECURITY add whitelist of dataset names permitted
-    db = init_dbconn(name = dataset, host='r4n7')
+    db = init_dbconn(name = dataset, host=settings['DB_HOST'])
 
     #Properly Cast count
     if 'count' in metadata_filters:
@@ -164,7 +164,7 @@ def update_pseudoterm_header():
     dataset = update['dataset']
     del update['dataset']
     
-    db = init_dbconn(name = dataset, host='r4n7')
+    db = init_dbconn(name = dataset, host=settings['DB_HOST'])
     res = update_pseudoterm(db, _id, **update)
     
     return res
