@@ -42,7 +42,6 @@ function get_annotation(){
     send = {};
     send.dataset='buckeye' // HARDCODE
     send.count = 10; //TODO: pull from some element
-    console.log(send)
 
 
     $.ajaxSetup({
@@ -71,7 +70,6 @@ function get_utterances(){
     send = {};
     send.dataset='buckeye' // HARDCODE
     send.count = 10; //TODO: pull from some element
-    console.log(send)
 
     $.ajaxSetup({
             contentType: "application/json; charset=utf-8",
@@ -98,7 +96,6 @@ function get_audio_events(){
     send = {};
     send.dataset='buckeye' // HARDCODE
     send.count = 10; //TODO: pull from some element
-    console.log(send)
 
     $.ajaxSetup({
             contentType: "application/json; charset=utf-8",
@@ -127,7 +124,6 @@ function get_pseudoterm(pt_id){
     send.count = 1;
     send._id=(pt_id);
     
-    console.log(send)
 
     $.ajaxSetup({
             contentType: "application/json; charset=utf-8",
@@ -149,7 +145,6 @@ function get_pseudoterm(pt_id){
                     .val(active_pseudoterm.native_display);
                 $('#pt_stats_landing_zone')
                     .html(prettyPrint(active_pseudoterm));
-                console.log('done');
                 //Also get audioevents and snippets
             } 
         });
@@ -159,7 +154,6 @@ function get_pseudoterms(count){
     send = {};
     send.dataset='buckeye' // HARDCODE
     send.count = count || 10; //TODO: pull from some element
-    console.log(send)
 
     $.ajaxSetup({
             contentType: "application/json; charset=utf-8",
@@ -187,7 +181,6 @@ function get_audio_events_from_pseudoterm(pseudoterm_id, count){
     send.dataset='buckeye'; //HARDCODE
     send.pt_id=pseudoterm_id;
     send.count= count || 10; //10 if nothing is specified in the call
-    console.log(send);
     $.ajax({
             url: "http://localhost:12321/find_audio_events",
                 type: "POST",
@@ -221,7 +214,6 @@ function annotate_pt_eng_label(){
                 alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
             },
                 success: function(data) {
-                console.log('Eng display should ahve been updated');
             } 
         });
 
@@ -243,7 +235,6 @@ function annotate_pt_native_label(){
                 alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
             },
                 success: function(data) {
-                console.log('Native display should ahve been updated');
             } 
         });
     //Reload the PT now to see the changes reflected
