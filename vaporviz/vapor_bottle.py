@@ -5,7 +5,7 @@ import os
 import tempfile
 
 # Third party modules
-from bottle import route, run, request, response, static_file
+from bottle import route, run, request, response, static_file, template
 import bson.json_util
 import pysox
 try:
@@ -55,6 +55,12 @@ def widget_handler(path):
         page = open( source_path ) .read()
     print "Returning what was found at:", source_path
     return page
+
+"""Template testing"""
+@route('/template_test')
+def widget_handler():
+    page = "<HTML><BODY>This {{fill}} should be filled in"
+    return template(page,fill="**")
 
 
 def generic_find(find_function, metadata_filters):
