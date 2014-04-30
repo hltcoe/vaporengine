@@ -7,6 +7,8 @@ from lib.database import gen_date_args
 
 from lib.timestamping import now_to_millis
 
+from bson import ObjectId
+
 ###
 ### Collection Config
 ###
@@ -128,10 +130,12 @@ def insert_utterance(db, utterance):
     utterance_id = db[UTTERANCES_COLL].insert(utterance)
     return utterance_id
 
-from bson import ObjectId
+
 def update_utterance(db, utterance_id, **updates):
     """update an utterance entry"""
     match_dict = {'_id':ObjectId(utterance_id)}
+    if '_id' in updates: # Mongo doesn't like this and refuses to update if we do this
+        del updates['_id']
     update_dict = { '$set': updates}
     print 'updating', match_dict, 'with', update_dict
     db[UTTERANCES_COLL].update(match_dict,update_dict,multi=False)
@@ -160,6 +164,14 @@ def insert_pseudoterm(db, pseudoterm):
     pseudoterm_id = db[PSEUDOTERMS_COLL].insert(pseudoterm)
     return pseudoterm_id
 
+def update_utterance(db, pseudoterm_id, **updates):
+    """update an pseudoterm entry"""
+    match_dict = {'_id':ObjectId(pseudoterm_id)}
+    if '_id' in updates: # Mongo doesn't like this and refuses to update if we do this
+        del updates['_id']
+    update_dict = { '$set': updates}
+    print 'updating', match_dict, 'with', update_dict
+    db[UTTERANCES_COLL].update(match_dict,update_dict,multi=False)
 
 
 ###
@@ -223,6 +235,14 @@ def insert_annotation(db, annotation):
     annotation_id = db[ANNOTATIONS_COLL].insert(annotation)
     return annotation_id
     
+def update_annotation(db, annotation_id, **updates):
+    """update an pseudoterm entry"""
+    match_dict = {'_id':ObjectId(pseudoterm_id)}
+    if '_id' in updates: # Mongo doesn't like this and refuses to update if we do this
+        del updates['_id']
+    update_dict = { '$set': updates}
+    print 'updating', match_dict, 'with', update_dict
+    db[UTTERANCES_COLL].update(match_dict,update_dict,multi=False)
 
 
 

@@ -58,7 +58,9 @@ for docid in zrl.AllUtterances():
 
             insert_audio_event(db, ae)
             
-            print "%s %s %s %s" % (docid, ptid, aeid, zrl.AudioEventDataForAEID(aeid))
+            #print "%s %s %s %s" % (docid, ptid, aeid, zrl.AudioEventDataForAEID(aeid))
     utterance['pts'] = this_utterance_pts
+    print "Pseudoterms for utterance",utterance_mongo_id,":", utterance['pts']
+    print utterance.keys()
     update_utterance( db, utterance_mongo_id, **utterance)
 
