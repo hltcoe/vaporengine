@@ -103,6 +103,32 @@ function get_audio_events(){
         });
 }
 
+function get_cloud_data(utterance_ids){
+
+    send = {};
+    send.dataset='buckeye'; // HARDCODE
+    send.utterances = utterance_ids;
+        
+        
+    $.ajaxSetup({
+            contentType: "application/json; charset=utf-8",
+                dataType: "json"
+                });
+
+    $.ajax({
+            url: "http://localhost:12321/cloud_data_from_utterances",
+                type: "POST",
+                data: JSON.stringify(send),
+                error: function(xhr, error) {
+                alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
+            },
+                success: function(data) {
+                $('#cloud_data_landing_zone').html(prettyPrint(data));
+            } 
+        });
+}
+
+
 
 function get_pseudoterm(pt_id){
 
@@ -244,4 +270,8 @@ function test_ajax_calls(){
     get_pseudoterms();
 };
 
+function test_cloud_data_call(){
+    utterances = ['53627c6e04dc077fb2110b78','53627c6e04dc077fb211149b','53627c6f04dc077fb21122e7'];
+    get_cloud_data(utterances);
+}
 

@@ -169,6 +169,25 @@ def update_pseudoterm_header():
     
     return res
 
+#Get Venncloud data for a single list of utterances
+from vaporviz.vapor_venncloud import make_wc_datastructure
+@route('/cloud_data_from_utterances',method=['OPTIONS','POST'])
+@json_wrapper
+@enable_cors
+def cloud_data_handler():
+    request_data = json.load(request.body) # Should have a 'dataset' and an 'utterances' field
+    dataset = request_data['dataset']
+
+    utterances = request_data['utterances']
+    
+    db = init_dbconn(name = dataset, host=settings['DB_HOST'])
+    print request_data
+    token_vector = make_wc_datastructure( db, utterances )
+
+    print "Token Vector:", token_vector[:3]
+    return token_vector
+
+
 
 @route('/')
 def index_page():
