@@ -43,7 +43,8 @@ for docid in zrl.AllUtterances():
                   'zr_pt_id':ptid}
             mongo_ptid = insert_pseudoterm(db,pt)
             pt_to_mongo_id[ptid] = mongo_ptid
-            this_utterance_pts.append(mongo_ptid)
+        mongo_ptid = pt_to_mongo_id[ptid]
+        this_utterance_pts.append(mongo_ptid)
             
         for aeid in zrl.AudioEventIDsForPTID(ptid):
             #Each time we see an audio event, it'll be the first time
