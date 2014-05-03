@@ -1,3 +1,5 @@
+var cloud_datasets = {};
+
 
 function display_annotations(annotations){
 
@@ -103,8 +105,14 @@ function get_audio_events(){
         });
 }
 
-function get_cloud_data(utterance_ids){
+function get_cloud_data(utterance_list){
 
+    var utterance_ids = utterance_list.utterance_ids;
+    var dataset_name = utterance_list.dataset_name;
+    
+    return $.Deferred( function( defer ) {
+
+    
     send = {};
     send.dataset='buckeye'; // HARDCODE
     send.utterances = utterance_ids;
@@ -121,11 +129,21 @@ function get_cloud_data(utterance_ids){
                 data: JSON.stringify(send),
                 error: function(xhr, error) {
                 alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
+                defer.reject('Deferred error message');
             },
                 success: function(data) {
-                $('#cloud_data_landing_zone').html(prettyPrint(data));
+                //cloud_datasets = [data];
+                wc_data = {};
+                wc_data.dataset_name = dataset_name;
+                wc_data.tokens = data;
+                wc_data.num_tokens = data.length;
+                wc_data.num_documents = utterance_ids.length;
+                cloud_datasets[dataset_name] = wc_data;
+                //$('#cloud_data_landing_zone').html(prettyPrint(data));
+                defer.resolve(data);
             } 
         });
+        }).promise();
 }
 
 
@@ -272,6 +290,38 @@ function test_ajax_calls(){
 
 function test_cloud_data_call(){
     utterances = ['53627c6e04dc077fb2110b78','53627c6e04dc077fb211149b','53627c6f04dc077fb21122e7'];
-    get_cloud_data(utterances);
+    $.when(get_cloud_data(utterances)).done( function(data){
+            $('#cloud_data_landing_zone').html(prettyPrint(data));            
+        });
+
+    
 }
+
+//Deprecated, to be looked at again later
+function get_multiple_utterances_cloud_data( utterances_lists ){
+    get_cloud_data(utterances);
+    return $.Deferred( function(defer) {
+            $.each( utterance_list, function(index, utt_list) {
+                    dataset_name = utt_list.dataset_name;
+                    get_cloud_data( utt_list.utterance_ids, utt_list.dataset_name);
+                });
+            defer.resolve();
+        }).promise();
+};
+
+function venncloud_from_utterances( utterances_lists ){
+
+    
+    options = {};
+    //options.wordcloud_element = 'cloud_data_landing_zone';
+
+    //$.when(get_multiple_utterances_cloud_data(utterances_lists)).done( function(){
+    //HARDCODED below for the nonce.
+    u = utterances_lists;
+    $.when(get_cloud_data( u[0] ), get_cloud_data( u[1] )).done( function(){
+            //user cloud datasets
+            
+            make_me_a_venncloud( cloud_datasets, options )
+        });
+};
 

@@ -62,7 +62,7 @@ def make_wc_datastructure(db, utterances ):
     #Now finally make the token feature vector
     token_vector = []
     for token,mongo_ids in sorted(token_to_mongoids.items()):
-        t = {'token':token, 'tf':tf[token], 'idf':1, 'examples':[],
+        t = {'text':token, 'tf':tf[token], 'idf':1, 'examples':[],
              'number_of_pts':len(mongo_ids), 'pt_ids':mongo_ids} #TODO fix IDF
         #TODO add pseudoterm length here too?
         token_vector.append(t)
