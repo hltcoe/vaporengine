@@ -1,0 +1,45 @@
+<HTML>
+<head>
+
+<script src="http://localhost:12321/www/jquery-1.8.3.js"></script>
+  <script src="http://localhost:12321/www/jquery-ui.js"></script>
+  <script src="http://localhost:12321/www/floating-1.12.js"></script>
+  <script src="http://localhost:12321/www/dynamic_wordclouds.js"></script>
+<script src="http://localhost:12321/www/prettyprint.js"></script>
+
+  <link rel="stylesheet" href="http://localhost:12321/www/jquery-ui.css">
+  <link rel="stylesheet" href="http://localhost:12321/www/dynamic_wordclouds.css">
+
+
+
+
+<!--<script src="http://localhost:12321/www/data_handler.js"></script>-->
+
+</head>
+<BODY>
+
+<div id="annotation_landing_zone"></div>
+
+<div id="cloud_data_landing_zone"></div><BR><BR>
+
+
+<script>
+  $.get("http://localhost:12321/www/venncloud_template.html", function(data){
+  $('#cloud_data_landing_zone').html(data);
+});
+$.getScript("http://localhost:12321/www/data_handler.js",function(){
+
+  utterances1 = {};
+  utterances1.utterance_ids = ['53627c6e04dc077fb2110b78','53627c6e04dc077fb211149b','53627c6f04dc077fb21122e7'];
+  utterances1.dataset_name="Set1";
+
+  utterances2 = {};
+    utterances2.utterance_ids = ['53627c7004dc077fb2113a6b','53627c7004dc077fb2113cc5','53627c8404dc077fb2135c70','53627c6f04dc077fb21122e7'];
+utterances2.dataset_name="Set2";
+console.log([utterances1,utterances2]);
+    venncloud_from_utterances([utterances1,utterances2]);
+
+});
+</script>
+</BODY>
+</HTML>

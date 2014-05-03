@@ -309,10 +309,15 @@ function get_multiple_utterances_cloud_data( utterances_lists ){
         }).promise();
 };
 
+function alert_utterance_id(token){
+    alert(token);
+};
+
 function venncloud_from_utterances( utterances_lists ){
 
-    
     options = {};
+    options['click'] = alert_utterance_id;
+    
     //options.wordcloud_element = 'cloud_data_landing_zone';
 
     //$.when(get_multiple_utterances_cloud_data(utterances_lists)).done( function(){
@@ -320,7 +325,6 @@ function venncloud_from_utterances( utterances_lists ){
     u = utterances_lists;
     $.when(get_cloud_data( u[0] ), get_cloud_data( u[1] )).done( function(){
             //user cloud datasets
-            
             make_me_a_venncloud( cloud_datasets, options )
         });
 };

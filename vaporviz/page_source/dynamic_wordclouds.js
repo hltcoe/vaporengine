@@ -874,6 +874,7 @@ function filter_for_display_entities_types(to_filter) {
 
 
 //Sorting
+//TODO: Allow sorting on arbitrary variables.
 function sorter(to_sort, my_sort_type) {
     to_sort.sort(function (a, b) {
         return b['text'] < a['text']
@@ -898,12 +899,11 @@ function preference_sorter(to_sort) {
 //Size and Opacity calculations
 get_size = function (count, idf) {
     weighted_by_count = count * (100 / overall_max_observed); //HARDCODE??
-    weighted_by_rarity_size = 1 / Math.log(1 / idf);
+    //weighted_by_rarity_size = 1 / Math.log(1 / idf); //HARDCODE turned off
+    weighted_by_rarity_size = 1;
     weighted_size = s.base_fontsize; // A base size
-    //console.log(weighted_size, weighted_by_rarity_size, weighted_by_count, count, idf);
     weighted_size *= (1 - s.size_frequency_weight) + s.size_frequency_weight * weighted_by_count;
     weighted_size *= (1 - s.size_rarity_weight) + (s.size_rarity_weight * weighted_by_rarity_size);
-    //DEBUG.innerHTML = "~!" + (1-rarity_weight) * unweighted_by_rarity_size + "~~" + rarity_weight * idf + "!@!" + max_observed_count;
     if (weighted_size < 10) {
         return 10
     }
@@ -1247,7 +1247,6 @@ function compute_master_data(datasets) {
     var idfs = [];
 
     //Add fields to each dataset
-    return $.Deferred( function(defer) {
     for (var j in datasets) {
         var dataset = datasets[j];
         var tokens = dataset['tokens'];
@@ -1280,8 +1279,6 @@ function compute_master_data(datasets) {
 
     
     master_datasets = datasets;
-
-    defer.resolve();
     //TODO: Something breaks between here and the end of the function
     
     mean_counts = sum(counts) / counts.length;
@@ -1308,8 +1305,6 @@ function compute_master_data(datasets) {
     tmp = [s.min_req_tf, s.max_req_tf];
     $("#required_observations_slider").slider("option", "values", tmp);
 
-    defer.resolve();
-        }).promise();
 }
 function add_handlers(zone) {
     //console.log("Z:",zone);
@@ -1342,7 +1337,6 @@ function defaulLeftClickHandler(token){
     default_example_onclick(token);
 }
 function defaulRightClickHandler(token){
-
 }
 
 function make_me_a_venncloud(datasets, options) {
@@ -1355,27 +1349,23 @@ function make_me_a_venncloud(datasets, options) {
     s.onclick_function = options.click || defaulLeftClickHandler;
     s.oncontextclick_function = options.contextclick || defaulRightClickHandler;
 
-    var wordcloud_element = options.wordcloud_element || 'wordcloud_location';
+    var wordcloud_element = options.wordcloud_element || 'wordcloud_landing_zone';
 
     initialize_wordcloud_controls();
 
-    $.when(compute_master_data(datasets)).done( function(){
+    compute_master_data(datasets);
 
-            var initialSelection = [];
-            for (var j in master_datasets){
-                if (initialSelection.length < 2) {
-                    initialSelection.push(j);
-                }};
-                //if (master_datasets.length > 0) initialSelection.push(0);
-                //if (master_datasets.length > 1) initialSelection.push(1);
-            selected_datasets = initialSelection;
-            draw_wordcloud();
-        });
+    var initialSelection = [];
+    for (var j in master_datasets){
+        if (initialSelection.length < 2) {
+            initialSelection.push(j);
+        }};
+    selected_datasets = initialSelection;
+    draw_wordcloud();
     
     hide_example_windows();
     
     main_wordcloud_container = $('#' + wordcloud_element);
     var context_area = $('#' + wordcloud_element + '>table>tbody');
     add_handlers(context_area);
-
 }
