@@ -43,7 +43,7 @@ var s = {
     base_fontsize: 30,
     base_opacity: 3,
     opacity_slider_max_value: 10,
-    sort_type: 'ALPHABETIC',
+    sort_type: 'COUNT',
     mean_counts: 1,
     mean_idf: 1,
     display_words: true,

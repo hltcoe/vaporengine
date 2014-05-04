@@ -1,3 +1,4 @@
+
 <HTML>
 <head>
 
@@ -6,6 +7,7 @@
   <script src="http://localhost:12321/www/floating-1.12.js"></script>
   <script src="http://localhost:12321/www/dynamic_wordclouds.js"></script>
 <script src="http://localhost:12321/www/prettyprint.js"></script>
+  <script src="/www/vapor_audio.js"></script>
 
   <link rel="stylesheet" href="http://localhost:12321/www/jquery-ui.css">
   <link rel="stylesheet" href="http://localhost:12321/www/dynamic_wordclouds.css">
@@ -18,12 +20,35 @@
 </head>
 <BODY>
 
-<div id="annotation_landing_zone"></div>
+
+<div id='annotation_landing_zone'></div>
+<!-- Bandaid for the broken $.get-->
+<table>
+  <tr>
+    <td style="fontsize=22"><b>Eng:</b><input id="pt_eng_display"></input></b></td>
+    <td style="fontsize=22"><b>Native:</b><input id="pt_native_display"></input></b></td>
+  </tr>
+  <tr>
+    <td>
+      Snippets
+      <div id="pt_snippets_audio_player"></div>
+    </td>
+    <td>
+      Snippets with Context
+      <div id="pt_snippets_with_context_audio_player"></div>
+    </td>
+  </tr>
+</table>
+
+<!-- Bandaid for the broken $.get-->
+
+
 
 <div id="cloud_data_landing_zone"></div><BR><BR>
 
 
 <script>
+
   $.get("http://localhost:12321/www/venncloud_template.html", function(data){
   $('#cloud_data_landing_zone').html(data);
 });

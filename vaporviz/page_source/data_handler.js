@@ -250,8 +250,11 @@ function annotate_pt_eng_label(){
                 alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
             },
                 success: function(data) {
+                get_pseudoterm( active_pt_id );
             } 
         });
+    //TODO: Issue a call to redraw that token of the wordcloud.
+    alert('updating'+eng_display);
 
 };
 
@@ -271,10 +274,10 @@ function annotate_pt_native_label(){
                 alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
             },
                 success: function(data) {
+                //Reload the PT now to see the changes reflected
+                get_pseudoterm( active_pt_id );
             } 
         });
-    //Reload the PT now to see the changes reflected
-    get_pseudoterm( active_pt_id );
     
 };
 
@@ -309,14 +312,63 @@ function get_multiple_utterances_cloud_data( utterances_lists ){
         }).promise();
 };
 
-function alert_utterance_id(token){
+function set_up_annotate_pseudoterm_id(token){
+    if (token.length > 50){ return; } //If you mistakenly click the whole box
+    $.get('http://localhost:12321/www/pseudoterm_template.html',function(data){
+            alert("in");
+            $('#annotation_landing_zone').html(data);
+             alert("Past");
+        });
+
+
+    /*
+    debugger;
     alert(token);
+    $.get('http://localhost:12321/www/pseudoterm_template.html',function(data){
+            alert("in");
+            $('#annotation_landing_zone').html(data);
+             alert("Past");
+        });
+    */
+    var token_container = master_datasets[selected_datasets[0]].tokens[token] ||
+        master_datasets[selected_datasets[1]].tokens[token] ||
+        [];
+    var pt_ids = token_container.pt_ids;
+    console.log(pt_ids);
+    pseudotermID = pt_ids[0]['$oid'];
+    get_pseudoterm(pseudotermID); //Also posts to the global variable
+
+    var audioPlayerDiv = $('#pt_snippets_audio_player');
+    $('#pt_snippets_audio_player').off().empty(); //TODO: properly remove handlers
+    addControlsForPlayer(
+        audioPlayerDiv,
+        "ID_to_use_for_new_DOM_elements",
+        "/audio/pseudoterm/" + pseudotermID + ".wav");
+
+    var audioContextPlayerDiv = $('#pt_snippets_with_context_audio_player');
+    $('#pt_snippets_with_context_audio_player').off().empty(); //TODO: properly remove handlers
+    addControlsForPlayer(
+        audioContextPlayerDiv,
+        "another_ID_to_use_for_new_DOM_elements",
+        "/audio/pseudoterm/context/" + pseudotermID + ".wav");
+
+    $("#pt_eng_display")
+       .focusout(function(){
+         annotate_pt_eng_label();
+       });
+
+    $("#pt_native_display")
+       .focusout(function(){
+         annotate_pt_native_label();
+       });
+
 };
+
 
 function venncloud_from_utterances( utterances_lists ){
 
     options = {};
-    options['click'] = alert_utterance_id;
+    options['click'] = set_up_annotate_pseudoterm_id;
     
     //options.wordcloud_element = 'cloud_data_landing_zone';
 

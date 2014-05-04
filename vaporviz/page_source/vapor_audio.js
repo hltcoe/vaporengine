@@ -1,5 +1,7 @@
 
 
+//TODO: split into two separate elements -- one that attaches new buttons, one that calls with new pseudoterm
+
 // Adds a <div> containing Pause and Play controls to an element.
 //   - parentElement:   DOM element that the <div> will be appended to
 //   - playerElementID: unique ID that will be used for creating
