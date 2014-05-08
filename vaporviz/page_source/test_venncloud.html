@@ -21,7 +21,18 @@
 <BODY>
 
 
+<!-- TODO: proper annotation instead of just updating the element in the db -->
+
 <div id='annotation_landing_zone'></div>
+<div id="floatdivleft" style="  
+    position:absolute;  
+    width:350px;height:100px;top:10px;right:10px;  
+    padding:5px;background:#FFFFFF;  
+    border:2px solid #2266AA;  
+    z-index:100">
+  <a href='javascript:;' onclick='hide_example_windows()' style='font-size:10'><b>[close]</b></a>
+  <a href='javascript:;' onclick='mark_as_junk()' style='font-size:10'><b>[This pseudoterm is junk.]</b></a>
+
 <!-- Bandaid for the broken $.get-->
 <table>
   <tr>
@@ -31,16 +42,20 @@
   <tr>
     <td>
       Snippets
-      <div id="pt_snippets_audio_player"></div>
+      <span id="pt_snippets_audio_player"></span>
     </td>
     <td>
       Snippets with Context
-      <div id="pt_snippets_with_context_audio_player"></div>
+      <span id="pt_snippets_with_context_audio_player"></span>
     </td>
   </tr>
 </table>
-
 <!-- Bandaid for the broken $.get-->
+
+
+<!--<span id="annotation_landing_zone">Annotation window goes here.</span>-->
+</div>
+
 
 
 

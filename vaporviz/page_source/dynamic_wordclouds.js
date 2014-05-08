@@ -81,6 +81,8 @@ var highlight_keywords = false;
 /**Example Windows**/
 /*******************/
 
+
+/*
 floatingMenu.add('floatdivright',
     {
         // Represents distance from left or right browser window
@@ -103,7 +105,7 @@ floatingMenu.add('floatdivright',
         // Remove this one if you don't want snap effect
         snap: true
     });
-
+*/
 floatingMenu.add('floatdivleft',
     {
         targetLeft: 10,
@@ -1363,7 +1365,7 @@ function make_me_a_venncloud(datasets, options) {
     selected_datasets = initialSelection;
     draw_wordcloud();
     
-    hide_example_windows();
+    //hide_example_windows();
     
     main_wordcloud_container = $('#' + wordcloud_element);
     var context_area = $('#' + wordcloud_element + '>table>tbody');
