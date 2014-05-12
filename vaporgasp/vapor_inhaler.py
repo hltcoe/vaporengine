@@ -22,7 +22,7 @@ pt_to_mongo_id = {}
 
 for docid in zrl.AllUtterances():
     utterance = {
-        'hltcoe_audio_path': zrl.filename_for_docid(docid)
+        'hltcoe_audio_path': zrl.filename_for_docid[docid]
         }
     utterance_mongo_id = insert_utterance(db, utterance)
 

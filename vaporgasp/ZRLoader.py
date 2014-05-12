@@ -81,7 +81,7 @@ class ZRLoader:
 
         full_filenames = slurp(filenames)
         for full_filename in full_filenames:
-            basename = os.path.splitext(os.path.basename(full_filename).split('.'))[0]
+            basename = os.path.splitext(os.path.basename(full_filename))[0]
             self.filename_for_docid[basename] = full_filename
 
         for (ptid,pttuple) in self.pts.iteritems():
