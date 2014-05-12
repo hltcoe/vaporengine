@@ -201,16 +201,9 @@ def static_files(filepath):
     return static_file(filepath, root=os.path.join(vaporviz_path, 'static'))
 
 
-@route('/audio/gujarati/<filepath:path>')
-def audio_static_gujarati(filepath):
-    # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
-    return static_file(filepath, root='/home/hltcoe/ajansen/QASW/audio', mimetype='audio/wav')
-
-
-@route('/audio/BUCKEYE/<filepath:path>')
-def audio_static_buckeye(filepath):
-    # TODO: Retrieve audio file paths from Mongo, instead of hard-coding
-    return static_file(filepath, root='/home/hltcoe/ajansen/aren_local/BUCKEYE', mimetype='audio/wav')
+@route('/audio/WAV/<filepath:path>')
+def audio_static_wav(filepath):
+    return static_file(filepath, root=settings['WAV_PATH'], mimetype='audio/wav')
 
 
 @route('/audio/audio_event/<audio_event_id>.wav')
