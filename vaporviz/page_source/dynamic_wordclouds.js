@@ -1147,7 +1147,7 @@ function paint_tokens(display, data, color) {
         attr.nodeValue = element_id;
         token_element.setAttributeNode(attr);
 
-        token_element.textContent = ' ' + t['text'] + ' ';
+        token_element.textContent = ' [' + t['text'] + '] ';
 
         token_element.style.fontSize = '2pt';
         token_element.style.color = color;
@@ -1340,7 +1340,7 @@ function add_handlers(zone) {
     //console.log("Z:",zone);
     zone.on("click", function (e) {
         e = e || Event;
-        s.onclick_function(e.target.innerHTML.trim())
+        s.onclick_function(e.target.innerHTML.trim().replace("[","").replace("]",""));
     });
     zone.on("contextmenu", function (e) {
         e = e || Event;
