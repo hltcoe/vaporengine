@@ -3,6 +3,9 @@
  -Fix wordcloud description
  */
 
+//Element containers
+var context_area = "";
+
 
 //Data containers
 var master_datasets = []; //All datasets encoded
@@ -1239,6 +1242,13 @@ function draw_wordcloud() {
     // Call update to get actual values correct
     update_wordcloud();
 
+    //Handlers were lost when wordcloud was redrawn
+    var wordcloud_element = s.wordcloud_element || 'wordcloud_landing_zone';
+    main_wordcloud_container = $('#' + wordcloud_element);
+    //var context_area = $('#' + wordcloud_element + '>table>tbody');
+    context_area = $('#' + wordcloud_element + '>table>tbody');
+    add_handlers(context_area);
+    
     // Turn the display on
     main_wordcloud_container.show();
 
@@ -1368,6 +1378,7 @@ function make_me_a_venncloud(datasets, options) {
     //hide_example_windows();
     
     main_wordcloud_container = $('#' + wordcloud_element);
-    var context_area = $('#' + wordcloud_element + '>table>tbody');
+    //var context_area = $('#' + wordcloud_element + '>table>tbody');
+    context_area = $('#' + wordcloud_element + '>table>tbody');
     add_handlers(context_area);
 }
