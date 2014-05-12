@@ -172,7 +172,6 @@ function get_pseudoterm(pt_id){
                 active_pseudoterm = data[0]; //Global var
                 $('#pt_eng_display')
                     .val(active_pseudoterm.eng_display);
-                $('#pt_eng_display').focus().select();
                 
                 $('#pt_native_display')
                     .val(active_pseudoterm.native_display);
@@ -240,6 +239,11 @@ function get_audio_events_from_pseudoterm(pseudoterm_id, count){
 function annotate_pt_eng_label(){
     active_pt_id = active_pseudoterm._id;
     annotation = $('#pt_eng_display').val();
+    if (active_pseudoterm.eng_display == annotation){
+        return;
+    }
+    else{
+    
     send = {};
     send.dataset='buckeye'; //HARDCODE
     send._id=active_pt_id;
@@ -257,7 +261,8 @@ function annotate_pt_eng_label(){
         });
     //TODO: Issue a call to redraw that token of the wordcloud.
     //alert('updating'+send.eng_display);
-
+    update_displayed_token( active_pseudoterm.eng_display , annotation);
+    };
 };
 
 
@@ -363,6 +368,9 @@ function set_up_annotate_pseudoterm_id(token){
        .focusout(function(){
          annotate_pt_native_label();
        });
+
+    //Autoselect the english display element
+    $('#pt_eng_display').focus().select();
 
 };
 
