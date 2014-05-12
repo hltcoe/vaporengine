@@ -8,48 +8,21 @@
 
   <script src="/static/jquery-1.11.0.min.js"></script>
   <script src="/static/bootstrap-3.1.1/js/bootstrap.js"></script>
+
+  <script src="/static/wavesurfer/wavesurfer.js"></script>
+  <script src="/static/wavesurfer/webaudio.js"></script>
+  <script src="/static/wavesurfer/webaudio.buffer.js"></script>
+  <script src="/static/wavesurfer/webaudio.media.js"></script>
+  <script src="/static/wavesurfer/drawer.js"></script>
+  <script src="/static/wavesurfer/drawer.canvas.js"></script>
+
   <script src="/www/data_handler.js"></script>
   <script src="/www/vapor_audio.js"></script>
 
   <script>
-   function playClip() {
-     var mediaElement = document.getElementById('player');
-
-     // Audio clip offsets from Aren were 388 and 470
-     mediaElement.src = '/audio/gujarati/answers/0003.wav#t=3.88,4.70';
-
-     // load() must be called after updating src
-     mediaElement.load();
-     mediaElement.play();
-   }
-
-   function playAudioEvent(playerElementID, audioEventID) {
-     var mediaElement = document.getElementById(playerElementID);
-     mediaElement.src = '/audio/audio_event/' + audioEventID + '.wav';
-     // load() must be called after updating src
-     mediaElement.load();
-     mediaElement.play();
-   }
-
-   function playPseudoterm(playerElementID, pseudotermID) {
-     var mediaElement = document.getElementById(playerElementID);
-     mediaElement.src = '/audio/pseudoterm/' + pseudotermID + '.wav';
-     // load() must be called after updating src
-     mediaElement.load();
-     mediaElement.play();
-   }
-
-   function playUtterance(playerElementID, utteranceID) {
-     var mediaElement = document.getElementById(playerElementID);
-     mediaElement.src = '/audio/utterance/' + utteranceID + '.wav';
-     // load() must be called after updating src
-     mediaElement.load();
-     mediaElement.play();
-   }
-
-   function addPseudotermList() {
+   function addPseudotermList(waveformWidgetID) {
      send = {};
-     send.dataset='buckeye' // HARDCODE
+     send.dataset = 'buckeye'; // HARDCODE
      send.count = 10; //TODO: pull from some element
      console.log(send)
 
@@ -66,13 +39,13 @@
          alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
        },
        success: function(data) {
-
          for (var i in data) {
            var pseudoterm_div = $('<div>').html("Pseudoterm ID: " + data[i].native_display);
-           addControlsForPlayer(
+           addControlsForWaveformWidget(
              pseudoterm_div,
+             waveformWidgetID,
              data[i].native_display,
-             '/audio/pseudoterm/' + data[i]['_id'] + '.wav');
+             getURLforPseudotermWAV(data[i]['_id']));
            $('#pseudoterm_list').append(pseudoterm_div);
          }
        }
@@ -80,58 +53,55 @@
    }
 
    $(document).ready(function() {
-     addPseudotermList();
+     addWaveformWidget('waveform_div');
+
+     addPseudotermList('waveform_div');
    });
   </script>
 </head>
 <body>
+  <div class="container" style="padding-top: 2em; padding-bottom; 2em;">
 
-  <div>
-    <h1>Audio Event - dynamically created clip</h1>
-    <audio id="ae_player">
-      <p>Your browser does not support the audio element</p>
-    </audio>
-    <button onclick="playAudioEvent('ae_player', '5360d6c0fedd526522c43935');">Play</button>
-  </div>
+    <div id="waveform_div"></div>
 
-  <div>
-    <h1>Pseudoterm - dynamically created clip</h1>
-    <audio id="pt_player">
-      <p>Your browser does not support the audio element</p>
-    </audio>
-    <button onclick="playPseudoterm('pt_player', '5360d6c0fedd526522c43934');">Play</button>
-  </div>
+    <hr />
 
-  <div id="pseudoterm_list">
-  </div>
+    <!--
+    <div>
+      <h2>Audio Event - dynamically created clip</h2>
+      <audio id="ae_player">
+        <p>Your browser does not support the audio element</p>
+      </audio>
+      <button onclick="playAudioEvent('ae_player', '5360d6c0fedd526522c43935');">Play</button>
+    </div>
 
-  <div>
-    <h1>Utterance - static file</h1>
-    <audio id="utt_player">
-      <p>Your browser does not support the audio element</p>
-    </audio>
-    <button onclick="playUtterance('utt_player', '5360d6c0fedd526522c43933');">Play</button>
+    <div>
+      <audio id="pt_player">
+        <p>Your browser does not support the audio element</p>
+      </audio>
+      <button onclick="playPseudoterm('pt_player', '5360d6c0fedd526522c43934');">Play</button>
+    </div>
+    -->
 
-    <audio src="/audio/utterance/5360d6c0fedd526522c43933.wav" controls>
-      <p>Your browser does not support the audio element</p>
-    </audio>
-  </div>
+    <h2>Pseudoterm - dynamically created clip</h2>
 
-  <hr>
+    <div id="pseudoterm_list">
+    </div>
 
-  <div>
-    <h1>Gujarati - static file</h1>
-    <audio id="player">
-      <p>Your browser does not support the audio element</p>
-    </audio>
-    <button onclick="playClip();">Play</button>
-  </div>
+    <!--
+    <div>
+      <h2>Utterance - static file</h2>
+      <audio id="utt_player">
+        <p>Your browser does not support the audio element</p>
+      </audio>
+      <button onclick="playUtterance('utt_player', '5360d6c0fedd526522c43933');">Play</button>
 
-  <div>
-    <h1>English - static file</h1>
-    <audio src="/audio/BUCKEYE/s01/s0101a.wav" controls>
-      <p>Your browser does not support the audio element</p>
-    </audio>
+      <audio src="/audio/utterance/5360d6c0fedd526522c43933.wav" controls>
+        <p>Your browser does not support the audio element</p>
+      </audio>
+    </div>
+    -->
+
   </div>
 
 </body>
