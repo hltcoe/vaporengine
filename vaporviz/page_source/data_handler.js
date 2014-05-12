@@ -172,6 +172,8 @@ function get_pseudoterm(pt_id){
                 active_pseudoterm = data[0]; //Global var
                 $('#pt_eng_display')
                     .val(active_pseudoterm.eng_display);
+                $('#pt_eng_display').focus().select();
+                
                 $('#pt_native_display')
                     .val(active_pseudoterm.native_display);
                 $('#pt_stats_landing_zone')
@@ -254,7 +256,7 @@ function annotate_pt_eng_label(){
             } 
         });
     //TODO: Issue a call to redraw that token of the wordcloud.
-    alert('updating'+eng_display);
+    //alert('updating'+send.eng_display);
 
 };
 
