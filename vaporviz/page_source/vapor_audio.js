@@ -1,77 +1,82 @@
 // Global hash mapping DOM ID's of waveform widgets to instances of Waveform class
 // TODO: Do something less hacky than a global variable
-var wavesurfers = {};
+var widgets = {}
 
 
-function addWaveformWidget(playerElementID) {
-  wavesurfers[playerElementID] = Object.create(WaveSurfer);
-
-  wavesurfers[playerElementID].init({
-    container: document.querySelector('#' + playerElementID),
-    waveColor: 'violet',
-    progressColor: 'purple'
-  });
-}
-
-function waveformWidgetLoadAndPlayURL(playerElementID, audioSourceURL) {
-  wavesurfers[playerElementID].load(audioSourceURL);
-  wavesurfers[playerElementID].on('ready', function() { wavesurfers[playerElementID].play(); });
-}
-
-function waveformWidgetLoadURL(playerElementID, audioSourceURL) {
-  wavesurfers[playerElementID].load(audioSourceURL);
-}
-
-function waveformWidgetPlay(playerElementID) {
-  wavesurfers[playerElementID].play();
-}
-
-function waveformWidgetPause(playerElementID) {
-  wavesurfers[playerElementID].pause();
-}
-
-function addControlsForWaveformWidget(parentElement, playerElementID, controlsID, audioSourceURL) {
+function addControlsForWaveformWidget(parentElement, playerElementID, audioSourceURL) {
   var playerDiv = $('<div>')
     .attr('id', playerElementID + '_audio_control')
     .addClass('audio_control');
 
-  var playButton = $('<button>')
-    .addClass('btn btn-primary')
-    .attr('id', controlsID + '_play_button')
+  var playPauseButton = $('<button>')
+    .addClass('btn btn-primary btn-xs')
     .click(
-        {
-            'audioSourceURL': audioSourceURL,
-            'controlsID': controlsID,
-            'playerElementID': playerElementID,
-        },
-        function(event) {
-            waveformWidgetLoadAndPlayURL(event.data.playerElementID, event.data.audioSourceURL);
-            $('#' + event.data.controlsID + '_play_button').prop('disabled', true);
-            $('#' + event.data.controlsID + '_pause_button').prop('disabled', false);
+      {
+        'audioSourceURL': audioSourceURL,
+        'playerElementID': playerElementID,
+      },
+      function(event) {
+        var widget = widgets[event.data.playerElementID];
+        if (widget.url === undefined || widget.url != event.data.audioSourceURL) {
+          // Load specified audio file IFF it is not already loaded
+          waveformWidgetLoadAndPlayURL(event.data.playerElementID, event.data.audioSourceURL);
+          widget.url = event.data.audioSourceURL;
         }
-    )
-    .html('<i class="glyphicon glyphicon-play"></i>Play');
-  var pauseButton = $('<button>')
-    .addClass('btn btn-primary')
-    .attr('id', controlsID + '_pause_button')
-    .click(
-        {
-            'controlsID': controlsID,
-            'playerElementID': playerElementID,
-        },
-        function(event) {
-            waveformWidgetPause(event.data.playerElementID);
-            $('#' + event.data.controlsID + '_play_button').prop('disabled', false);
-            $('#' + event.data.controlsID + '_pause_button').prop('disabled', true);
+        else {
+          waveformWidgetPlayPause(event.data.playerElementID);
         }
+      }
     )
-    .html('<i class="glyphicon glyphicon-pause"></i>Pause')
-    .prop('disabled', true);
+    .html('<i class="glyphicon glyphicon-play"></i> / <i class="glyphicon glyphicon-pause"></i>');
 
-  playerDiv.append(playButton);
-  playerDiv.append(pauseButton);
+  playerDiv.append(playPauseButton);
 
   parentElement.append(playerDiv);
+}
+
+function addWaveformWidget(playerElementID) {
+  widgets[playerElementID] = {}
+  widgets[playerElementID].wavesurfer = Object.create(WaveSurfer);
+
+  widgets[playerElementID].wavesurfer.init({
+    container: document.querySelector('#' + playerElementID),
+    normalize: true,
+    progressColor: 'purple',
+    waveColor: 'violet',
+  });
+}
+
+function getURLforAudioEventWAV(audioEventID) {
+  return '/audio/audio_event/' + audioEventID + '.wav';
+}
+
+function getURLforPseudotermWAV(pseudotermID) {
+  return '/audio/pseudoterm/' + pseudotermID + '.wav';
+}
+
+function getURLforUtteranceWAV(utteranceID) {
+  return '/audio/utterance/' + utteranceID + '.wav';
+}
+
+function waveformWidgetLoadAndPlayURL(playerElementID, audioSourceURL) {
+  waveformWidgetLoadURL(playerElementID, audioSourceURL);
+  widgets[playerElementID].wavesurfer.on('ready', function() { widgets[playerElementID].wavesurfer.play(); });
+}
+
+function waveformWidgetLoadURL(playerElementID, audioSourceURL) {
+  widgets[playerElementID].wavesurfer.load(audioSourceURL);
+}
+
+function waveformWidgetPlay(playerElementID) {
+  widgets[playerElementID].wavesurfer.play();
+}
+
+function waveformWidgetPlayPause(playerElementID) {
+  widgets[playerElementID].wavesurfer.playPause();
+}
+
+function waveformWidgetPause(playerElementID) {
+  widgets[playerElementID].wavesurfer.pause();
 }
 
 
@@ -124,17 +129,4 @@ function addControlsForPlayer(parentElement, playerElementID, audioSourceURL) {
   controlDiv.append(pauseButton);
 
   parentElement.append(controlDiv);
-}
-
-
-function getURLforAudioEventWAV(audioEventID) {
-  return '/audio/audio_event/' + audioEventID + '.wav';
-}
-
-function getURLforPseudotermWAV(pseudotermID) {
-  return '/audio/pseudoterm/' + pseudotermID + '.wav';
-}
-
-function getURLforUtteranceWAV(utteranceID) {
-  return '/audio/utterance/' + utteranceID + '.wav';
 }
