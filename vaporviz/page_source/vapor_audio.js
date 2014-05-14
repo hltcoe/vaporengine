@@ -1,4 +1,4 @@
-// Global hash mapping DOM ID's of waveform visualizers to instances of Waveform class
+// Global hash mapping DOM ID's of waveform visualizers to instances of Wavesurfer class
 // TODO: Do something less hacky than a global variable
 var visualizers = {}
 
@@ -58,10 +58,6 @@ function getURLforUtteranceWAV(utteranceID) {
   return '/audio/utterance/' + utteranceID + '.wav';
 }
 
-function getWaveformVisualizerWavesurfer(visualizerID) {
-  return visualizers[visualizerID].wavesurfer;
-}
-
 function waveformVisualizerLoadAndPlayURL(visualizerID, audioSourceURL) {
   waveformVisualizerLoadURL(visualizerID, audioSourceURL);
   visualizers[visualizerID].wavesurfer.on('ready', function() { visualizers[visualizerID].wavesurfer.play(); });
@@ -69,6 +65,19 @@ function waveformVisualizerLoadAndPlayURL(visualizerID, audioSourceURL) {
 
 function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
   visualizers[visualizerID].wavesurfer.load(audioSourceURL);
+
+  // If audio clip is a pseudoterm audio clip composed of multiple audio events,
+  // add markers to waveform at audio event boundaries
+  if (audioSourceURL.substr(0,18) === '/audio/pseudoterm/') {
+    var pseudotermID = audioSourceURL.substr(18,24);
+    $.getJSON("/audio/pseudoterm/" + pseudotermID + "_audio_events.json", function(audio_events) {
+      var total_duration = 0.0;
+      for (var i in audio_events) {
+        total_duration += audio_events[i].duration / 100.0;
+        visualizers[visualizerID].wavesurfer.mark({'color': 'yellow', 'position': total_duration});
+      }
+    });
+  }
 }
 
 function waveformVisualizerPlay(visualizerID) {

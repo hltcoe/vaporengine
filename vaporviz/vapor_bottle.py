@@ -250,6 +250,20 @@ def audio_for_audio_event(audio_event_id):
     return bytestring_as_file_with_mimetype(wav_data, 'audio/wav')
 
 
+@route('/audio/pseudoterm/<pseudoterm_id>_audio_events.json')
+@json_wrapper
+def audio_events_for_pseudoterm(pseudoterm_id):
+    """
+    Returns a JSON object with information about the audio events
+    associated with a pseudoterm
+    """
+    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
+    audio_events = find_audio_events(db, pt_id=pseudoterm['_id'])
+
+    return audio_events[:10]
+
+
 @route('/audio/pseudoterm/<pseudoterm_id>.wav')
 def audio_for_pseudoterm(pseudoterm_id):
     """
