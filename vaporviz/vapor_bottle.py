@@ -259,9 +259,9 @@ def audio_events_for_pseudoterm(pseudoterm_id):
     """
     db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
     pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
-    audio_events = find_audio_events(db, pt_id=pseudoterm['_id'])
+    audio_events = find_audio_events(db, pt_id=pseudoterm['_id'], count=10)
 
-    return audio_events[:10]
+    return audio_events
 
 
 @route('/audio/pseudoterm/<pseudoterm_id>.wav')
@@ -271,7 +271,7 @@ def audio_for_pseudoterm(pseudoterm_id):
     """
     db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
     pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
-    audio_events = find_audio_events(db, pt_id=pseudoterm['_id'])
+    audio_events = find_audio_events(db, pt_id=pseudoterm['_id'], count=10)
 
     # Create a temporary directory
     tmp_directory = tempfile.mkdtemp()
@@ -288,7 +288,7 @@ def audio_for_pseudoterm(pseudoterm_id):
 
     # TODO: Allow number of audio events to be specified as parameter, instead
     #       of hard-coded to 10
-    for audio_event in audio_events[:10]:
+    for audio_event in audio_events:
         START_OFFSET = bytes("%f" % (audio_event['start_offset'] / 100.0))
         DURATION = bytes("%f" % (audio_event['duration'] / 100.0))
 
@@ -323,7 +323,7 @@ def audio_for_pseudoterm_with_context(pseudoterm_id):
 
     db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
     pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
-    audio_events = find_audio_events(db, pt_id=pseudoterm['_id'])
+    audio_events = find_audio_events(db, pt_id=pseudoterm['_id'], count=10)
 
     # Create a temporary directory
     tmp_directory = tempfile.mkdtemp()
@@ -340,7 +340,7 @@ def audio_for_pseudoterm_with_context(pseudoterm_id):
 
     # TODO: Allow number of audio events to be specified as parameter, instead
     #       of hard-coded to 10
-    for audio_event in audio_events[:10]:
+    for audio_event in audio_events:
         initial_start_offset = audio_event['start_offset'] / 100.0
         initial_duration = audio_event['duration'] / 100.0
 
