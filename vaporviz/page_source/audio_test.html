@@ -20,7 +20,7 @@
   <script src="/www/vapor_audio.js"></script>
 
   <script>
-   function addPseudotermList(waveformWidgetID) {
+   function addPseudotermList(waveformVisualizerID) {
      send = {};
      send.dataset = 'buckeye'; // HARDCODE
      send.count = 10; //TODO: pull from some element
@@ -41,9 +41,9 @@
        success: function(data) {
          for (var i in data) {
            var pseudoterm_div = $('<div>').html("Pseudoterm ID: " + data[i].native_display);
-           addControlsForWaveformWidget(
+           addControlsForWaveformVisualizer(
              pseudoterm_div,
-             waveformWidgetID,
+             waveformVisualizerID,
              getURLforPseudotermWAV(data[i]['_id']));
            $('#pseudoterm_list').append(pseudoterm_div);
          }
@@ -52,7 +52,7 @@
    }
 
    $(document).ready(function() {
-     addWaveformWidget('waveform_div');
+     addWaveformVisualizer('waveform_div');
 
      addPseudotermList('waveform_div');
    });

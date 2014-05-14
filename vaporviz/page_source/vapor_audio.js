@@ -1,11 +1,11 @@
-// Global hash mapping DOM ID's of waveform widgets to instances of Waveform class
+// Global hash mapping DOM ID's of waveform visualizers to instances of Waveform class
 // TODO: Do something less hacky than a global variable
-var widgets = {}
+var visualizers = {}
 
 
-function addControlsForWaveformWidget(parentElement, playerElementID, audioSourceURL) {
+function addControlsForWaveformVisualizer(parentElement, visualizerID, audioSourceURL) {
   var playerDiv = $('<div>')
-    .attr('id', playerElementID + '_audio_control')
+    .attr('id', visualizerID + '_audio_control')
     .addClass('audio_control');
 
   var playPauseButton = $('<button>')
@@ -13,17 +13,17 @@ function addControlsForWaveformWidget(parentElement, playerElementID, audioSourc
     .click(
       {
         'audioSourceURL': audioSourceURL,
-        'playerElementID': playerElementID,
+        'visualizerID': visualizerID,
       },
       function(event) {
-        var widget = widgets[event.data.playerElementID];
-        if (widget.url === undefined || widget.url != event.data.audioSourceURL) {
+        var visualizer = visualizers[event.data.visualizerID];
+        if (visualizer.url === undefined || visualizer.url != event.data.audioSourceURL) {
           // Load specified audio file IFF it is not already loaded
-          waveformWidgetLoadAndPlayURL(event.data.playerElementID, event.data.audioSourceURL);
-          widget.url = event.data.audioSourceURL;
+          waveformVisualizerLoadAndPlayURL(event.data.visualizerID, event.data.audioSourceURL);
+          visualizer.url = event.data.audioSourceURL;
         }
         else {
-          waveformWidgetPlayPause(event.data.playerElementID);
+          waveformVisualizerPlayPause(event.data.visualizerID);
         }
       }
     )
@@ -34,12 +34,12 @@ function addControlsForWaveformWidget(parentElement, playerElementID, audioSourc
   parentElement.append(playerDiv);
 }
 
-function addWaveformWidget(playerElementID) {
-  widgets[playerElementID] = {}
-  widgets[playerElementID].wavesurfer = Object.create(WaveSurfer);
+function addWaveformVisualizer(visualizerID) {
+  visualizers[visualizerID] = {}
+  visualizers[visualizerID].wavesurfer = Object.create(WaveSurfer);
 
-  widgets[playerElementID].wavesurfer.init({
-    container: document.querySelector('#' + playerElementID),
+  visualizers[visualizerID].wavesurfer.init({
+    container: document.querySelector('#' + visualizerID),
     normalize: true,
     progressColor: 'purple',
     waveColor: 'violet',
@@ -58,25 +58,29 @@ function getURLforUtteranceWAV(utteranceID) {
   return '/audio/utterance/' + utteranceID + '.wav';
 }
 
-function waveformWidgetLoadAndPlayURL(playerElementID, audioSourceURL) {
-  waveformWidgetLoadURL(playerElementID, audioSourceURL);
-  widgets[playerElementID].wavesurfer.on('ready', function() { widgets[playerElementID].wavesurfer.play(); });
+function getWaveformVisualizerWavesurfer(visualizerID) {
+  return visualizers[visualizerID].wavesurfer;
 }
 
-function waveformWidgetLoadURL(playerElementID, audioSourceURL) {
-  widgets[playerElementID].wavesurfer.load(audioSourceURL);
+function waveformVisualizerLoadAndPlayURL(visualizerID, audioSourceURL) {
+  waveformVisualizerLoadURL(visualizerID, audioSourceURL);
+  visualizers[visualizerID].wavesurfer.on('ready', function() { visualizers[visualizerID].wavesurfer.play(); });
 }
 
-function waveformWidgetPlay(playerElementID) {
-  widgets[playerElementID].wavesurfer.play();
+function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
+  visualizers[visualizerID].wavesurfer.load(audioSourceURL);
 }
 
-function waveformWidgetPlayPause(playerElementID) {
-  widgets[playerElementID].wavesurfer.playPause();
+function waveformVisualizerPlay(visualizerID) {
+  visualizers[visualizerID].wavesurfer.play();
 }
 
-function waveformWidgetPause(playerElementID) {
-  widgets[playerElementID].wavesurfer.pause();
+function waveformVisualizerPlayPause(visualizerID) {
+  visualizers[visualizerID].wavesurfer.playPause();
+}
+
+function waveformVisualizerPause(visualizerID) {
+  visualizers[visualizerID].wavesurfer.pause();
 }
 
 
