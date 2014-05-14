@@ -345,19 +345,17 @@ function set_up_annotate_pseudoterm_id(token){
     pseudotermID = pt_ids[0]['$oid'];
     get_pseudoterm(pseudotermID); //Also posts to the global variable
 
-    var audioPlayerDiv = $('#pt_snippets_audio_player');
-    $('#pt_snippets_audio_player').off().empty(); //TODO: properly remove handlers
-    addControlsForPlayer(
-        audioPlayerDiv,
-        "ID_to_use_for_new_DOM_elements",
-        "/audio/pseudoterm/" + pseudotermID + ".wav");
+    var visualizerID = "waveform_visualizer";  // HARDCODE
+    waveformVisualizerLoadAndPlayURL(visualizerID, getURLforPseudotermWAV(pseudotermID));
 
+  /*
     var audioContextPlayerDiv = $('#pt_snippets_with_context_audio_player');
     $('#pt_snippets_with_context_audio_player').off().empty(); //TODO: properly remove handlers
     addControlsForPlayer(
         audioContextPlayerDiv,
         "another_ID_to_use_for_new_DOM_elements",
         "/audio/pseudoterm/context/" + pseudotermID + ".wav");
+  */
 
     $("#pt_eng_display")
        .focusout(function(){

@@ -9,6 +9,13 @@
   <script src="/www/dynamic_wordclouds.js"></script>
   <script src="/www/prettyprint.js"></script>
 
+  <script src="/static/wavesurfer/wavesurfer.js"></script>
+  <script src="/static/wavesurfer/webaudio.js"></script>
+  <script src="/static/wavesurfer/webaudio.buffer.js"></script>
+  <script src="/static/wavesurfer/webaudio.media.js"></script>
+  <script src="/static/wavesurfer/drawer.js"></script>
+  <script src="/static/wavesurfer/drawer.canvas.js"></script>
+
   <script src="/www/vapor_audio.js"></script>
   <script src="/www/data_handler.js"></script>
 
@@ -39,6 +46,9 @@
       // because the [current] Safari, Chrome and Firefox debuggers can't put
       // breakpoints in scripts that are loaded using jQuery's getScript()
       create_utterance_venncloud();
+
+      addWaveformVisualizer('waveform_visualizer');
+      addControlsForWaveformVisualizer($('#pt_snippets_audio_player'), 'waveform_visualizer');
     });
 
     $.get("/www/venncloud_template.html", function(data){
@@ -53,7 +63,7 @@
 <div id='annotation_landing_zone'></div>
 <div id="floatdivleft" style="
     position:absolute;
-    width:350px;height:100px;top:10px;right:10px;
+    width:400px;height:100px;top:10px;right:10px;
     padding:5px;background:#FFFFFF;
     border:2px solid #2266AA;
     z-index:100">
@@ -72,8 +82,10 @@
         <span id="pt_snippets_audio_player"></span>
       </td>
       <td>
+        <!--
         Snippets with Context
         <span id="pt_snippets_with_context_audio_player"></span>
+        -->
       </td>
     </tr>
   </table>
@@ -81,6 +93,8 @@
 
   <!--<span id="annotation_landing_zone">Annotation window goes here.</span>-->
 </div>
+
+<div id="waveform_visualizer"></div>
 
 <div id="cloud_data_landing_zone"></div>
 <br><br>
