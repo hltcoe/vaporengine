@@ -16,18 +16,11 @@ function addControlsForWaveformVisualizer(parentElement, visualizerID, audioSour
         'visualizerID': visualizerID,
       },
       function(event) {
-        var visualizer = visualizers[event.data.visualizerID];
-        if (visualizer.url === undefined || visualizer.url != event.data.audioSourceURL) {
-          // Load specified audio file IFF it is not already loaded
-          waveformVisualizerLoadAndPlayURL(event.data.visualizerID, event.data.audioSourceURL);
-          visualizer.url = event.data.audioSourceURL;
-        }
-        else {
-          waveformVisualizerPlayPause(event.data.visualizerID);
-        }
+        waveformVisualizerPlayPause(event.data.visualizerID);
       }
     )
-    .html('<i class="glyphicon glyphicon-play"></i> / <i class="glyphicon glyphicon-pause"></i>');
+    .html('Play/Pause');
+//    .html('<i class="glyphicon glyphicon-play"></i> / <i class="glyphicon glyphicon-pause"></i>');
 
   playerDiv.append(playPauseButton);
 
@@ -41,8 +34,8 @@ function addWaveformVisualizer(visualizerID) {
   visualizers[visualizerID].wavesurfer.init({
     container: document.querySelector('#' + visualizerID),
     normalize: true,
-    progressColor: 'purple',
-    waveColor: 'violet',
+    progressColor: 'red',
+    waveColor: 'pink',
   });
 }
 
@@ -74,23 +67,36 @@ function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
       var total_duration = 0.0;
       for (var i in audio_events) {
         total_duration += audio_events[i].duration / 100.0;
-        visualizers[visualizerID].wavesurfer.mark({'color': 'yellow', 'position': total_duration});
+        visualizers[visualizerID].wavesurfer.mark({'color': 'black', 'position': total_duration});
       }
     });
   }
 }
 
+function waveformVisualizerFixProgressPosition(visualizerID) {
+  // If waveform progress indicator is at end of clip, move progress
+  // indicator back to beginning of clip
+  var ws = visualizers[visualizerID].wavesurfer;
+
+  if (Math.abs(ws.getDuration() - ws.getCurrentTime()) < 0.01) {
+    ws.seekTo(0.0);
+  }
+}
+
 function waveformVisualizerPlay(visualizerID) {
+  waveformVisualizerFixProgressPosition(visualizerID);
   visualizers[visualizerID].wavesurfer.play();
 }
 
 function waveformVisualizerPlayPause(visualizerID) {
+  waveformVisualizerFixProgressPosition(visualizerID);
   visualizers[visualizerID].wavesurfer.playPause();
 }
 
 function waveformVisualizerPause(visualizerID) {
   visualizers[visualizerID].wavesurfer.pause();
 }
+
 
 
 
