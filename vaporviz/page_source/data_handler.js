@@ -39,7 +39,7 @@ function get_annotation(){
                 });
 
     $.ajax({
-            url: "http://localhost:12321/find_annotations",
+            url: "/find_annotations",
                 type: "POST",
                 data: JSON.stringify(send),
                 error: function(xhr, error) {
@@ -66,7 +66,7 @@ function get_utterances(){
                 });
 
     $.ajax({
-            url: "http://localhost:12321/find_utterances",
+            url: "/find_utterances",
                 type: "POST",
                 data: JSON.stringify(send),
                 error: function(xhr, error) {
@@ -92,7 +92,7 @@ function get_audio_events(){
                 });
 
     $.ajax({
-            url: "http://localhost:12321/find_audio_events",
+            url: "/find_audio_events",
                 type: "POST",
                 data: JSON.stringify(send),
                 error: function(xhr, error) {
@@ -124,7 +124,7 @@ function get_cloud_data(utterance_list){
                 });
 
     $.ajax({
-            url: "http://localhost:12321/cloud_data_from_utterances",
+            url: "/cloud_data_from_utterances",
                 type: "POST",
                 data: JSON.stringify(send),
                 error: function(xhr, error) {
@@ -162,7 +162,7 @@ function get_pseudoterm(pt_id){
                 });
 
     $.ajax({
-            url: "http://localhost:12321/find_pseudoterms",
+            url: "/find_pseudoterms",
                 type: "POST",
                 data: JSON.stringify(send),
                 error: function(xhr, error) {
@@ -198,7 +198,7 @@ function get_pseudoterms(count){
                 });
 
     $.ajax({
-            url: "http://localhost:12321/find_pseudoterms",
+            url: "/find_pseudoterms",
                 type: "POST",
                 data: JSON.stringify(send),
                 error: function(xhr, error) {
@@ -219,7 +219,7 @@ function get_audio_events_from_pseudoterm(pseudoterm_id, count){
     send.pt_id=pseudoterm_id;
     send.count= count || 10; //10 if nothing is specified in the call
     $.ajax({
-            url: "http://localhost:12321/find_audio_events",
+            url: "/find_audio_events",
                 type: "POST",
                 data: JSON.stringify(send),
                 error: function(xhr, error) {
@@ -249,7 +249,7 @@ function annotate_pt_eng_label(){
     send._id=active_pt_id;
     send.eng_display = annotation;
     $.ajax({
-            url: "http://localhost:12321/update_pseudoterm",
+            url: "/update_pseudoterm",
                 type: "POST",
                 data: JSON.stringify(send),
                 error: function(xhr, error) {
@@ -274,7 +274,7 @@ function annotate_pt_native_label(){
     send._id=active_pt_id;
     send.native_display = annotation;
     $.ajax({
-            url: "http://localhost:12321/update_pseudoterm",
+            url: "/update_pseudoterm",
                 type: "POST",
                 data: JSON.stringify(send),
                 error: function(xhr, error) {
@@ -321,7 +321,7 @@ function get_multiple_utterances_cloud_data( utterances_lists ){
 
 function set_up_annotate_pseudoterm_id(token){
     if (token.length > 50){ return; } //If you mistakenly click the whole box
-    $.get('http://localhost:12321/www/pseudoterm_template.html',function(data){
+    $.get('/www/pseudoterm_template.html',function(data){
             alert("in");
             $('#annotation_landing_zone').html(data);
              alert("Past");
@@ -331,7 +331,7 @@ function set_up_annotate_pseudoterm_id(token){
     /*
     debugger;
     alert(token);
-    $.get('http://localhost:12321/www/pseudoterm_template.html',function(data){
+    $.get('/www/pseudoterm_template.html',function(data){
             alert("in");
             $('#annotation_landing_zone').html(data);
              alert("Past");
