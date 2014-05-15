@@ -1,6 +1,6 @@
 // Global hash mapping DOM ID's of waveform visualizers to instances of Wavesurfer class
 // TODO: Do something less hacky than a global variable
-var visualizers = {}
+var visualizers = {};
 
 
 function addControlsForWaveformVisualizer(parentElement, visualizerID) {
@@ -57,7 +57,7 @@ function addControlsAndLoadAudioForWaveformVisualizer(parentElement, visualizerI
 }
 
 function addWaveformVisualizer(visualizerID) {
-  visualizers[visualizerID] = {}
+  visualizers[visualizerID] = {};
   visualizers[visualizerID].wavesurfer = Object.create(WaveSurfer);
 
   visualizers[visualizerID].wavesurfer.init({
