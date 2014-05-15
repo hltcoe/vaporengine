@@ -41,7 +41,6 @@ for utterance in zrl.AllUtterances():
         this_utterance_pts.append(mongo_ptid)
             
         for aeid in zrl.AudioEventIDsForPTID(ptid):
-##            # Each time we see an audio event, it'll be the first time
             if not aeid in ae_to_mongo_id:
                 filename,start,end = zrl.AudioEventDataForAEID(aeid)
 
