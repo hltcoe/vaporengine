@@ -41,7 +41,7 @@
        success: function(data) {
          for (var i in data) {
            var pseudoterm_div = $('<div>').html("Pseudoterm ID: " + data[i].native_display);
-           addControlsForWaveformVisualizer(
+           addControlsAndLoadAudioForWaveformVisualizer(
              pseudoterm_div,
              waveformVisualizerID,
              getURLforPseudotermWAV(data[i]['_id']));

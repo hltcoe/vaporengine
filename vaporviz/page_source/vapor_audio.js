@@ -3,7 +3,29 @@
 var visualizers = {}
 
 
-function addControlsForWaveformVisualizer(parentElement, visualizerID, audioSourceURL) {
+function addControlsForWaveformVisualizer(parentElement, visualizerID) {
+  var playerDiv = $('<div>')
+    .attr('id', visualizerID + '_audio_control')
+    .addClass('audio_control');
+
+  var playPauseButton = $('<button>')
+    .addClass('btn btn-primary btn-xs')
+    .click(
+      {
+        'visualizerID': visualizerID,
+      },
+      function(event) {
+        waveformVisualizerPlayPause(event.data.visualizerID);
+      }
+    )
+    .html('Play/Pause');
+
+  playerDiv.append(playPauseButton);
+
+  parentElement.append(playerDiv);
+}
+
+function addControlsAndLoadAudioForWaveformVisualizer(parentElement, visualizerID, audioSourceURL) {
   var playerDiv = $('<div>')
     .attr('id', visualizerID + '_audio_control')
     .addClass('audio_control');
@@ -16,11 +38,18 @@ function addControlsForWaveformVisualizer(parentElement, visualizerID, audioSour
         'visualizerID': visualizerID,
       },
       function(event) {
-        waveformVisualizerPlayPause(event.data.visualizerID);
+        var visualizer = visualizers[event.data.visualizerID];
+        if (visualizer.url === undefined || visualizer.url != event.data.audioSourceURL) {
+          // Load specified audio file IFF it is not already loaded
+          waveformVisualizerLoadAndPlayURL(event.data.visualizerID, event.data.audioSourceURL);
+          visualizer.url = event.data.audioSourceURL;
+        }
+        else {
+          waveformVisualizerPlayPause(event.data.visualizerID);
+        }
       }
     )
-    .html('Play/Pause');
-//    .html('<i class="glyphicon glyphicon-play"></i> / <i class="glyphicon glyphicon-pause"></i>');
+    .html('<i class="glyphicon glyphicon-play"></i> / <i class="glyphicon glyphicon-pause"></i>');
 
   playerDiv.append(playPauseButton);
 
@@ -99,8 +128,6 @@ function waveformVisualizerPause(visualizerID) {
 
 
 
-
-//TODO: split into two separate elements -- one that attaches new buttons, one that calls with new pseudoterm
 
 // Adds a <div> containing Pause and Play controls to an element.
 //   - parentElement:   DOM element that the <div> will be appended to
