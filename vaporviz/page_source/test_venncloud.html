@@ -1,13 +1,18 @@
+<!DOCTYPE html>
 <html>
 <head>
   <link rel="stylesheet" href="/www/jquery-ui.css">
   <link rel="stylesheet" href="/www/dynamic_wordclouds.css">
 
-  <script src="/www/jquery-1.8.3.js"></script>
+  <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap.css"/>
+  <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap-theme.css"/>
+
+  <script src="/static/jquery-1.11.0.min.js"></script>
+  <script src="/static/bootstrap-3.1.1/js/bootstrap.js"></script>
+
   <script src="/www/jquery-ui.js"></script>
   <script src="/www/floating-1.12.js"></script>
   <script src="/www/dynamic_wordclouds.js"></script>
-  <script src="/www/prettyprint.js"></script>
 
   <script src="/static/wavesurfer/wavesurfer.js"></script>
   <script src="/static/wavesurfer/webaudio.js"></script>
@@ -21,30 +26,36 @@
 
   <script>
     function create_utterance_venncloud() {
-      utterances1 = {};
-      utterances1.utterance_ids = [
-        '53627c6e04dc077fb2110b78',
-        '53627c6e04dc077fb211149b',
-        '53627c6f04dc077fb21122e7'];
-      utterances1.dataset_name="Set1";
+      $.ajax({
+        url: "/find_utterances",
+        type: "POST",
+        data: JSON.stringify({'dataset': 'buckeye', 'count': 7}),
+        error: function(xhr, error) {
+          alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
+        },
+        success: function(utterances) {
+          utterance_set1 = {};
+          utterance_set1.utterance_ids = [
+            utterances[0]._id,
+            utterances[1]._id,
+            utterances[2]._id
+          ];
+          utterance_set1.dataset_name="Set1";
 
-      utterances2 = {};
-      utterances2.utterance_ids = [
-        '53627c7004dc077fb2113a6b',
-        '53627c7004dc077fb2113cc5',
-        '53627c8404dc077fb2135c70',
-        '53627c6f04dc077fb21122e7'];
-      utterances2.dataset_name="Set2";
-      console.log([utterances1,utterances2]);
-      venncloud_from_utterances([utterances1,utterances2]);
+          utterance_set2 = {};
+          utterance_set2.utterance_ids = [
+            utterances[2]._id,
+            utterances[3]._id,
+            utterances[4]._id
+          ];
+          utterance_set2.dataset_name="Set2";
+          console.log([utterance_set1,utterance_set2]);
+          venncloud_from_utterances([utterance_set1,utterance_set2]);
+        }
+      });
     }
 
     $(document).ready(function() {
-      // On 2014-05-14, CTH modified page to call create_utterance_venncloud()
-      // from $(document).ready() instead of using:
-      //   $.getScript("/www/data_handler", create_utterance_venncloud)
-      // because the [current] Safari, Chrome and Firefox debuggers can't put
-      // breakpoints in scripts that are loaded using jQuery's getScript()
       create_utterance_venncloud();
 
       addWaveformVisualizer('waveform_visualizer');
@@ -56,48 +67,100 @@
     });
   </script>
 </head>
-<body>
+<body style="padding-top: 200px;">
 
 <!-- TODO: proper annotation instead of just updating the element in the db -->
 
-<div id='annotation_landing_zone'></div>
-<div id="floatdivleft" style="
-    position:absolute;
-    width:400px;height:100px;top:10px;right:10px;
-    padding:5px;background:#FFFFFF;
-    border:2px solid #2266AA;
-    z-index:100">
-  <a href='javascript:;' onclick='hide_example_windows()' style='font-size:10'><b>[close]</b></a>
-  <a href='javascript:;' onclick='mark_as_junk()' style='font-size:10'><b>[This pseudoterm is junk.]</b></a>
+<div class="container">
 
-  <!-- Bandaid for the broken $.get-->
-  <table>
-    <tr>
-      <td style="fontsize=22"><b>Eng:</b><input id="pt_eng_display"></input></b></td>
-      <td style="fontsize=22"><b>Native:</b><input id="pt_native_display"></input></b></td>
-    </tr>
-    <tr>
-      <td>
-        Snippets
-        <span id="pt_snippets_audio_player"></span>
-      </td>
-      <td>
-        <!--
-        Snippets with Context
-        <span id="pt_snippets_with_context_audio_player"></span>
-        -->
-      </td>
-    </tr>
-  </table>
-  <!-- Bandaid for the broken $.get-->
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em;">
+        <div id="waveform_visualizer"></div>
+      </div>
+      <div>
+        <div class="form-inline">
+          <div class="form-group">
+            <span id="pt_snippets_audio_player"></span>
+          </div>
+          <div class="form-group">
+            <label for="pt_eng_display">English</label>
+            <input id="pt_eng_display"></input>
+          </div>
+          <div class="form-group">
+            <label for="pt_native_display">Native</label>
+            <input id="pt_native_display"></input>
+          </div>
+          </div>
+        </div>
+      </div>
+      <!--
+      <div style="margin: 0.5em;">
+        <div class="btn-group">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Entities
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Action</a></li>
+            </ul>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Common Cloud
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Action</a></li>
+            </ul>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              TF filter
+              <span class="caret"></span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              IDF filter
+              <span class="caret"></span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Size
+              <span class="caret"></span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Opacity
+              <span class="caret"></span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Sort by
+              <span class="caret"></span>
+            </button>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Legend
+              <span class="caret"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      -->
+    </div>
+  </nav>
 
-  <!--<span id="annotation_landing_zone">Annotation window goes here.</span>-->
-</div>
+  <div id='annotation_landing_zone'></div>
 
-<div id="waveform_visualizer"></div>
-
-<div id="cloud_data_landing_zone"></div>
-<br><br>
+  <div id="cloud_data_landing_zone"></div>
+</div><!-- /.container -->
 
 </body>
 </html>

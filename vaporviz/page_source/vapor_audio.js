@@ -18,7 +18,7 @@ function addControlsForWaveformVisualizer(parentElement, visualizerID) {
         waveformVisualizerPlayPause(event.data.visualizerID);
       }
     )
-    .html('Play/Pause');
+    .html('<i class="glyphicon glyphicon-play"></i> / <i class="glyphicon glyphicon-pause"></i>');
 
   playerDiv.append(playPauseButton);
 
