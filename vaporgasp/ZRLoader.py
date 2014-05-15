@@ -1,4 +1,5 @@
 import codecs, io, os, sys
+from collections import defaultdict
 
 # Load data from Aren Jansen's Zero Resource Psuedo-term generator.
 # 
@@ -48,49 +49,50 @@ class ZRLoader:
                  audiofragments='matches/master_graph.nodes',
                  clusters='matches/master_graph.dedups',
                  filenames='fileswav.lst'):
-        self.docs = {}
-        self.pts = {}
-        self.afrags = {}
-        self.filename_for_docid = {}
+        self.afrags = defaultdict(tuple)
+        self.filename_for_utterance = {}
+        self.audioevents_for_pt = defaultdict(tuple)
+        self.pts_for_utterance = defaultdict(list)
 
         self.load(os.path.join(prefix, audiofragments),
                   os.path.join(prefix, clusters),
                   os.path.join(prefix, filenames))
 
     def AllUtterances(self):
-        return self.docs.keys()
+        return self.pts_for_utterance.keys()
 
     def PTIDsForUtterance(self, utterance):
-        return self.docs.get(utterance,[])
+        return self.pts_for_utterance[utterance]
 
-    def AudioEventIDsForPTID(self, ptid):
-        return self.pts.get(ptid,())
+    def AudioEventIDsForPTID(self, pt_id):
+        return self.audioevents_for_pt[pt_id]
 
-    def AudioEventDataForAEID(self, aeid):
-        return self.afrags.get(aeid,())
+    def AudioEventDataForAEID(self, ae_id):
+        return self.afrags[ae_id]
         
     def load(self, audiofragments, clusters, filenames):
         frags = slurp(audiofragments)
-        for (fragid, line) in enumerate(frags, start=1):
-            (file_basename, start, end, score, ig1, ig2) = line.split();
-            self.afrags[fragid] = (file_basename, int(start), int(end))
+        for (frag_id, line) in enumerate(frags, start=1):
+            (utterance_id, start, end, score, ig1, ig2) = line.split();
+            self.afrags[frag_id] = (utterance_id, int(start), int(end))
 
         clusts = slurp(clusters)
-        for (ptid, line) in enumerate(clusts, start=1):
-            self.pts[ptid] = tuple([int(x) for x in line.split()])
+        for (pt_id, line) in enumerate(clusts, start=1):
+            self.audioevents_for_pt[pt_id] = tuple([int(x) for x in line.split()])
 
         full_filenames = slurp(filenames)
         for full_filename in full_filenames:
             basename = os.path.splitext(os.path.basename(full_filename))[0]
-            self.filename_for_docid[basename] = full_filename.strip()
+            self.filename_for_utterance[basename] = full_filename.strip()
 
-        for (ptid,pttuple) in self.pts.iteritems():
-            for fragid in pttuple:
-                fragtuple = self.afrags[fragid]
-                # fragtuple looks like (docid,start,end)
-                docid = fragtuple[0]
-                #print "PUT: %s %s" % (docid, ptid)
-                self.docs.setdefault(docid,[]).append(ptid)
+        for (pt_id, pttuple) in self.audioevents_for_pt.iteritems():
+            for frag_id in pttuple:
+                # fragtuple looks like (utterance_id,start,end)
+                fragtuple = self.afrags[frag_id]
+                utterance_id = fragtuple[0]
+
+                #print "PUT: %s %s" % (utterance_id, pt_id)
+                self.pts_for_utterance[utterance_id].append(pt_id)
 
 
 if __name__ == '__main__':  
@@ -102,17 +104,17 @@ if __name__ == '__main__':
 
     ZRL = ZRLoader('/home/hltcoe/ajansen/discovery/exp/buckeye-T25/')
 
-    for docid in ZRL.AllUtterances()[0:1]:
-        for ptid in ZRL.PTIDsForUtterance(docid):
-            for aeid in ZRL.AudioEventIDsForPTID(ptid):
-                print "%s %s %s %s" % (docid, ptid, aeid, ZRL.AudioEventDataForAEID(aeid))
+    for utterance_id in ZRL.AllUtterances()[0:1]:
+        for pt_id in ZRL.PTIDsForUtterance(utterance_id):
+            for ae_id in ZRL.AudioEventIDsForPTID(pt_id):
+                print "%s %s %s %s" % (utterance_id, pt_id, ae_id, ZRL.AudioEventDataForAEID(ae_id))
 
     # for x in [1+x for x in range(5)]:
     #     print "PT[%s]: %s" % (x, ZRL.pts[x])
     # for x in [1+x for x in range(5)]:
     #     print "AFRAGS[%s]: %s" % (x, ZRL.afrags[x])
-    # for docid in ZRL.AllUtterances()[0:5]:
-    #     print "DOC[%s]: %s" % (docid, ZRL.docs[docid])
+    # for utterance_id in ZRL.AllUtterances()[0:5]:
+    #     print "UTTERANCE[%s]: %s" % (utterance_id, ZRL.pts_for_utterance[utterance_id])
     # for x in [1+x for x in range(5)]:
     #     print "PT[%s]: %s" % (x, ZRL.pts[x])
     # for x in [1+x for x in range(5)]:
