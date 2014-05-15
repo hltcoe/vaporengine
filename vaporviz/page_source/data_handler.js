@@ -8,28 +8,28 @@ function display_annotations(annotations){
             console.log(datum);
         });
     */
-    
+
     $('#annotations_landing_zone').html(prettyPrint(annotations));
-};
+}
 
 function display_utterances(utterances){
     $('#utterances_landing_zone').html(prettyPrint(utterances));
-};
+}
 
 function display_pseudoterms(pseudoterms){
     $('#pseudoterms_landing_zone').html(prettyPrint(pseudoterms));
-};
+}
 
 function display_audio_events(audio_events){
     $('#audio_events_landing_zone').html(prettyPrint(audio_events));
-};
+}
 
 
 function get_annotation(){
     //dataset_name = $('#dataset_dropdown').val();
 
     send = {};
-    send.dataset='buckeye' // HARDCODE
+    send.dataset='buckeye'; // HARDCODE
     send.count = 10; //TODO: pull from some element
 
 
@@ -48,7 +48,7 @@ function get_annotation(){
                 success: function(data) {
                 current_annotations = data;
                 display_annotations(data);
-            } 
+            }
         });
 }
 
@@ -57,7 +57,7 @@ function get_utterances(){
     //dataset_name = $('#dataset_dropdown').val();
 
     send = {};
-    send.dataset='buckeye' // HARDCODE
+    send.dataset='buckeye'; // HARDCODE
     send.count = 10; //TODO: pull from some element
 
     $.ajaxSetup({
@@ -75,7 +75,7 @@ function get_utterances(){
                 success: function(data) {
                 current_utterances = data;
                 display_utterances(data);
-            } 
+            }
         });
 }
 
@@ -83,7 +83,7 @@ function get_utterances(){
 function get_audio_events(){
 
     send = {};
-    send.dataset='buckeye' // HARDCODE
+    send.dataset='buckeye'; // HARDCODE
     send.count = 10; //TODO: pull from some element
 
     $.ajaxSetup({
@@ -101,7 +101,7 @@ function get_audio_events(){
                 success: function(data) {
                 current_audio_events = data;
                 display_audio_events(data);
-            } 
+            }
         });
 }
 
@@ -109,15 +109,15 @@ function get_cloud_data(utterance_list){
 
     var utterance_ids = utterance_list.utterance_ids;
     var dataset_name = utterance_list.dataset_name;
-    
+
     return $.Deferred( function( defer ) {
 
-    
+
     send = {};
     send.dataset='buckeye'; // HARDCODE
     send.utterances = utterance_ids;
-        
-        
+
+
     $.ajaxSetup({
             contentType: "application/json; charset=utf-8",
                 dataType: "json"
@@ -141,7 +141,7 @@ function get_cloud_data(utterance_list){
                 cloud_datasets[dataset_name] = wc_data;
                 //$('#cloud_data_landing_zone').html(prettyPrint(data));
                 defer.resolve(data);
-            } 
+            }
         });
         }).promise();
 }
@@ -151,10 +151,10 @@ function get_cloud_data(utterance_list){
 function get_pseudoterm(pt_id){
 
     send = {};
-    send.dataset='buckeye' // HARDCODE
+    send.dataset='buckeye'; // HARDCODE
     send.count = 1;
     send._id=(pt_id);
-    
+
 
     $.ajaxSetup({
             contentType: "application/json; charset=utf-8",
@@ -172,24 +172,25 @@ function get_pseudoterm(pt_id){
                 active_pseudoterm = data[0]; //Global var
                 $('#pt_eng_display')
                     .val(active_pseudoterm.eng_display);
-                
+
                 $('#pt_native_display')
                     .val(active_pseudoterm.native_display);
                 $('#pt_stats_landing_zone')
                     .html(prettyPrint(active_pseudoterm));
                 $('#pt_snippets_play_button')
-                    .click(function(){playPseudoterm('pt_player', pt_id)});
+                    .click(function(){playPseudoterm('pt_player', pt_id);});
                 $('#pt_snippets_play_button')
-                    .click(function(){playPseudoterm_with_context('pt_player', pt_id)});
+                    .click(function(){playPseudoterm_with_context('pt_player', pt_id);});
 
                 //Also get audioevents and snippets
-            } 
+            }
         });
-};
+}
+
 function get_pseudoterms(count){
 
     send = {};
-    send.dataset='buckeye' // HARDCODE
+    send.dataset='buckeye'; // HARDCODE
     send.count = count || 10; //TODO: pull from some element
 
     $.ajaxSetup({
@@ -208,9 +209,9 @@ function get_pseudoterms(count){
                 current_pseudoterms = data;
                 //display_pseudoterms(data);
                 active_pseudoterm = data[0]; //Global var
-            } 
+            }
         });
-};
+}
 
 function get_audio_events_from_pseudoterm(pseudoterm_id, count){
 
@@ -226,14 +227,14 @@ function get_audio_events_from_pseudoterm(pseudoterm_id, count){
                 alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
             },
                 success: function(data) {
-                display_audio_events(data)
+                display_audio_events(data);
 
-            } 
+            }
         });
-    
 
-    
-};
+
+
+}
 
 
 function annotate_pt_eng_label(){
@@ -243,7 +244,7 @@ function annotate_pt_eng_label(){
         return;
     }
     else{
-    
+
     send = {};
     send.dataset='buckeye'; //HARDCODE
     send._id=active_pt_id;
@@ -257,13 +258,13 @@ function annotate_pt_eng_label(){
             },
                 success: function(data) {
                 get_pseudoterm( active_pt_id );
-            } 
+            }
         });
     //TODO: Issue a call to redraw that token of the wordcloud.
     //alert('updating'+send.eng_display);
     update_displayed_token( active_pseudoterm.eng_display , annotation);
-    };
-};
+    }
+}
 
 
 function annotate_pt_native_label(){
@@ -283,10 +284,10 @@ function annotate_pt_native_label(){
                 success: function(data) {
                 //Reload the PT now to see the changes reflected
                 get_pseudoterm( active_pt_id );
-            } 
+            }
         });
-    
-};
+
+}
 
 
 
@@ -296,15 +297,15 @@ function test_ajax_calls(){
     get_utterances();
     get_audio_events();
     get_pseudoterms();
-};
+}
 
 function test_cloud_data_call(){
     utterances = ['53627c6e04dc077fb2110b78','53627c6e04dc077fb211149b','53627c6f04dc077fb21122e7'];
     $.when(get_cloud_data(utterances)).done( function(data){
-            $('#cloud_data_landing_zone').html(prettyPrint(data));            
+            $('#cloud_data_landing_zone').html(prettyPrint(data));
         });
 
-    
+
 }
 
 //Deprecated, to be looked at again later
@@ -317,7 +318,7 @@ function get_multiple_utterances_cloud_data( utterances_lists ){
                 });
             defer.resolve();
         }).promise();
-};
+}
 
 function set_up_annotate_pseudoterm_id(token){
     if (token.length > 50){ return; } //If you mistakenly click the whole box
@@ -370,14 +371,14 @@ function set_up_annotate_pseudoterm_id(token){
     //Autoselect the english display element
     $('#pt_eng_display').focus().select();
 
-};
+}
 
 
 function venncloud_from_utterances( utterances_lists ){
 
     options = {};
-    options['click'] = set_up_annotate_pseudoterm_id;
-    
+    options.click = set_up_annotate_pseudoterm_id;
+
     //options.wordcloud_element = 'cloud_data_landing_zone';
 
     //$.when(get_multiple_utterances_cloud_data(utterances_lists)).done( function(){
@@ -385,7 +386,6 @@ function venncloud_from_utterances( utterances_lists ){
     u = utterances_lists;
     $.when(get_cloud_data( u[0] ), get_cloud_data( u[1] )).done( function(){
             //user cloud datasets
-            make_me_a_venncloud( cloud_datasets, options )
+            make_me_a_venncloud( cloud_datasets, options );
         });
-};
-
+}
