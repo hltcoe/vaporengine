@@ -15,7 +15,7 @@ dbname = settings['DB_NAME']
 
 db = init_dbconn(host=dbhost,name=dbname)
 
-zrl = ZRLoader(settings['ZRL_PATH'])
+zrl = ZRLoader(settings['ZRL_PATH'], clusters=settings['ZRL_CLUSTERS'])
 
 
 ae_to_mongo_id = {}
