@@ -62,6 +62,7 @@ function addWaveformVisualizer(visualizerID) {
 
   visualizers[visualizerID].wavesurfer.init({
     container: document.querySelector('#' + visualizerID),
+    dragSelection: false,
     normalize: true,
     progressColor: 'red',
     waveColor: 'pink',
