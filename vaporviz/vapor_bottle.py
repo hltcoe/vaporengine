@@ -21,7 +21,7 @@ from vaporgasp.queries import (find_annotations, find_utterances,
                                update_pseudoterm)
 # TODO: Don't hard-code database settings to 'buckeye'
 from settings import buckeye as settings
-    
+
 # the decorator to ease some javascript pain (if memory serves)
 def enable_cors(fn):
     def _enable_cors(*args, **kwargs):
@@ -29,7 +29,7 @@ def enable_cors(fn):
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS, HEAD'
         response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
-        
+
         if request.method != 'OPTIONS':
             # actual request; reply with the actual response
             return fn(*args, **kwargs)
@@ -49,7 +49,7 @@ def json_wrapper(method):
 """For serving generic widgets and pages"""
 @route('/www/<path>')
 def widget_handler(path):
-    source_path = 'page_source/%s' % path 
+    source_path = 'page_source/%s' % path
     try:
         page = open( source_path ).read()
     except:
@@ -93,8 +93,8 @@ def generic_find(find_function, metadata_filters):
     if 'sort_by' in metadata_filters:
         sort_by = metadata_filters['sort_by'] #Or do we need a conversion here
 
-    
-        
+
+
     print metadata_filters
     cursor = find_function(db, **metadata_filters)
 
@@ -109,7 +109,7 @@ def generic_find(find_function, metadata_filters):
         results.append(result)
     print "Results:", results
     return results
-    
+
 
 
 @route('/find_annotations',method=['OPTIONS','POST'])
@@ -163,10 +163,10 @@ def update_pseudoterm_header():
 
     dataset = update['dataset']
     del update['dataset']
-    
+
     db = init_dbconn(name = dataset, host=settings['DB_HOST'])
     res = update_pseudoterm(db, _id, **update)
-    
+
     return res
 
 #Get Venncloud data for a single list of utterances
@@ -179,7 +179,7 @@ def cloud_data_handler():
     dataset = request_data['dataset']
 
     utterances = request_data['utterances']
-    
+
     db = init_dbconn(name = dataset, host=settings['DB_HOST'])
     print request_data
     token_vector = make_wc_datastructure( db, utterances )
@@ -271,6 +271,9 @@ def audio_for_pseudoterm(pseudoterm_id):
     """
     db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
     pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
+
+    # TODO: Allow number of audio events to be specified as parameter, instead
+    #       of hard-coded to 10
     audio_events = find_audio_events(db, pt_id=pseudoterm['_id'], count=10)
 
     # Create a temporary directory
@@ -286,14 +289,15 @@ def audio_for_pseudoterm(pseudoterm_id):
         'w',
         settings['SOX_SIGNAL_INFO'])
 
-    # TODO: Allow number of audio events to be specified as parameter, instead
-    #       of hard-coded to 10
+    print "audio_for_pseudoterm('%s'):" % pseudoterm_id
     for audio_event in audio_events:
         START_OFFSET = bytes("%f" % (audio_event['start_offset'] / 100.0))
         DURATION = bytes("%f" % (audio_event['duration'] / 100.0))
 
         utterance = find_utterances(db, _id=audio_event['utterance_id'])[0]
         input_filename = utterance['hltcoe_audio_path']
+
+        print "  [%s] (%d-%d)" % (utterance['hltcoe_audio_path'], audio_event['start_offset'], audio_event['end_offset'])
 
         infile = pysox.CSoxStream(input_filename)
         chain = pysox.CEffectsChain(infile, outfile)
