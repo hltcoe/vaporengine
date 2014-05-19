@@ -24,6 +24,7 @@ utterance_to_mongo_id = {}
 
 for utterance in zrl.AllUtterances():
     utterance_fields = {
+        'audio_identifier': utterance,
         'hltcoe_audio_path': zrl.filename_for_utterance[utterance]
         }
     utterance_mongo_id = insert_utterance(db, utterance_fields)
