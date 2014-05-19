@@ -58,6 +58,9 @@ function addControlsAndLoadAudioForWaveformVisualizer(parentElement, visualizerI
 
 function addWaveformVisualizer(visualizerID) {
   visualizers[visualizerID] = {};
+
+  visualizers[visualizerID].audio_events = [];
+
   visualizers[visualizerID].wavesurfer = Object.create(WaveSurfer);
 
   visualizers[visualizerID].wavesurfer.init({
@@ -66,6 +69,27 @@ function addWaveformVisualizer(visualizerID) {
     normalize: true,
     progressColor: 'red',
     waveColor: 'pink',
+  });
+
+  visualizers[visualizerID].wavesurfer.on('region-in', function(marker) {
+    var
+      previousUtteranceID = -1,
+      utteranceID;
+
+    console.log("Marker ID: " + marker.id);
+    utteranceID = visualizers[visualizerID].audio_events[marker.id].utterance_id['$oid'];
+    if (parseInt(marker.id) > 0) {
+      previousUtteranceID = visualizers[visualizerID].audio_events[parseInt(marker.id) - 1].utterance_id['$oid'];
+    }
+    if (utteranceID != previousUtteranceID && previousUtteranceID != -1) {
+      $('#' + previousUtteranceID + '_utterance_button')
+            .addClass('btn-default')
+            .removeClass('btn-info');
+    }
+    console.log("Utterance ID: " + utteranceID);
+    $('#' + utteranceID + '_utterance_button')
+          .addClass('btn-info')
+          .removeClass('btn-default');
   });
 }
 
@@ -83,7 +107,12 @@ function getURLforUtteranceWAV(utteranceID) {
 
 function waveformVisualizerLoadAndPlayURL(visualizerID, audioSourceURL) {
   waveformVisualizerLoadURL(visualizerID, audioSourceURL);
-  visualizers[visualizerID].wavesurfer.on('ready', function() { visualizers[visualizerID].wavesurfer.play(); });
+  visualizers[visualizerID].wavesurfer.on('ready', function() {
+      visualizers[visualizerID].wavesurfer.play();
+  });
+  visualizers[visualizerID].wavesurfer.on('progress', function(marker) {
+    var utteranceID;
+  });
 }
 
 function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
@@ -94,10 +123,51 @@ function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
   if (audioSourceURL.substr(0,18) === '/audio/pseudoterm/') {
     var pseudotermID = audioSourceURL.substr(18,24);
     $.getJSON("/audio/pseudoterm/" + pseudotermID + "_audio_events.json", function(audio_events) {
-      var total_duration = 0.0;
-      for (var i in audio_events) {
+      var
+        audio_events_per_utterance_id = {},
+        i,
+        total_duration = 0.0,
+        utterance_id,
+        utteranceListDiv,
+        utteranceSpan;
+
+      visualizers[visualizerID].wavesurfer.clearMarks();
+      visualizers[visualizerID].wavesurfer.clearRegions();
+      visualizers[visualizerID].audio_events = audio_events;
+
+      for (i in audio_events) {
+        visualizers[visualizerID].wavesurfer.region({
+          'color': 'blue',
+          'id': i,
+          'startPosition': total_duration,
+          'endPosition': total_duration + audio_events[i].duration/100.0 - 0.01
+        });
         total_duration += audio_events[i].duration / 100.0;
-        visualizers[visualizerID].wavesurfer.mark({'color': 'black', 'position': total_duration});
+        visualizers[visualizerID].wavesurfer.mark({
+            'color': 'black',
+            'id': i,
+            'position': total_duration
+        });
+
+        utterance_id = audio_events[i].utterance_id['$oid'];
+        if (typeof(audio_events_per_utterance_id[utterance_id]) == 'undefined') {
+          audio_events_per_utterance_id[utterance_id] = 0;
+        }
+        audio_events_per_utterance_id[utterance_id] += 1;
+      }
+
+      // Add buttons for each distinct utterance
+      utteranceListDiv = $('#' + visualizerID + '_utterance_list');
+      utteranceListDiv.html('');
+      for (utterance_id in audio_events_per_utterance_id) {
+        utteranceSpan = $('<span>').append('<a>')
+          .addClass('btn btn-default btn-xs')
+          .attr('id', utterance_id + '_utterance_button')
+          .attr('href', '')
+          .attr('role', 'button')
+          .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
+          .html(utterance_id.substr(18,6) + ' <b>(x' + audio_events_per_utterance_id[utterance_id] + ')</b>');
+        utteranceListDiv.append(utteranceSpan);
       }
     });
   }
