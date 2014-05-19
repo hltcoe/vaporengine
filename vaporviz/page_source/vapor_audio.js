@@ -125,6 +125,7 @@ function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
     $.getJSON("/audio/pseudoterm/" + pseudotermID + "_audio_events.json", function(audio_events) {
       var
         audio_events_per_utterance_id = {},
+        audio_identifier_for_utterance_id = {},
         i,
         total_duration = 0.0,
         utterance_id,
@@ -154,6 +155,7 @@ function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
           audio_events_per_utterance_id[utterance_id] = 0;
         }
         audio_events_per_utterance_id[utterance_id] += 1;
+        audio_identifier_for_utterance_id[utterance_id] = audio_events[i].audio_identifier;
       }
 
       // Add buttons for each distinct utterance
@@ -166,7 +168,8 @@ function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
           .attr('href', '')
           .attr('role', 'button')
           .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
-          .html(utterance_id.substr(18,6) + ' <b>(x' + audio_events_per_utterance_id[utterance_id] + ')</b>');
+          .html(audio_identifier_for_utterance_id[utterance_id] +
+                ' <b>(x' + audio_events_per_utterance_id[utterance_id] + ')</b>');
         utteranceListDiv.append(utteranceSpan);
       }
     });

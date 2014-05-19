@@ -258,7 +258,16 @@ def audio_events_for_pseudoterm(pseudoterm_id):
     """
     db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
     pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
-    audio_events = find_audio_events(db, pt_id=pseudoterm['_id'], count=10)
+    audio_event_cursor = find_audio_events(db, pt_id=pseudoterm['_id'], count=10)
+
+    audio_events = [audio_event for audio_event in audio_event_cursor]
+
+    audio_identifier_for_utterance_id = {}
+    for audio_event in audio_events:
+        if audio_event['utterance_id'] not in audio_identifier_for_utterance_id:
+            utterance = find_utterances(db, _id=audio_event['utterance_id'])[0]
+            audio_identifier_for_utterance_id[audio_event['utterance_id']] = utterance['audio_identifier']
+        audio_event['audio_identifier'] = audio_identifier_for_utterance_id[audio_event['utterance_id']]
 
     return audio_events
 
