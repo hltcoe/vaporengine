@@ -19,8 +19,7 @@ from lib.database import init_dbconn
 from vaporgasp.queries import (find_annotations, find_utterances,
                                find_pseudoterms, find_audio_events,
                                update_pseudoterm)
-# TODO: Don't hard-code database settings to 'buckeye'
-from settings import buckeye as settings
+from settings import settings
 
 # the decorator to ease some javascript pain (if memory serves)
 def enable_cors(fn):

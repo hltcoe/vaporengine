@@ -4,10 +4,10 @@ import sys
 #print sys.path
 
 from lib.timestamping import datestring_to_millis
-from settings import buckeye
-DB_HOST = buckeye['DB_HOST']
-DB_NAME = buckeye['DB_NAME']
-DB_PORT = buckeye['DB_PORT']
+from settings import settings
+DB_HOST = settings['DB_HOST']
+DB_NAME = settings['DB_NAME']
+DB_PORT = settings['DB_PORT']
 
 
 ###

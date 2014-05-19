@@ -1,5 +1,5 @@
 
-#from settings import buckeye as settings
+#from settings import settings
 from lib.database import init_dbconn, init_apply_all_indexes
 from vaporgasp.queries import *
 

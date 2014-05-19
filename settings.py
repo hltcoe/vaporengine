@@ -19,3 +19,5 @@ buckeye_localhost['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(16000.0,1,16)
 buckeye_localhost['WAV_PATH'] = os.path.join(os.getenv('HOME'), 'BUCKEYE')
 buckeye_localhost['ZRL_CLUSTERS'] = 'matches/master_graph.dedups'
 buckeye_localhost['ZRL_PATH'] = os.path.join(os.getenv('HOME'), 'buckeye-T25/')
+
+settings = buckeye

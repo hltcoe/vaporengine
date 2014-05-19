@@ -7,7 +7,7 @@ from vaporgasp.queries import (insert_utterance, insert_pseudoterm,
                                update_utterance)
 
 from lib.database import init_dbconn
-from settings import buckeye as settings
+from settings import settings
 
 
 dbhost = settings['DB_HOST']
