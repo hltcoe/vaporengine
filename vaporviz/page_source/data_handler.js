@@ -249,6 +249,7 @@ function annotate_pt_eng_label(){
     send.dataset='buckeye'; //HARDCODE
     send._id=active_pt_id;
     send.eng_display = annotation;
+    send.annotated = true;
     $.ajax({
             url: "/update_pseudoterm",
                 type: "POST",
