@@ -78,8 +78,13 @@ WaveSurfer.WebAudio = {
         }
         this.scriptNode.connect(this.ac.destination);
         this.scriptNode.onaudioprocess = function () {
+            var time = my.getCurrentTime();
+
+            if (time >= my.getDuration()) {
+                my.fireEvent('finish', time);
+            }
+
             if (!my.isPaused()) {
-                var time = my.getCurrentTime();
                 my.onPlayFrame(time);
                 my.fireEvent('audioprocess', time);
             }
@@ -91,10 +96,6 @@ WaveSurfer.WebAudio = {
             if (this.prevFrameTime >= this.scheduledPause) {
                 this.pause();
             }
-        }
-
-        if (time > this.getDuration()) {
-            this.fireEvent('finish', time);
         }
 
         if (this.loop) {
@@ -175,18 +176,17 @@ WaveSurfer.WebAudio = {
                 var start = ~~(i * sampleSize);
                 var end = ~~(start + sampleSize);
                 var max = 0;
-                var min = 0;
                 for (var j = start; j < end; j += sampleStep) {
-                    var value = Math.abs(chan[j]);
+                    var value = chan[j];
                     if (value > max) {
                         max = value;
-                    } else if (value < min) {
-                        min = value;
+                    // faster than Math.abs
+                    } else if (-value > max) {
+                        max = -value;
                     }
                 }
-                var median = (max + min) / 2;
-                if (c == 0 || median > peaks[i]) {
-                    peaks[i] = median;
+                if (c == 0 || max > peaks[i]) {
+                    peaks[i] = max;
                 }
             }
         }
