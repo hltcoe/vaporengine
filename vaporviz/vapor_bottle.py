@@ -5,7 +5,7 @@ import os
 import tempfile
 
 # Third party modules
-from bottle import HTTPResponse, route, run, request, response, static_file, template
+from bottle import HTTPResponse, route, run, request, response, static_file, template, TEMPLATE_PATH
 from bson import ObjectId
 import bson.json_util
 import pysox
@@ -20,6 +20,11 @@ from vaporgasp.queries import (find_annotations, find_utterances,
                                find_pseudoterms, find_audio_events,
                                update_pseudoterm)
 from settings import settings
+
+
+vaporviz_path = os.path.dirname(os.path.realpath(__file__))
+TEMPLATE_PATH.append(os.path.join(vaporviz_path, 'page_source'))
+
 
 # the decorator to ease some javascript pain (if memory serves)
 def enable_cors(fn):
@@ -403,6 +408,13 @@ def audio_for_utterance(utterance_id):
     utterance_filename = utterance['hltcoe_audio_path']
 
     return static_file(utterance_filename, root="/", mimetype='audio/wav')
+
+
+@route('/document/<audio_identifier>')
+def document_view(audio_identifier):
+    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
+    return template('document', utterance_id=str(utterance['_id']))
 
 
 def bytestring_as_file_with_mimetype(bytestring, mimetype):
