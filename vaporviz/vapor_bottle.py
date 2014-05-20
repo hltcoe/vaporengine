@@ -410,6 +410,15 @@ def audio_for_utterance(utterance_id):
     return static_file(utterance_filename, root="/", mimetype='audio/wav')
 
 
+@route('/document/list')
+def document_list():
+    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    utterance_cursor = find_utterances(db)
+    utterance_audio_identifiers = [utt['audio_identifier'] for utt in utterance_cursor]
+    utterance_audio_identifiers.sort()
+    return template('document_list', utterance_audio_identifiers=utterance_audio_identifiers)
+
+
 @route('/document/view/<audio_identifier>')
 def document_view(audio_identifier):
     db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
