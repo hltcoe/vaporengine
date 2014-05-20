@@ -72,24 +72,7 @@ function addWaveformVisualizer(visualizerID) {
   });
 
   visualizers[visualizerID].wavesurfer.on('region-in', function(marker) {
-    var
-      previousUtteranceID = -1,
-      utteranceID;
-
-    console.log("Marker ID: " + marker.id);
-    utteranceID = visualizers[visualizerID].audio_events[marker.id].utterance_id['$oid'];
-    if (parseInt(marker.id) > 0) {
-      previousUtteranceID = visualizers[visualizerID].audio_events[parseInt(marker.id) - 1].utterance_id['$oid'];
-    }
-    if (utteranceID != previousUtteranceID && previousUtteranceID != -1) {
-      $('#' + previousUtteranceID + '_utterance_button')
-            .addClass('btn-default')
-            .removeClass('btn-info');
-    }
-    console.log("Utterance ID: " + utteranceID);
-    $('#' + utteranceID + '_utterance_button')
-          .addClass('btn-info')
-          .removeClass('btn-default');
+    updateActiveDocumentForAudioEvent(visualizerID, marker);
   });
 }
 
@@ -103,6 +86,40 @@ function getURLforPseudotermWAV(pseudotermID) {
 
 function getURLforUtteranceWAV(utteranceID) {
   return '/audio/utterance/' + utteranceID + '.wav';
+}
+
+function resetActiveDocumentButtons(visualizerID) {
+  var
+    i,
+    totalButtons,
+    utteranceID;
+
+  totalButtons = visualizers[visualizerID].audio_events.length;
+  for (i = 0; i < totalButtons; i++) {
+    utteranceID = visualizers[visualizerID].audio_events[i].utterance_id['$oid'];
+    $('#' + utteranceID + '_utterance_button')
+          .addClass('btn-default')
+          .removeClass('btn-info');
+  }
+}
+
+function updateActiveDocumentForAudioEvent(visualizerID, marker) {
+  var
+    previousUtteranceID = -1,
+    utteranceID;
+
+  utteranceID = visualizers[visualizerID].audio_events[marker.id].utterance_id['$oid'];
+  if (parseInt(marker.id) > 0) {
+    previousUtteranceID = visualizers[visualizerID].audio_events[parseInt(marker.id) - 1].utterance_id['$oid'];
+  }
+  if (utteranceID != previousUtteranceID && previousUtteranceID != -1) {
+    $('#' + previousUtteranceID + '_utterance_button')
+          .addClass('btn-default')
+          .removeClass('btn-info');
+  }
+  $('#' + utteranceID + '_utterance_button')
+        .addClass('btn-info')
+        .removeClass('btn-default');
 }
 
 function waveformVisualizerLoadAndPlayURL(visualizerID, audioSourceURL) {
@@ -182,6 +199,7 @@ function waveformVisualizerFixProgressPosition(visualizerID) {
   var ws = visualizers[visualizerID].wavesurfer;
 
   if (Math.abs(ws.getDuration() - ws.getCurrentTime()) < 0.01) {
+    resetActiveDocumentButtons(visualizerID);
     ws.seekTo(0.0);
   }
 }
