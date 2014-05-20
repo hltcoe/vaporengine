@@ -13,6 +13,7 @@
   <script src="/www/jquery-ui.js"></script>
   <script src="/www/floating-1.12.js"></script>
   <script src="/www/dynamic_wordclouds.js"></script>
+  <script src="/www/prettyprint.js"></script>
 
   <script src="/static/wavesurfer/wavesurfer.js"></script>
   <script src="/static/wavesurfer/webaudio.js"></script>
