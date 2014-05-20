@@ -165,7 +165,7 @@ function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
         utteranceSpan = $('<a>')
           .addClass('btn btn-default btn-xs')
           .attr('id', utterance_id + '_utterance_button')
-          .attr('href', '/document/' + audio_identifier_for_utterance_id[utterance_id])
+          .attr('href', '/document/view/' + audio_identifier_for_utterance_id[utterance_id])
           .attr('role', 'button')
           .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
           .html(audio_identifier_for_utterance_id[utterance_id] +

@@ -410,7 +410,7 @@ def audio_for_utterance(utterance_id):
     return static_file(utterance_filename, root="/", mimetype='audio/wav')
 
 
-@route('/document/<audio_identifier>')
+@route('/document/view/<audio_identifier>')
 def document_view(audio_identifier):
     db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
     utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
