@@ -127,9 +127,6 @@ function waveformVisualizerLoadAndPlayURL(visualizerID, audioSourceURL) {
   visualizers[visualizerID].wavesurfer.on('ready', function() {
       visualizers[visualizerID].wavesurfer.play();
   });
-  visualizers[visualizerID].wavesurfer.on('progress', function(marker) {
-    var utteranceID;
-  });
 }
 
 function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
@@ -140,60 +137,26 @@ function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
   if (audioSourceURL.substr(0,18) === '/audio/pseudoterm/') {
     var pseudotermID = audioSourceURL.substr(18,24);
     $.getJSON("/audio/pseudoterm/" + pseudotermID + "_audio_events.json", function(audio_events) {
-      var
-        audio_events_per_utterance_id = {},
-        audio_identifier_for_utterance_id = {},
-        i,
-        total_duration = 0.0,
-        utterance_id,
-        utteranceListDiv,
-        utteranceSpan;
-
-      visualizers[visualizerID].wavesurfer.clearMarks();
-      visualizers[visualizerID].wavesurfer.clearRegions();
-      visualizers[visualizerID].audio_events = audio_events;
-
-      for (i in audio_events) {
-        visualizers[visualizerID].wavesurfer.region({
-          'color': 'blue',
-          'id': i,
-          'startPosition': total_duration,
-          'endPosition': total_duration + audio_events[i].duration/100.0 - 0.01
-        });
-        total_duration += audio_events[i].duration / 100.0;
-        visualizers[visualizerID].wavesurfer.mark({
-            'color': 'black',
-            'id': i,
-            'position': total_duration
-        });
-
-        utterance_id = audio_events[i].utterance_id['$oid'];
-        if (typeof(audio_events_per_utterance_id[utterance_id]) == 'undefined') {
-          audio_events_per_utterance_id[utterance_id] = 0;
-        }
-        audio_events_per_utterance_id[utterance_id] += 1;
-        audio_identifier_for_utterance_id[utterance_id] = audio_events[i].audio_identifier;
-      }
-
-      // Add buttons for each distinct utterance
-      utteranceListDiv = $('#' + visualizerID + '_utterance_list');
-      utteranceListDiv.html('');
-      for (utterance_id in audio_events_per_utterance_id) {
-        utteranceSpan = $('<a>')
-          .addClass('btn btn-default btn-xs')
-          .attr('id', utterance_id + '_utterance_button')
-          .attr('href', '/document/view/' + audio_identifier_for_utterance_id[utterance_id])
-          .attr('role', 'button')
-          .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
-          .html(audio_identifier_for_utterance_id[utterance_id] +
-                ' <b>(x' + audio_events_per_utterance_id[utterance_id] + ')</b>');
-        utteranceListDiv.append(utteranceSpan);
-      }
+      waveformVisualizerUpdateAudioEvents(visualizerID, audio_events);
     });
   }
 }
 
-function waveformVisualizerFixProgressPosition(visualizerID) {
+function waveformVisualizerPlay(visualizerID) {
+  waveformVisualizerRewindIfNecessary(visualizerID);
+  visualizers[visualizerID].wavesurfer.play();
+}
+
+function waveformVisualizerPlayPause(visualizerID) {
+  waveformVisualizerRewindIfNecessary(visualizerID);
+  visualizers[visualizerID].wavesurfer.playPause();
+}
+
+function waveformVisualizerPause(visualizerID) {
+  visualizers[visualizerID].wavesurfer.pause();
+}
+
+function waveformVisualizerRewindIfNecessary(visualizerID) {
   // If waveform progress indicator is at end of clip, move progress
   // indicator back to beginning of clip
   var ws = visualizers[visualizerID].wavesurfer;
@@ -204,21 +167,58 @@ function waveformVisualizerFixProgressPosition(visualizerID) {
   }
 }
 
-function waveformVisualizerPlay(visualizerID) {
-  waveformVisualizerFixProgressPosition(visualizerID);
-  visualizers[visualizerID].wavesurfer.play();
+function waveformVisualizerUpdateAudioEvents(visualizerID, audio_events) {
+  var
+    audio_events_per_utterance_id = {},
+    audio_identifier_for_utterance_id = {},
+    i,
+    total_duration = 0.0,
+    utterance_id,
+    utteranceListDiv,
+    utteranceSpan;
+
+  visualizers[visualizerID].wavesurfer.clearMarks();
+  visualizers[visualizerID].wavesurfer.clearRegions();
+  visualizers[visualizerID].audio_events = audio_events;
+
+  for (i in audio_events) {
+    visualizers[visualizerID].wavesurfer.region({
+      'color': 'blue',
+      'id': i,
+      'startPosition': total_duration,
+      'endPosition': total_duration + audio_events[i].duration/100.0 - 0.01
+    });
+    total_duration += audio_events[i].duration / 100.0;
+    visualizers[visualizerID].wavesurfer.mark({
+        'color': 'black',
+        'id': i,
+        'position': total_duration
+    });
+
+    utterance_id = audio_events[i].utterance_id['$oid'];
+    if (typeof(audio_events_per_utterance_id[utterance_id]) == 'undefined') {
+      audio_events_per_utterance_id[utterance_id] = 0;
+    }
+    audio_events_per_utterance_id[utterance_id] += 1;
+    audio_identifier_for_utterance_id[utterance_id] = audio_events[i].audio_identifier;
+  }
+
+  utteranceListDiv = $('#' + visualizerID + '_utterance_list');
+  // Delete existing buttons
+  utteranceListDiv.html('');
+  // Add buttons for each distinct utterance
+  for (utterance_id in audio_events_per_utterance_id) {
+    utteranceSpan = $('<a>')
+      .addClass('btn btn-default btn-xs')
+      .attr('id', utterance_id + '_utterance_button')
+      .attr('href', '/document/view/' + audio_identifier_for_utterance_id[utterance_id])
+      .attr('role', 'button')
+      .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
+      .html(audio_identifier_for_utterance_id[utterance_id] +
+            ' <b>(x' + audio_events_per_utterance_id[utterance_id] + ')</b>');
+    utteranceListDiv.append(utteranceSpan);
+  }
 }
-
-function waveformVisualizerPlayPause(visualizerID) {
-  waveformVisualizerFixProgressPosition(visualizerID);
-  visualizers[visualizerID].wavesurfer.playPause();
-}
-
-function waveformVisualizerPause(visualizerID) {
-  visualizers[visualizerID].wavesurfer.pause();
-}
-
-
 
 
 // Adds a <div> containing Pause and Play controls to an element.
