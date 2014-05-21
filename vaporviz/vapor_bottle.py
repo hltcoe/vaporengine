@@ -444,6 +444,14 @@ def document_view(audio_identifier):
     return template('document', utterance_id=str(utterance['_id']))
 
 
+@route('/document/play/<audio_identifier>')
+def document_play(audio_identifier):
+    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
+    audio_events = find_audio_events(db, utterance_id=utterance['_id'])
+    return template('document_play', audio_events=audio_events, utterance_id=str(utterance['_id']))
+
+
 def bytestring_as_file_with_mimetype(bytestring, mimetype):
     """
     Based on static_file() in bottle.py
