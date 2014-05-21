@@ -173,6 +173,24 @@ def update_pseudoterm_header():
 
     return res
 
+
+from vaporgasp.queries import pseudoterm_is_junk
+@route('/junk_pseudoterm',method=['OPTIONS','POST'])
+@json_wrapper
+@enable_cors
+def junk_pseudoterm():
+    update = json.load(request.body)
+    _id = update['_id']
+    del update['_id']
+
+    dataset = update['dataset']
+    del update['dataset']
+
+    db = init_dbconn(name = dataset, host=settings['DB_HOST'])
+    res = pseudoterm_is_junk(db, _id)
+
+    return res
+
 #Get Venncloud data for a single list of utterances
 from vaporviz.vapor_venncloud import make_wc_datastructure
 @route('/cloud_data_from_utterances',method=['OPTIONS','POST'])

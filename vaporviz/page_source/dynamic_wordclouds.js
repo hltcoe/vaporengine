@@ -1272,6 +1272,19 @@ function update_displayed_token(old_token, new_token){
     draw_wordcloud();
 };
 
+
+function junk_displayed_token(old_token){
+    console.log("junking "+old_token);
+    //Loop through each dataset and remove the token
+    for (var j in master_datasets){
+        dataset = master_datasets[j].tokens;
+        if (old_token in dataset){
+            delete master_datasets[j].tokens[old_token];
+        };
+    };
+    draw_wordcloud();
+};
+
 var counts = [];
 function compute_master_data(datasets) {
     var idfs = [];

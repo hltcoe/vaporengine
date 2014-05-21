@@ -290,7 +290,28 @@ function annotate_pt_native_label(){
 
 }
 
+function junk_this_pseudoterm(){
+    active_pt_id = active_pseudoterm._id;
+    send = {};
+    send.dataset = 'buckeye'; //HARDCODE
+    send._id=active_pt_id;
+    send.native_display = annotation;
+    $.ajax({
+            url: "/junk_pseudoterm",
+                type: "POST",
+                data: JSON.stringify(send),
+                error: function(xhr, error) {
+                alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
+            },
+                success: function(data) {
+                //Reload the PT now to see the changes reflected
+                //get_pseudoterm( active_pt_id );
+            }
+        });
 
+    junk_displayed_token( active_pseudoterm.eng_display );
+    
+};
 
 
 function test_ajax_calls(){

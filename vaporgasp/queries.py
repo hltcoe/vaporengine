@@ -52,7 +52,7 @@ object_id_fields = ['_id','pt_id','utterance_id'] #Recast these as ObjectIds aut
 def _find_by_common(collection, fields=None,  count=50,
                     start_date=None, end_date=None,
                     page=0, sort_by=None, exists=None,
-                    does_not_exist=None,
+                    does_not_exist=None, include_junk=False,
                     **kw):
     """A `find` query handling system for the `twitter` collection.
 
@@ -77,7 +77,10 @@ def _find_by_common(collection, fields=None,  count=50,
     if does_not_exist:
         for nonexister in does_not_exist:
             query_dict[nonexister]={'$exists':False}
-        
+
+    #Deal with Junk queries [which are to be excluded by default]
+    if not include_junk:
+        query_dict['is_junk']={'$exists':False}
 
     # Arrange fields to optimize index usage
     #TODO: deal with optimizing indices 
@@ -179,6 +182,12 @@ def update_pseudoterm(db, pseudoterm_id, **updates):
     print 'updating', match_dict, 'with', update_dict
     db[PSEUDOTERMS_COLL].update(match_dict,update_dict,multi=False)
 
+def pseudoterm_is_junk(db, pseudoterm_id):
+    """Marks a pseudoterm as junk in the database, by default it
+    will never be returned again."""
+    update_pseudoterm(db, pseudoterm_id, is_junk=True)
+    
+    
 
 ###
 ### Audio Events

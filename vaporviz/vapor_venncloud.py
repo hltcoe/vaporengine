@@ -37,18 +37,23 @@ def make_wc_datastructure(db, utterances ):
         #loop through pseudoterms and make a document out of them
         for pt_id in utt['pts']:
 
-
+            junk_pt = False
             #If we've seen it before, don't hit the DB, just pull out the token
             if pt_id in mongoid_to_token:
                 token = mongoid_to_token[pt_id]
             else:
                 #If we haven't seen it, hit the DB, add to appropriate places
-                pt = find_pseudoterms(db, _id=ObjectId(pt_id)).next()
-                token = pt['eng_display']
-                token_to_mongoids[token] = token_to_mongoids.get(token,[]) + [pt_id]
-                mongoid_to_token[pt_id] = token
-
-            this_doc.append( token )
+                pt_cur = find_pseudoterms(db, _id=ObjectId(pt_id))
+                try:
+                    pt = pt_cur.next()
+                    token = pt['eng_display']
+                except StopIteration:
+                    junk_pt = True
+                else:
+                    token_to_mongoids[token] = token_to_mongoids.get(token,[]) + [pt_id]
+                    mongoid_to_token[pt_id] = token
+            if not junk_pt:
+                this_doc.append( token )
         docs.append(sorted(this_doc))
 
     #Have to get idf somehow to include. For now everything is 1
