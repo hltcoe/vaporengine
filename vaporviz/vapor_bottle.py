@@ -235,11 +235,6 @@ def static_files(filepath):
     return static_file(filepath, root=os.path.join(vaporviz_path, 'static'))
 
 
-@route('/audio/WAV/<filepath:path>')
-def audio_static_wav(filepath):
-    return static_file(filepath, root=settings['WAV_PATH'], mimetype='audio/wav')
-
-
 @route('/<corpus>/audio/audio_event/<audio_event_id>.wav')
 def audio_for_audio_event(corpus,audio_event_id):
     """
