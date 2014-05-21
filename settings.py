@@ -45,3 +45,4 @@ tagolog['ZRL_CLUSTERS'] = 'matches/master_graph.dedups'
 tagolog['ZRL_PATH'] = '/home/hltcoe/ajansen/discovery/exp/tagolog300/'
 settings['tagolog'] = tagolog
 
+current_corpora = ['buckeye', 'fisher_spanish', 'tagolog']
