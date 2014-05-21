@@ -29,7 +29,7 @@ function get_annotation(){
     //dataset_name = $('#dataset_dropdown').val();
 
     send = {};
-    send.dataset='buckeye'; // HARDCODE
+    send.dataset=corpus_name;
     send.count = 10; //TODO: pull from some element
 
 
@@ -57,7 +57,7 @@ function get_utterances(){
     //dataset_name = $('#dataset_dropdown').val();
 
     send = {};
-    send.dataset='buckeye'; // HARDCODE
+    send.dataset=corpus_name;
     send.count = 10; //TODO: pull from some element
 
     $.ajaxSetup({
@@ -83,7 +83,7 @@ function get_utterances(){
 function get_audio_events(){
 
     send = {};
-    send.dataset='buckeye'; // HARDCODE
+    send.dataset=corpus_name;
     send.count = 10; //TODO: pull from some element
 
     $.ajaxSetup({
@@ -114,7 +114,7 @@ function get_cloud_data(utterance_list){
 
 
     send = {};
-    send.dataset='buckeye'; // HARDCODE
+    send.dataset=corpus_name;
     send.utterances = utterance_ids;
 
 
@@ -151,7 +151,7 @@ function get_cloud_data(utterance_list){
 function get_pseudoterm(pt_id){
 
     send = {};
-    send.dataset='buckeye'; // HARDCODE
+    send.dataset=corpus_name; // HARDCODE
     send.count = 1;
     send._id=(pt_id);
 
@@ -190,7 +190,7 @@ function get_pseudoterm(pt_id){
 function get_pseudoterms(count){
 
     send = {};
-    send.dataset='buckeye'; // HARDCODE
+    send.dataset=corpus_name;
     send.count = count || 10; //TODO: pull from some element
 
     $.ajaxSetup({
@@ -216,7 +216,7 @@ function get_pseudoterms(count){
 function get_audio_events_from_pseudoterm(pseudoterm_id, count){
 
     send = {};
-    send.dataset='buckeye'; //HARDCODE
+    send.dataset=corpus_name;
     send.pt_id=pseudoterm_id;
     send.count= count || 10; //10 if nothing is specified in the call
     $.ajax({
@@ -246,7 +246,7 @@ function annotate_pt_eng_label(){
     else{
 
     send = {};
-    send.dataset='buckeye'; //HARDCODE
+    send.dataset=corpus_name;
     send._id=active_pt_id;
     send.eng_display = annotation;
     send.annotated = true;
@@ -272,7 +272,7 @@ function annotate_pt_native_label(){
     active_pt_id = active_pseudoterm._id;
     annotation = $('#pt_native_display').val();
     send = {};
-    send.dataset='buckeye'; //HARDCODE
+    send.dataset=corpus_name;
     send._id=active_pt_id;
     send.native_display = annotation;
     $.ajax({
@@ -293,7 +293,7 @@ function annotate_pt_native_label(){
 function junk_this_pseudoterm(){
     active_pt_id = active_pseudoterm._id;
     send = {};
-    send.dataset = 'buckeye'; //HARDCODE
+    send.dataset = corpus_name;
     send._id=active_pt_id;
     send.native_display = annotation;
     $.ajax({

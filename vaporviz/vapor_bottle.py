@@ -64,6 +64,18 @@ def widget_handler(path):
     print "Returning what was found at:", source_path
     return page
 
+"""For serving up pages that must be corpus aware"""
+@route('/corpus/<corpus_name>/<page_path>')
+def corpus_aware_handler(corpus_name,page_path):
+    source_path = 'page_source/%s' % page_path
+    try:
+        print "Returning what was found at:", source_path
+        return template( source_path, corpus_name=corpus_name)
+    except:
+        source_path = 'vaporviz/'+source_path
+        print "Failing, trying  what was found at:", source_path
+        return template( source_path, corpus_name=corpus_name)
+
 
 """Template testing"""
 @route('/template_test')
@@ -77,12 +89,12 @@ def generic_find(find_function, metadata_filters):
     and preparing to serve to the website.
     `find_function` should be one of the function from queries.py"""
     print metadata_filters
-    dataset = metadata_filters['dataset'] #This maps to MongoDB table name
-    print "from dataset:", dataset
+    dataset_name = metadata_filters['dataset'] #This maps to MongoDB table name
+    print "from dataset:", dataset_name
     del metadata_filters['dataset']
 
     #SECURITY add whitelist of dataset names permitted
-    db = init_dbconn(name = dataset, host=settings['DB_HOST'])
+    db = init_dbconn(name = dataset_name, host=settings[dataset_name]['DB_HOST'])
 
     #Properly Cast count
     if 'count' in metadata_filters:
@@ -165,10 +177,10 @@ def update_pseudoterm_header():
     _id = update['_id']
     del update['_id']
 
-    dataset = update['dataset']
+    dataset_name = update['dataset']
     del update['dataset']
 
-    db = init_dbconn(name = dataset, host=settings['DB_HOST'])
+    db = init_dbconn(name = dataset_name, host=settings[dataset_name]['DB_HOST'])
     res = update_pseudoterm(db, _id, **update)
 
     return res
@@ -183,10 +195,10 @@ def junk_pseudoterm():
     _id = update['_id']
     del update['_id']
 
-    dataset = update['dataset']
+    dataset_name = update['dataset']
     del update['dataset']
 
-    db = init_dbconn(name = dataset, host=settings['DB_HOST'])
+    db = init_dbconn(name = dataset_name, host=settings[dataset_name]['DB_HOST'])
     res = pseudoterm_is_junk(db, _id)
 
     return res
@@ -202,7 +214,7 @@ def cloud_data_handler():
 
     utterances = request_data['utterances']
 
-    db = init_dbconn(name = dataset, host=settings['DB_HOST'])
+    db = init_dbconn(name = dataset, host=settings[dataset]['DB_HOST'])
     print request_data
     token_vector = make_wc_datastructure( db, utterances )
 
@@ -228,11 +240,11 @@ def audio_static_wav(filepath):
     return static_file(filepath, root=settings['WAV_PATH'], mimetype='audio/wav')
 
 
-@route('/audio/audio_event/<audio_event_id>.wav')
-def audio_for_audio_event(audio_event_id):
+@route('/<corpus>/audio/audio_event/<audio_event_id>.wav')
+def audio_for_audio_event(corpus,audio_event_id):
     """
     """
-    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     audio_event = find_audio_events(db, _id=ObjectId(audio_event_id))[0]
 
     # Create a temporary directory
@@ -246,7 +258,7 @@ def audio_for_audio_event(audio_event_id):
     outfile = pysox.CSoxStream(
         tmp_filename,
         'w',
-        settings['SOX_SIGNAL_INFO'])
+        settings[corpus]['SOX_SIGNAL_INFO'])
 
     START_OFFSET = bytes("%f" % (audio_event['start_offset'] / 100.0))
     DURATION = bytes("%f" % (audio_event['duration'] / 100.0))
@@ -272,14 +284,14 @@ def audio_for_audio_event(audio_event_id):
     return bytestring_as_file_with_mimetype(wav_data, 'audio/wav')
 
 
-@route('/audio/pseudoterm/<pseudoterm_id>_audio_events.json')
+@route('/<corpus>/audio/pseudoterm/<pseudoterm_id>_audio_events.json')
 @json_wrapper
-def audio_events_for_pseudoterm(pseudoterm_id):
+def audio_events_for_pseudoterm(corpus,pseudoterm_id):
     """
     Returns a JSON object with information about the audio events
     associated with a pseudoterm
     """
-    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
     audio_event_cursor = find_audio_events(db, pt_id=pseudoterm['_id'], count=10)
 
@@ -295,12 +307,12 @@ def audio_events_for_pseudoterm(pseudoterm_id):
     return audio_events
 
 
-@route('/audio/pseudoterm/<pseudoterm_id>.wav')
-def audio_for_pseudoterm(pseudoterm_id):
+@route('/<corpus>/audio/pseudoterm/<pseudoterm_id>.wav')
+def audio_for_pseudoterm(corpus,pseudoterm_id):
     """
     Creates a WAV file from multiple audio samples of a single pseudoterm
     """
-    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
 
     # TODO: Allow number of audio events to be specified as parameter, instead
@@ -318,7 +330,7 @@ def audio_for_pseudoterm(pseudoterm_id):
     outfile = pysox.CSoxStream(
         tmp_filename,
         'w',
-        settings['SOX_SIGNAL_INFO'])
+        settings[corpus]['SOX_SIGNAL_INFO'])
 
     print "audio_for_pseudoterm('%s'):" % pseudoterm_id
     for audio_event in audio_events:
@@ -348,15 +360,15 @@ def audio_for_pseudoterm(pseudoterm_id):
     return bytestring_as_file_with_mimetype(wav_data, 'audio/wav')
 
 
-@route('/audio/pseudoterm/context/<pseudoterm_id>.wav')
-def audio_for_pseudoterm_with_context(pseudoterm_id):
+@route('/corpus/audio/pseudoterm/context/<pseudoterm_id>.wav')
+def audio_for_pseudoterm_with_context(corpus,pseudoterm_id):
     """
     Creates a WAV file from multiple audio samples of a single pseudoterm
     """
     # TODO: Get seconds of context from HTTP parameter
     SECONDS_OF_CONTEXT = 0.5
 
-    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+    db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
     audio_events = find_audio_events(db, pt_id=pseudoterm['_id'], count=10)
 
@@ -371,7 +383,7 @@ def audio_for_pseudoterm_with_context(pseudoterm_id):
     outfile = pysox.CSoxStream(
         tmp_filename,
         'w',
-        settings['SOX_SIGNAL_INFO'])
+        settings[corpus]['SOX_SIGNAL_INFO'])
 
     # TODO: Allow number of audio events to be specified as parameter, instead
     #       of hard-coded to 10
@@ -418,9 +430,9 @@ def audio_for_pseudoterm_with_context(pseudoterm_id):
     return bytestring_as_file_with_mimetype(wav_data, 'audio/wav')
 
 
-@route('/audio/utterance/<utterance_id>.wav')
-def audio_for_utterance(utterance_id):
-    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+@route('/<corpus>/audio/utterance/<utterance_id>.wav')
+def audio_for_utterance(corpus,utterance_id):
+    db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
 
     utterance = find_utterances(db, _id=ObjectId(utterance_id))[0]
     utterance_filename = utterance['hltcoe_audio_path']
@@ -428,18 +440,18 @@ def audio_for_utterance(utterance_id):
     return static_file(utterance_filename, root="/", mimetype='audio/wav')
 
 
-@route('/document/list')
-def document_list():
-    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+@route('/<corpus>/document/list')
+def document_list(corpus):
+    db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     utterance_cursor = find_utterances(db)
     utterance_audio_identifiers = [utt['audio_identifier'] for utt in utterance_cursor]
     utterance_audio_identifiers.sort()
     return template('document_list', utterance_audio_identifiers=utterance_audio_identifiers)
 
 
-@route('/document/view/<audio_identifier>')
-def document_view(audio_identifier):
-    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+@route('/<corpus>/document/view/<audio_identifier>')
+def document_view(corpus,audio_identifier):
+    db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
     return template('document', utterance_id=str(utterance['_id']))
 

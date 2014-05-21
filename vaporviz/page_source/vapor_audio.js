@@ -77,15 +77,15 @@ function addWaveformVisualizer(visualizerID) {
 }
 
 function getURLforAudioEventWAV(audioEventID) {
-  return '/audio/audio_event/' + audioEventID + '.wav';
+  return '/' + corpus_name + '/audio/audio_event/' + audioEventID + '.wav';
 }
 
 function getURLforPseudotermWAV(pseudotermID) {
-  return '/audio/pseudoterm/' + pseudotermID + '.wav';
+  return '/' + corpus_name +'/audio/pseudoterm/' + pseudotermID + '.wav';
 }
 
 function getURLforUtteranceWAV(utteranceID) {
-  return '/audio/utterance/' + utteranceID + '.wav';
+  return '/' + corpus_name +'/audio/utterance/' + utteranceID + '.wav';
 }
 
 function resetActiveDocumentButtons(visualizerID) {
@@ -139,9 +139,9 @@ function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
 
   // If audio clip is a pseudoterm audio clip composed of multiple audio events,
   // add markers to waveform at audio event boundaries
-  if (audioSourceURL.substr(0,18) === '/audio/pseudoterm/') {
+  if (audioSourceURL.substr(0,18) === '/' + corpus_name +'/audio/pseudoterm/') { //TODO Craig -- fix the 18
     var pseudotermID = audioSourceURL.substr(18,24);
-    $.getJSON("/audio/pseudoterm/" + pseudotermID + "_audio_events.json", function(audio_events) {
+    $.getJSON('/' + corpus_name +"/audio/pseudoterm/" + pseudotermID + "_audio_events.json", function(audio_events) {
       waveformVisualizerUpdateAudioEvents(visualizerID, audio_events);
     });
   }
@@ -216,7 +216,7 @@ function waveformVisualizerUpdateAudioEvents(visualizerID, audio_events) {
     utteranceSpan = $('<a>')
       .addClass('btn btn-default btn-xs')
       .attr('id', utterance_id + '_utterance_button')
-      .attr('href', '/document/view/' + audio_identifier_for_utterance_id[utterance_id])
+      .attr('href', '/' + corpus_name +'/document/view/' + audio_identifier_for_utterance_id[utterance_id])
       .attr('role', 'button')
       .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
       .html(audio_identifier_for_utterance_id[utterance_id] +
