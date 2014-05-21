@@ -105,7 +105,7 @@ function get_audio_events(){
     });
 }
 
-function get_cloud_data(utterance_list){
+function get_cloud_data(corpus, utterance_list){
 
     var utterance_ids = utterance_list.utterance_ids;
     var dataset_name = utterance_list.dataset_name;
@@ -114,7 +114,7 @@ function get_cloud_data(utterance_list){
 
 
     send = {};
-    send.dataset=corpus_name;
+    send.dataset = corpus;
     send.utterances = utterance_ids;
 
 
@@ -384,7 +384,7 @@ function set_up_annotate_pseudoterm_id(token){
 }
 
 
-function venncloud_from_utterances( utterances_lists ){
+function venncloud_from_utterances(corpus, utterances_lists){
 
     options = {};
     options.click = set_up_annotate_pseudoterm_id;
@@ -394,7 +394,7 @@ function venncloud_from_utterances( utterances_lists ){
     //$.when(get_multiple_utterances_cloud_data(utterances_lists)).done( function(){
     //HARDCODED below for the nonce.
     u = utterances_lists;
-    $.when(get_cloud_data( u[0] ), get_cloud_data( u[1] )).done( function(){
+    $.when(get_cloud_data(corpus, u[0] ), get_cloud_data(corpus, u[1] )).done( function(){
         //user cloud datasets
         make_me_a_venncloud( cloud_datasets, options );
     });
