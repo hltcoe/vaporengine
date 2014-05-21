@@ -12,7 +12,9 @@
   <link rel="stylesheet" href="/www/dynamic_wordclouds.css" />
 
   <!--<script src="/www/data_handler.js"></script>-->
-
+  <script>
+	var corpus_name = '{{corpus_name}}';
+  </script>
 </head>
 <body>
 
@@ -58,7 +60,7 @@
     $.ajax({
       url: "/find_utterances",
       type: "POST",
-      data: JSON.stringify({'dataset': 'buckeye', 'count': 7}),
+      data: JSON.stringify({'dataset': corpus_name, 'count': 7}),
       error: function(xhr, error) {
         alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
       },
