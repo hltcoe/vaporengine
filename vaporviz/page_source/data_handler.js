@@ -61,9 +61,9 @@ function get_utterances(){
     send.count = 10; //TODO: pull from some element
 
     $.ajaxSetup({
-            contentType: "application/json; charset=utf-8",
-                dataType: "json"
-                });
+        contentType: "application/json; charset=utf-8",
+        dataType: "json"
+    });
 
     $.ajax({
         url: "/find_utterances",
