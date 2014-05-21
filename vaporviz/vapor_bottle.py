@@ -70,18 +70,11 @@ def corpus_aware_handler(corpus_name,page_path):
     source_path = 'page_source/%s' % page_path
     try:
         print "Returning what was found at:", source_path
-        return template( source_path, corpus_name=corpus_name)
+        return template(source_path, corpus_name=corpus_name)
     except:
         source_path = 'vaporviz/'+source_path
         print "Failing, trying  what was found at:", source_path
-        return template( source_path, corpus_name=corpus_name)
-
-
-"""Template testing"""
-@route('/template_test')
-def widget_handler():
-    page = "<HTML><BODY>This {{fill}} should be filled in"
-    return template(page,fill="**")
+        return template(source_path, corpus_name=corpus_name)
 
 
 def generic_find(find_function, metadata_filters):
