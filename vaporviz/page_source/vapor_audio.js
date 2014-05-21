@@ -108,6 +108,11 @@ function updateActiveDocumentForAudioEvent(visualizerID, marker) {
     previousUtteranceID = -1,
     utteranceID;
 
+  // TODO: More sanity checks to verify that this handler is responsible for this region
+  if (!visualizers[visualizerID].audio_events[marker.id]) {
+    return;
+  }
+
   utteranceID = visualizers[visualizerID].audio_events[marker.id].utterance_id['$oid'];
   if (parseInt(marker.id) > 0) {
     previousUtteranceID = visualizers[visualizerID].audio_events[parseInt(marker.id) - 1].utterance_id['$oid'];
