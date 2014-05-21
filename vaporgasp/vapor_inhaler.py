@@ -9,13 +9,19 @@ from vaporgasp.queries import (insert_utterance, insert_pseudoterm,
 from lib.database import init_dbconn
 from settings import settings
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("dataset_name")
+args = parser.parse_args()
 
-dbhost = settings['DB_HOST']
-dbname = settings['DB_NAME']
+dataset_name = args.dataset_name
+
+dbhost = settings[dataset_name]['DB_HOST']
+dbname = settings[dataset_name]['DB_NAME']
 
 db = init_dbconn(host=dbhost,name=dbname)
 
-zrl = ZRLoader(settings['ZRL_PATH'], clusters=settings['ZRL_CLUSTERS'])
+zrl = ZRLoader(settings[dataset_name]['ZRL_PATH'], clusters=settings[dataset_name]['ZRL_CLUSTERS'])
 
 
 audioevent_to_mongo_id = {}

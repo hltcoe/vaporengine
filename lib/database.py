@@ -5,9 +5,10 @@ import sys
 
 from lib.timestamping import datestring_to_millis
 from settings import settings
-DB_HOST = settings['DB_HOST']
-DB_NAME = settings['DB_NAME']
-DB_PORT = settings['DB_PORT']
+#Default to buckeye
+DB_HOST = settings['buckeye']['DB_HOST']
+DB_NAME = settings['buckeye']['DB_NAME']
+DB_PORT = settings['buckeye']['DB_PORT']
 
 
 ###
