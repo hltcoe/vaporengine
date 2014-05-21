@@ -23,7 +23,7 @@
   <div>
     % for audio_identifier in utterance_audio_identifiers:
     <span class="document_link">
-      <a href="/document/view/{{audio_identifier}}">{{audio_identifier}}</a>
+      <a href="../view/{{audio_identifier}}">{{audio_identifier}}</a>
     </span>
     % end
   </div>

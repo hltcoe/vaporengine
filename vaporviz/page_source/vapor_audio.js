@@ -54,6 +54,8 @@ function addControlsAndLoadAudioForWaveformVisualizer(parentElement, visualizerI
   playerDiv.append(playPauseButton);
 
   parentElement.append(playerDiv);
+
+  waveformVisualizerLoadURL(visualizerID, audioSourceURL);
 }
 
 function addWaveformVisualizer(visualizerID) {
@@ -76,16 +78,16 @@ function addWaveformVisualizer(visualizerID) {
   });
 }
 
-function getURLforAudioEventWAV(audioEventID) {
-  return '/' + corpus_name + '/audio/audio_event/' + audioEventID + '.wav';
+function getURLforAudioEventWAV(corpus_name, audioEventID) {
+  return '/corpus/' + corpus_name + '/audio/audio_event/' + audioEventID + '.wav';
 }
 
-function getURLforPseudotermWAV(pseudotermID) {
-  return '/' + corpus_name +'/audio/pseudoterm/' + pseudotermID + '.wav';
+function getURLforPseudotermWAV(corpus_name, pseudotermID) {
+  return '/corpus/' + corpus_name +'/audio/pseudoterm/' + pseudotermID + '.wav';
 }
 
-function getURLforUtteranceWAV(utteranceID) {
-  return '/' + corpus_name +'/audio/utterance/' + utteranceID + '.wav';
+function getURLforUtteranceWAV(corpus_name, utteranceID) {
+  return '/corpus/' + corpus_name +'/audio/utterance/' + utteranceID + '.wav';
 }
 
 function resetActiveDocumentButtons(visualizerID) {
@@ -139,12 +141,14 @@ function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
 
   // If audio clip is a pseudoterm audio clip composed of multiple audio events,
   // add markers to waveform at audio event boundaries
+  /*
   if (audioSourceURL.substr(0,18) === '/' + corpus_name +'/audio/pseudoterm/') { //TODO Craig -- fix the 18
     var pseudotermID = audioSourceURL.substr(18,24);
     $.getJSON('/' + corpus_name +"/audio/pseudoterm/" + pseudotermID + "_audio_events.json", function(audio_events) {
       waveformVisualizerUpdateAudioEvents(visualizerID, audio_events);
     });
   }
+  */
 }
 
 function waveformVisualizerPlay(visualizerID) {

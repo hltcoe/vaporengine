@@ -47,12 +47,11 @@
     }
 
     $(document).ready(function() {
-//      create_wordcloud_for_utterance("{{utterance_id}}");
       addWaveformVisualizer('waveform_visualizer');
       addControlsAndLoadAudioForWaveformVisualizer(
         $('#pt_snippets_audio_player'),
         'waveform_visualizer',
-        getURLforUtteranceWAV('{{utterance_id}}')
+        getURLforUtteranceWAV('{{corpus}}', '{{utterance_id}}')
       );
 
       visualizers['waveform_visualizer'].wavesurfer.on('region-in', function(marker) {
@@ -84,8 +83,10 @@
             .html(audio_events[i]['_id'] + " ");
           $('#audio_event_list').append(audioEventSpan);
         }
+
+        // TODO: Remove this callback function after the first time it has been called
       });
-      $('#pt_junk_button').click( junk_this_pseudoterm) ;
+      $('#pt_junk_button').click(junk_this_pseudoterm) ;
     });
 
     $.get("/www/venncloud_template.html", function(data){

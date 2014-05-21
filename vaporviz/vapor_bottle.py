@@ -19,7 +19,7 @@ from lib.database import init_dbconn
 from vaporgasp.queries import (find_annotations, find_utterances,
                                find_pseudoterms, find_audio_events,
                                update_pseudoterm)
-from settings import settings
+from settings import current_corpora, settings
 
 
 vaporviz_path = os.path.dirname(os.path.realpath(__file__))
@@ -219,16 +219,14 @@ def cloud_data_handler():
 @route('/')
 def index_page():
     vaporviz_path = os.path.dirname(os.path.realpath(__file__))
-    return static_file('index.html', root=os.path.join(vaporviz_path, 'page_source'))
-
+    return template('index', current_corpora=current_corpora)
 
 @route('/static/<filepath:path>')
 def static_files(filepath):
     vaporviz_path = os.path.dirname(os.path.realpath(__file__))
     return static_file(filepath, root=os.path.join(vaporviz_path, 'static'))
 
-
-@route('/<corpus>/audio/audio_event/<audio_event_id>.wav')
+@route('/corpus/<corpus>/audio/audio_event/<audio_event_id>.wav')
 def audio_for_audio_event(corpus,audio_event_id):
     """
     """
@@ -272,7 +270,7 @@ def audio_for_audio_event(corpus,audio_event_id):
     return bytestring_as_file_with_mimetype(wav_data, 'audio/wav')
 
 
-@route('/<corpus>/audio/pseudoterm/<pseudoterm_id>_audio_events.json')
+@route('/corpus/<corpus>/audio/pseudoterm/<pseudoterm_id>_audio_events.json')
 @json_wrapper
 def audio_events_for_pseudoterm(corpus,pseudoterm_id):
     """
@@ -295,7 +293,7 @@ def audio_events_for_pseudoterm(corpus,pseudoterm_id):
     return audio_events
 
 
-@route('/<corpus>/audio/pseudoterm/<pseudoterm_id>.wav')
+@route('/corpus/<corpus>/audio/pseudoterm/<pseudoterm_id>.wav')
 def audio_for_pseudoterm(corpus,pseudoterm_id):
     """
     Creates a WAV file from multiple audio samples of a single pseudoterm
@@ -348,8 +346,8 @@ def audio_for_pseudoterm(corpus,pseudoterm_id):
     return bytestring_as_file_with_mimetype(wav_data, 'audio/wav')
 
 
-@route('/corpus/audio/pseudoterm/context/<pseudoterm_id>.wav')
-def audio_for_pseudoterm_with_context(corpus,pseudoterm_id):
+@route('/corpus/<corpus>/audio/pseudoterm/context/<pseudoterm_id>.wav')
+def audio_for_pseudoterm_with_context(corpus, pseudoterm_id):
     """
     Creates a WAV file from multiple audio samples of a single pseudoterm
     """
@@ -418,8 +416,8 @@ def audio_for_pseudoterm_with_context(corpus,pseudoterm_id):
     return bytestring_as_file_with_mimetype(wav_data, 'audio/wav')
 
 
-@route('/<corpus>/audio/utterance/<utterance_id>.wav')
-def audio_for_utterance(corpus,utterance_id):
+@route('/corpus/<corpus>/audio/utterance/<utterance_id>.wav')
+def audio_for_utterance(corpus, utterance_id):
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
 
     utterance = find_utterances(db, _id=ObjectId(utterance_id))[0]
@@ -428,7 +426,13 @@ def audio_for_utterance(corpus,utterance_id):
     return static_file(utterance_filename, root="/", mimetype='audio/wav')
 
 
-@route('/<corpus>/document/list')
+@route('/corpus/<corpus>/wordcloud/')
+def corpus_wordcloud(corpus):
+    return template('corpus_wordcloud', corpus=corpus)
+
+
+@route('/corpus/<corpus>/')
+@route('/corpus/<corpus>/document/list/')
 def document_list(corpus):
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     utterance_cursor = find_utterances(db)
@@ -437,19 +441,22 @@ def document_list(corpus):
     return template('document_list', utterance_audio_identifiers=utterance_audio_identifiers)
 
 
-@route('/<corpus>/document/view/<audio_identifier>')
-def document_view(corpus,audio_identifier):
+@route('/corpus/<corpus>/document/view/<audio_identifier>')
+def document_view(corpus, audio_identifier):
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
     return template('document', utterance_id=str(utterance['_id']))
 
 
-@route('/document/play/<audio_identifier>')
-def document_play(audio_identifier):
-    db = init_dbconn(name=settings['DB_NAME'], host=settings['DB_HOST'])
+@route('/corpus/<corpus>/document/play/<audio_identifier>')
+def document_play(corpus, audio_identifier):
+    db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
     audio_events = find_audio_events(db, utterance_id=utterance['_id'])
-    return template('document_play', audio_events=audio_events, utterance_id=str(utterance['_id']))
+    return template('document_play',
+                    audio_events=audio_events,
+                    corpus=corpus,
+                    utterance_id=str(utterance['_id']))
 
 
 def bytestring_as_file_with_mimetype(bytestring, mimetype):
