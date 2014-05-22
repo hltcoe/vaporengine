@@ -37,7 +37,7 @@
       $.ajax({
         url: "/find_utterances",
         type: "POST",
-        data: JSON.stringify({'dataset': 'buckeye', 'count': 256}),
+        data: JSON.stringify({'dataset': '{{corpus}}', 'count': 256}),
         error: function(xhr, error) {
           alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
         },
@@ -66,8 +66,7 @@
       addWaveformVisualizer('waveform_visualizer');
       addControlsForWaveformVisualizer($('#pt_snippets_audio_player'), 'waveform_visualizer');
 
-	$('#pt_junk_button').click( junk_this_pseudoterm) ;
-
+	    $('#pt_junk_button').click(junk_this_pseudoterm);
     });
 
     $.get("/www/venncloud_template.html", function(data){
