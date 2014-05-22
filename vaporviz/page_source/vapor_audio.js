@@ -137,18 +137,21 @@ function waveformVisualizerLoadAndPlayURL(visualizerID, audioSourceURL) {
 }
 
 function waveformVisualizerLoadURL(visualizerID, audioSourceURL) {
+  var corpus, i, pseudotermID;
+
   visualizers[visualizerID].wavesurfer.load(audioSourceURL);
 
   // If audio clip is a pseudoterm audio clip composed of multiple audio events,
   // add markers to waveform at audio event boundaries
-  /*
-  if (audioSourceURL.substr(0,18) === '/' + corpus_name +'/audio/pseudoterm/') { //TODO Craig -- fix the 18
-    var pseudotermID = audioSourceURL.substr(18,24);
-    $.getJSON('/' + corpus_name +"/audio/pseudoterm/" + pseudotermID + "_audio_events.json", function(audio_events) {
-      waveformVisualizerUpdateAudioEvents(visualizerID, audio_events);
+  i = audioSourceURL.indexOf("/audio/pseudoterm/");
+  if (i != -1) {
+    corpus = audioSourceURL.substr(8, i - 8);
+    // Assumes that pseudotermID is a 24 character string
+    pseudotermID = audioSourceURL.substr(i + 18, 24);
+    $.getJSON('/corpus/' + corpus +"/audio/pseudoterm/" + pseudotermID + "_audio_events.json", function(audio_events) {
+      waveformVisualizerUpdateAudioEvents(visualizerID, corpus, audio_events);
     });
   }
-  */
 }
 
 function waveformVisualizerPlay(visualizerID) {
@@ -176,7 +179,7 @@ function waveformVisualizerRewindIfNecessary(visualizerID) {
   }
 }
 
-function waveformVisualizerUpdateAudioEvents(visualizerID, audio_events) {
+function waveformVisualizerUpdateAudioEvents(visualizerID, corpus, audio_events) {
   var
     audio_events_per_utterance_id = {},
     audio_identifier_for_utterance_id = {},
@@ -220,7 +223,7 @@ function waveformVisualizerUpdateAudioEvents(visualizerID, audio_events) {
     utteranceSpan = $('<a>')
       .addClass('btn btn-default btn-xs')
       .attr('id', utterance_id + '_utterance_button')
-      .attr('href', '/' + corpus_name +'/document/view/' + audio_identifier_for_utterance_id[utterance_id])
+      .attr('href', '/corpus/' + corpus +'/document/view/' + audio_identifier_for_utterance_id[utterance_id])
       .attr('role', 'button')
       .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
       .html(audio_identifier_for_utterance_id[utterance_id] +
