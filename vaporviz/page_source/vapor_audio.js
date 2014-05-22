@@ -38,15 +38,7 @@ function addControlsAndLoadAudioForWaveformVisualizer(parentElement, visualizerI
         'visualizerID': visualizerID,
       },
       function(event) {
-        var visualizer = visualizers[event.data.visualizerID];
-        if (visualizer.url === undefined || visualizer.url != event.data.audioSourceURL) {
-          // Load specified audio file IFF it is not already loaded
-          waveformVisualizerLoadAndPlayURL(event.data.visualizerID, event.data.audioSourceURL);
-          visualizer.url = event.data.audioSourceURL;
-        }
-        else {
-          waveformVisualizerPlayPause(event.data.visualizerID);
-        }
+        waveformVisualizerPlayPause(event.data.visualizerID);
       }
     )
     .html('<i class="glyphicon glyphicon-play"></i> / <i class="glyphicon glyphicon-pause"></i>');
