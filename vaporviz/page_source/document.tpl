@@ -39,7 +39,7 @@
         'utterance_ids': [utterance_id]
       };
 
-      venncloud_from_utterances([utterance_set1, utterance_set1]);
+      venncloud_from_utterances("{{corpus}}", [utterance_set1, utterance_set1]);
     }
 
     $(document).ready(function() {

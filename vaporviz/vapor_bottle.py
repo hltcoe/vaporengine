@@ -445,7 +445,7 @@ def document_list(corpus):
 def document_view(corpus, audio_identifier):
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
-    return template('document', utterance_id=str(utterance['_id']))
+    return template('document', corpus=corpus, utterance_id=str(utterance['_id']))
 
 
 @route('/corpus/<corpus>/document/play/<audio_identifier>')
