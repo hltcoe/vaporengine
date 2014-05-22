@@ -87,7 +87,7 @@ def generic_find(find_function, metadata_filters):
     del metadata_filters['dataset']
 
     #SECURITY add whitelist of dataset names permitted
-    db = init_dbconn(name = dataset_name, host=settings[dataset_name]['DB_HOST'])
+    db = init_dbconn(name=settings[dataset_name]['DB_NAME'], host=settings[dataset_name]['DB_HOST'])
 
     #Properly Cast count
     if 'count' in metadata_filters:
