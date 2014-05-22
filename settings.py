@@ -19,11 +19,10 @@ buckeye_localhost['DB_HOST'] = 'localhost'
 buckeye_localhost['DB_NAME'] = 'buckeye'
 buckeye_localhost['DB_PORT'] = 27017
 buckeye_localhost['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(16000.0,1,16)
-buckeye_localhost['WAV_PATH'] = os.path.join(os.getenv('HOME'), 'BUCKEYE')
+buckeye_localhost['WAV_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/BUCKEYE')
 buckeye_localhost['ZRL_CLUSTERS'] = 'matches/master_graph.dedups'
-buckeye_localhost['ZRL_PATH'] = os.path.join(os.getenv('HOME'), 'buckeye-T25/')
+buckeye_localhost['ZRL_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/buckeye-T25/')
 settings['buckeye_localhost'] = buckeye_localhost
-
 
 fisher_spanish = {}
 fisher_spanish['DB_HOST'] = 'r4n7'
@@ -35,6 +34,15 @@ fisher_spanish['ZRL_CLUSTERS'] = 'matches/master_graph.dedups'
 fisher_spanish['ZRL_PATH'] = '/home/hltcoe/ajansen/discovery/exp/fishsp200/'
 settings['fisher_spanish'] = fisher_spanish
 
+fisher_spanish_localhost = {}
+fisher_spanish_localhost['DB_HOST'] = 'localhost'
+fisher_spanish_localhost['DB_NAME'] = 'fisher_spanish'
+fisher_spanish_localhost['DB_PORT'] = 27017
+fisher_spanish_localhost['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(8000.0,1,16)
+fisher_spanish_localhost['WAV_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/FISHSPwav/')
+fisher_spanish_localhost['ZRL_CLUSTERS'] = 'matches/master_graph.dedups'
+fisher_spanish_localhost['ZRL_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/fishsp200/')
+settings['fisher_spanish_localhost'] = fisher_spanish_localhost
 
 tagalog = {}
 tagalog['DB_HOST'] = 'r4n7'
