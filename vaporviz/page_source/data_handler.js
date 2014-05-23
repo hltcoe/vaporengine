@@ -171,8 +171,10 @@ function junk_this_pseudoterm(event) {
   set_up_annotate_pseudoterm_id() to access the 'corpus' parameter,
   without storing the 'corpus' parameter in a global variable.
 */
-var CorpusClosureForSetupAnnotatePseudotermID = function(corpus) {
+var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visualizer) {
   this.corpus = corpus;
+  this.waveform_visualizer = waveform_visualizer;
+
   this.set_up_annotate_pseudoterm_id = function(token) {
       if (token.length > 50){ return; } //If you mistakenly click the whole box
       $.get('/www/pseudoterm_template.html',function(data){
@@ -189,8 +191,9 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus) {
       pseudotermID = pt_ids[0]['$oid'];
       get_pseudoterm(pseudotermID, corpus); //Also posts to the global variable
 
-      var visualizerID = "waveform_visualizer";  // HARDCODE
-      waveformVisualizerLoadAndPlayURL(visualizerID, getURLforPseudotermWAV(corpus, pseudotermID));
+      if (waveform_visualizer) {
+        waveform_visualizer.loadAndPlayURL(getURLforPseudotermWAV(corpus, pseudotermID));
+      }
 
       $("#pt_eng_display")
           .focusout(function(){
@@ -208,8 +211,8 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus) {
 };
 
 
-function venncloud_from_utterances(corpus, utterances_lists){
-    var corpus_closure = new CorpusClosureForSetupAnnotatePseudotermID(corpus);
+function venncloud_from_utterances(corpus, utterances_lists, waveform_visualizer){
+    var corpus_closure = new CorpusClosureForSetupAnnotatePseudotermID(corpus, waveform_visualizer);
 
     options = {};
     options.click = corpus_closure.set_up_annotate_pseudoterm_id;

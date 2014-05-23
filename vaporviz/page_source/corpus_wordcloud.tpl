@@ -33,7 +33,7 @@
   </style>
 
   <script>
-    function create_wordcloud_from_all_utterances() {
+    function create_wordcloud_from_all_utterances(waveform_visualizer) {
       $.ajax({
         url: "/find_utterances",
         type: "POST",
@@ -55,16 +55,16 @@
             utterance_set1.utterance_ids.push(utterances[i]._id);
           }
 
-          venncloud_from_utterances("{{corpus}}", [utterance_set1, utterance_set1]);
+          venncloud_from_utterances("{{corpus}}", [utterance_set1, utterance_set1], waveform_visualizer);
         }
       });
     }
 
     $(document).ready(function() {
-      create_wordcloud_from_all_utterances();
+      var waveformVisualizer = new WaveformVisualizer('waveform_visualizer');
+      waveformVisualizer.addControls($('#pt_snippets_audio_player'));
 
-      addWaveformVisualizer('waveform_visualizer');
-      addControlsForWaveformVisualizer($('#pt_snippets_audio_player'), 'waveform_visualizer');
+      create_wordcloud_from_all_utterances(waveformVisualizer);
 
 	    $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
     });

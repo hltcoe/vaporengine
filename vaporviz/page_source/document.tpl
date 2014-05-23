@@ -34,19 +34,18 @@
 
   <script>
     function create_wordcloud_for_utterance(utterance_id) {
-      var utterance_set1 = {
-        'dataset_name': 'Set1',
-        'utterance_ids': [utterance_id]
-      };
-
-      venncloud_from_utterances("{{corpus}}", [utterance_set1, utterance_set1]);
     }
 
     $(document).ready(function() {
-      create_wordcloud_for_utterance("{{utterance_id}}");
+      var waveformVisualizer = new WaveformVisualizer('waveform_visualizer');
+      waveformVisualizer.addControls($('#pt_snippets_audio_player'));
 
-      addWaveformVisualizer('waveform_visualizer');
-      addControlsForWaveformVisualizer($('#pt_snippets_audio_player'), 'waveform_visualizer');
+      var utterance_set1 = {
+        'dataset_name': 'Set1',
+        'utterance_ids': ["{{utterance_id}}"]
+      };
+      venncloud_from_utterances("{{corpus}}", [utterance_set1, utterance_set1], waveformVisualizer);
+
       $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
     });
 
