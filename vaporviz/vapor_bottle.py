@@ -173,7 +173,7 @@ def update_pseudoterm_header():
     dataset_name = update['dataset']
     del update['dataset']
 
-    db = init_dbconn(name = dataset_name, host=settings[dataset_name]['DB_HOST'])
+    db = init_dbconn(name=settings[dataset_name]['DB_NAME'], host=settings[dataset_name]['DB_HOST'])
     res = update_pseudoterm(db, _id, **update)
 
     return res
@@ -191,7 +191,7 @@ def junk_pseudoterm():
     dataset_name = update['dataset']
     del update['dataset']
 
-    db = init_dbconn(name = dataset_name, host=settings[dataset_name]['DB_HOST'])
+    db = init_dbconn(name=settings[dataset_name]['DB_NAME'], host=settings[dataset_name]['DB_HOST'])
     res = pseudoterm_is_junk(db, _id)
 
     return res
@@ -207,7 +207,7 @@ def cloud_data_handler():
 
     utterances = request_data['utterances']
 
-    db = init_dbconn(name = dataset, host=settings[dataset]['DB_HOST'])
+    db = init_dbconn(name=settings[dataset]['DB_NAME'], host=settings[dataset]['DB_HOST'])
     print request_data
     token_vector = make_wc_datastructure( db, utterances )
 
