@@ -1,110 +1,6 @@
 var cloud_datasets = {};
 
 
-// function display_annotations(annotations){
-//
-//     /*$.each(annotations,function(index,datum){
-//             console.log("---"+index);
-//             console.log(datum);
-//         });
-//     */
-//
-//     $('#annotations_landing_zone').html(prettyPrint(annotations));
-// }
-//
-// function display_utterances(utterances){
-//     $('#utterances_landing_zone').html(prettyPrint(utterances));
-// }
-//
-// function display_pseudoterms(pseudoterms){
-//     $('#pseudoterms_landing_zone').html(prettyPrint(pseudoterms));
-// }
-//
-// function display_audio_events(audio_events){
-//     $('#audio_events_landing_zone').html(prettyPrint(audio_events));
-// }
-
-
-// function get_annotation(){
-//     //dataset_name = $('#dataset_dropdown').val();
-//
-//     send = {};
-//     send.dataset=corpus_name;
-//     send.count = 10; //TODO: pull from some element
-//
-//
-//     $.ajaxSetup({
-//         contentType: "application/json; charset=utf-8",
-//         dataType: "json"
-//     });
-//
-//     $.ajax({
-//         url: "/find_annotations",
-//         type: "POST",
-//         data: JSON.stringify(send),
-//         error: function(xhr, error) {
-//             alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
-//         },
-//         success: function(data) {
-//             current_annotations = data;
-//             display_annotations(data);
-//         }
-//     });
-// }
-
-
-// function get_utterances(){
-//     //dataset_name = $('#dataset_dropdown').val();
-//
-//     send = {};
-//     send.dataset=corpus_name;
-//     send.count = 10; //TODO: pull from some element
-//
-//     $.ajaxSetup({
-//         contentType: "application/json; charset=utf-8",
-//         dataType: "json"
-//     });
-//
-//     $.ajax({
-//         url: "/find_utterances",
-//         type: "POST",
-//         data: JSON.stringify(send),
-//         error: function(xhr, error) {
-//             alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
-//         },
-//         success: function(data) {
-//             current_utterances = data;
-//             display_utterances(data);
-//         }
-//     });
-// }
-
-
-// function get_audio_events(){
-//
-//     send = {};
-//     send.dataset=corpus_name;
-//     send.count = 10; //TODO: pull from some element
-//
-//     $.ajaxSetup({
-//         contentType: "application/json; charset=utf-8",
-//         dataType: "json"
-//     });
-//
-//     $.ajax({
-//         url: "/find_audio_events",
-//         type: "POST",
-//         data: JSON.stringify(send),
-//         error: function(xhr, error) {
-//             alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
-//         },
-//         success: function(data) {
-//             current_audio_events = data;
-//             display_audio_events(data);
-//         }
-//     });
-// }
-
 function get_cloud_data(corpus, utterance_list){
 
     var utterance_ids = utterance_list.utterance_ids;
@@ -147,7 +43,6 @@ function get_cloud_data(corpus, utterance_list){
 }
 
 
-
 function get_pseudoterm(pt_id, corpus_name){
 
     send = {};
@@ -186,50 +81,6 @@ function get_pseudoterm(pt_id, corpus_name){
     });
 }
 
-// function get_pseudoterms(count){
-//
-//     send = {};
-//     send.dataset=corpus_name;
-//     send.count = count || 10; //TODO: pull from some element
-//
-//     $.ajaxSetup({
-//         contentType: "application/json; charset=utf-8",
-//         dataType: "json"
-//     });
-//
-//     $.ajax({
-//         url: "/find_pseudoterms",
-//         type: "POST",
-//         data: JSON.stringify(send),
-//         error: function(xhr, error) {
-//             alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
-//         },
-//         success: function(data) {
-//             current_pseudoterms = data;
-//             //display_pseudoterms(data);
-//             active_pseudoterm = data[0]; //Global var
-//         }
-//     });
-// }
-
-// function get_audio_events_from_pseudoterm(pseudoterm_id, count){
-//
-//     send = {};
-//     send.dataset=corpus_name;
-//     send.pt_id=pseudoterm_id;
-//     send.count= count || 10; //10 if nothing is specified in the call
-//     $.ajax({
-//         url: "/find_audio_events",
-//         type: "POST",
-//         data: JSON.stringify(send),
-//         error: function(xhr, error) {
-//             alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
-//         },
-//         success: function(data) {
-//             display_audio_events(data);
-//         }
-//     });
-// }
 
 function annotate_pt_eng_label(corpus){
     active_pt_id = active_pseudoterm._id;
@@ -282,6 +133,7 @@ function annotate_pt_native_label(corpus){
     });
 }
 
+
 function junk_this_pseudoterm(event) {
     active_pt_id = active_pseudoterm._id;
     send = {};
@@ -303,33 +155,6 @@ function junk_this_pseudoterm(event) {
 
     junk_displayed_token( active_pseudoterm.eng_display );
 }
-
-
-// function test_ajax_calls(){
-//     get_annotation();
-//     get_utterances();
-//     get_audio_events();
-//     get_pseudoterms();
-// }
-
-// function test_cloud_data_call(){
-//     utterances = ['53627c6e04dc077fb2110b78','53627c6e04dc077fb211149b','53627c6f04dc077fb21122e7'];
-//     $.when(get_cloud_data(utterances)).done( function(data){
-//         $('#cloud_data_landing_zone').html(prettyPrint(data));
-//     });
-// }
-
-// //Deprecated, to be looked at again later
-// function get_multiple_utterances_cloud_data( utterances_lists ){
-//     get_cloud_data(utterances);
-//     return $.Deferred( function(defer) {
-//         $.each( utterance_list, function(index, utt_list) {
-//             dataset_name = utt_list.dataset_name;
-//             get_cloud_data( utt_list.utterance_ids, utt_list.dataset_name);
-//         });
-//         defer.resolve();
-//     }).promise();
-// }
 
 
 /*
