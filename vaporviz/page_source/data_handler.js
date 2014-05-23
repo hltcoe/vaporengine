@@ -282,10 +282,10 @@ function annotate_pt_native_label(corpus){
     });
 }
 
-function junk_this_pseudoterm(){
+function junk_this_pseudoterm(event) {
     active_pt_id = active_pseudoterm._id;
     send = {};
-    send.dataset = corpus_name;
+    send.dataset = event.data.corpus;
     send._id=active_pt_id;
     send.native_display = annotation;
     $.ajax({

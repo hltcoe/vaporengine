@@ -32,7 +32,7 @@
     }
 
     .playover {
-      background-color: blue;
+      background-color: yellow;
     }
   </style>
 
@@ -83,10 +83,8 @@
             .html(audio_events[i]['_id'] + " ");
           $('#audio_event_list').append(audioEventSpan);
         }
-
-        // TODO: Remove this callback function after the first time it has been called
       });
-      $('#pt_junk_button').click(junk_this_pseudoterm) ;
+      $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
     });
 
     $.get("/www/venncloud_template.html", function(data){

@@ -66,7 +66,7 @@
       addWaveformVisualizer('waveform_visualizer');
       addControlsForWaveformVisualizer($('#pt_snippets_audio_player'), 'waveform_visualizer');
 
-	    $('#pt_junk_button').click(junk_this_pseudoterm);
+	    $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
     });
 
     $.get("/www/venncloud_template.html", function(data){
