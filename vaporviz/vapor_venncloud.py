@@ -1,3 +1,5 @@
+from __future__ import division
+
 """Specific code for connecting dynamic wordclouds and vennclouds to vaporviz"""
 
 """vennclouds need data of the form:
@@ -9,8 +11,6 @@
 
 token dict: { token: 'display_token', tf:tf, idf:idf, examples:[examples], ... }
 """
-
-from __future__ import division
 
 from bson import ObjectId
 
