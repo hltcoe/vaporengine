@@ -12,6 +12,8 @@ from __future__ import division
 token dict: { token: 'display_token', tf:tf, idf:idf, examples:[examples], ... }
 """
 
+from collections import defaultdict
+
 from bson import ObjectId
 
 from vaporgasp.queries import find_pseudoterms, find_utterances
@@ -24,6 +26,8 @@ def make_wc_datastructure(db, utterances):
     as needed by the dynamic wordcloud/venncloud code.
     """
     pseudoterm_id_set = set()
+    pseudoterm_id_totals = defaultdict(int)
+    tf = defaultdict(int)
     tokens = []
     token_to_pseudoterm_ids = {} #for graphemes that line up, these will be lists
     utterance_object_ids = []
@@ -41,21 +45,20 @@ def make_wc_datastructure(db, utterances):
     for utterance in utterances_cursor:
         for pseudoterm_id in utterance['pts']:
             pseudoterm_id_set.add(pseudoterm_id)
+            pseudoterm_id_totals[pseudoterm_id] += 1
     pseudoterm_object_ids = list(pseudoterm_id_set)
 
     pseudoterms_cursor = db.pseudoterms.find({"_id": {"$in": pseudoterm_object_ids}})
     for pseudoterm in pseudoterms_cursor:
         if 'is_junk' not in pseudoterm or not pseudoterm['is_junk']:
             token = pseudoterm['eng_display']
+            tf[token] = pseudoterm_id_totals[pseudoterm['_id']]
             tokens.append(token)
             token_to_pseudoterm_ids[token] = token_to_pseudoterm_ids.get(token,[]) + [pseudoterm['_id']]
 
     #Have to get idf somehow to include. For now everything is 1
 
     #Figure out the right way to integrate dynamic wordcloud package internal calls
-    tf = {}
-    for token in tokens:
-        tf[token] = tf.get(token,0)+1
 
     #Now finally make the token feature vector
     token_vector = []
