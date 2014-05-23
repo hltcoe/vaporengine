@@ -45,9 +45,10 @@ def make_wc_datastructure(db, utterances):
 
     pseudoterms_cursor = db.pseudoterms.find({"_id": {"$in": pseudoterm_object_ids}})
     for pseudoterm in pseudoterms_cursor:
-        token = pseudoterm['eng_display']
-        tokens.append(token)
-        token_to_pseudoterm_ids[token] = token_to_pseudoterm_ids.get(token,[]) + [pseudoterm['_id']]
+        if 'is_junk' not in pseudoterm or not pseudoterm['is_junk']:
+            token = pseudoterm['eng_display']
+            tokens.append(token)
+            token_to_pseudoterm_ids[token] = token_to_pseudoterm_ids.get(token,[]) + [pseudoterm['_id']]
 
     #Have to get idf somehow to include. For now everything is 1
 
