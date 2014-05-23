@@ -60,7 +60,7 @@
     $.ajax({
       url: "/find_utterances",
       type: "POST",
-      data: JSON.stringify({'dataset': corpus_name, 'count': 7}),
+      data: JSON.stringify({'dataset': 'buckeye', 'count': 7}),
       error: function(xhr, error) {
         alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
       },
@@ -81,7 +81,7 @@
         ];
         utterance_set2.dataset_name="Set2";
         console.log([utterance_set1,utterance_set2]);
-        venncloud_from_utterances([utterance_set1,utterance_set2]);
+        venncloud_from_utterances("buckeye", [utterance_set1,utterance_set2]);
       }
     });
   }
