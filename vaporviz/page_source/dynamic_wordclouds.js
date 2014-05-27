@@ -109,7 +109,7 @@ floatingMenu.add('floatdivright',
         snap: true
     });
 */
-if ($('#floatdivleft').length > 0) {
+if (document.getElementById('floatdivleft')) {
     floatingMenu.add('floatdivleft',
     {
         targetLeft: 10,
@@ -119,21 +119,21 @@ if ($('#floatdivleft').length > 0) {
 }
 
 function hide_example_windows() {
-    if ($('#floatdivright').length > 0) {
+    if (document.getElementById('floatdivright')) {
         $('#floatdivright').hide();
     }
-    if ($('#floatdivleft').length > 0) {
+    if (document.getElementById('floatdivleft')) {
         $('#floatdivleft').hide();
     }
 }
 
 function show_example_windows() {
     if (venncloud) {
-        if ($('#floatdivright').length > 0) {
+        if (document.getElementById('floatdivright')) {
             $('#floatdivright').show();
         }
     }
-    if ($('#floatdivleft').length > 0) {
+    if (document.getElementById('floatdivleft')) {
         $('#floatdivleft').show();
     }
 }
@@ -559,7 +559,9 @@ function initialize_wordcloud_controls() {
     //end count slider
 
     function update_required_tf_filter_display(values) {
-        document.getElementById("required_observations_out").innerHTML = '[' + values[0] + ' , ' + values[1] + ']';
+        if (document.getElementById('required_observations_out')) {
+            document.getElementById("required_observations_out").innerHTML = '[' + values[0] + ' , ' + values[1] + ']';
+        }
     }
 
     //begin Required Observations slider
@@ -603,7 +605,9 @@ function initialize_wordcloud_controls() {
     //begin Required IDF slider
     function update_required_idf_filter_display(values) {
         var disp = '[' + Math.floor(values[0]) + ' , ' + Math.floor(values[1]) + ']';
-        document.getElementById("required_idf_out").innerHTML = disp;
+        if (document.getElementById('required_idf_out')) {
+            document.getElementById("required_idf_out").innerHTML = disp;
+        }
     }
 
     $(function () {
@@ -842,7 +846,13 @@ function filter_multiple_for_required_tf_and_idf(to_filter_dicts) {
 
 //TODO: Add displays necessary to make this function
 function filter_for_display_entities_types(to_filter) {
-    s.display_words = $('#display_plain_words').is(':checked');
+    if (document.getElementById('display_plain_words')) {
+        s.display_words = $('#display_plain_words').is(':checked');
+    }
+    else {
+        // Wordcloud should be displayed even if DOM is missing 'display_plain_words' checkbox
+        s.display_words = true;
+    }
     s.display_hashtags = $('#display_hashtags').is(':checked');
     s.display_user_mentions = $('#display_user_mentions').is(':checked');
 
