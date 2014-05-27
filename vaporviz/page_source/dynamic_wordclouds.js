@@ -119,23 +119,15 @@ if (document.getElementById('floatdivleft')) {
 }
 
 function hide_example_windows() {
-    if (document.getElementById('floatdivright')) {
-        $('#floatdivright').hide();
-    }
-    if (document.getElementById('floatdivleft')) {
-        $('#floatdivleft').hide();
-    }
+    $('#floatdivright').hide();
+    $('#floatdivleft').hide();
 }
 
 function show_example_windows() {
     if (venncloud) {
-        if (document.getElementById('floatdivright')) {
-            $('#floatdivright').show();
-        }
+        $('#floatdivright').show();
     }
-    if (document.getElementById('floatdivleft')) {
-        $('#floatdivleft').show();
-    }
+    $('#floatdivleft').show();
 }
 function default_example_onclick(token) {
     if (token.length > 50) {
@@ -559,9 +551,7 @@ function initialize_wordcloud_controls() {
     //end count slider
 
     function update_required_tf_filter_display(values) {
-        if (document.getElementById('required_observations_out')) {
-            document.getElementById("required_observations_out").innerHTML = '[' + values[0] + ' , ' + values[1] + ']';
-        }
+        $('#required_observations_out').html('[' + values[0] + ' , ' + values[1] + ']');
     }
 
     //begin Required Observations slider
@@ -605,9 +595,7 @@ function initialize_wordcloud_controls() {
     //begin Required IDF slider
     function update_required_idf_filter_display(values) {
         var disp = '[' + Math.floor(values[0]) + ' , ' + Math.floor(values[1]) + ']';
-        if (document.getElementById('required_idf_out')) {
-            document.getElementById("required_idf_out").innerHTML = disp;
-        }
+        $('#required_idf_out').html(disp);
     }
 
     $(function () {
