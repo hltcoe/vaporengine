@@ -53,7 +53,7 @@ var s = {
     display_hashtags: true,
     display_user_mentions: true,
     onclick_function: function (token) {
-        default_example_onclick(token)
+    default_example_onclick(token);
     },
     oncontextclick_function: function (token) {
     }
@@ -196,7 +196,7 @@ function initialize_wordcloud_controls() {
     //Set up visibility controls
     hide_all_controls();
     toggle_wordcloud_common_cloud_controls = function () {
-        disp = $('#wordcloud_common_cloud_controls')
+        disp = $('#wordcloud_common_cloud_controls');
         if (common_cloud_controls_visible) {
             disp.hide();
             common_cloud_controls_visible = false;
@@ -211,12 +211,11 @@ function initialize_wordcloud_controls() {
             disp.show('slideDown');
             common_cloud_controls_visible = true;
         }
-        ;
     };
 
 
     toggle_wordcloud_frequency_filter = function () {
-        disp = $('#wordcloud_frequency_filter_controls')
+        disp = $('#wordcloud_frequency_filter_controls');
         if (frequency_filter_visible) {
             disp.hide();
             frequency_filter_visible = false;
@@ -231,12 +230,11 @@ function initialize_wordcloud_controls() {
             disp.show('slideDown');
             frequency_filter_visible = true;
         }
-        ;
     };
 
 
     toggle_wordcloud_rarity_filter = function () {
-        disp = $('#wordcloud_rarity_filter_controls')
+        disp = $('#wordcloud_rarity_filter_controls');
         if (rarity_filter_visible) {
             disp.hide();
             rarity_filter_visible = false;
@@ -251,7 +249,6 @@ function initialize_wordcloud_controls() {
             disp.show('slideDown');
             rarity_filter_visible = true;
         }
-        ;
     };
 
 
@@ -271,12 +268,11 @@ function initialize_wordcloud_controls() {
             disp.show('slideDown');
             sort_buttons_visible = true;
         }
-        ;
     };
 
 
     toggle_wordcloud_entities_buttons = function () {
-        disp = $('#wordcloud_entities_buttons')
+        disp = $('#wordcloud_entities_buttons');
         if (wordcloud_entities_buttons_visible) {
             disp.hide();
             wordcloud_entities_buttons_visible = false;
@@ -291,12 +287,11 @@ function initialize_wordcloud_controls() {
             disp.show('slideDown');
             wordcloud_entities_buttons_visible = true;
         }
-        ;
     };
 
 
     toggle_wordcloud_opacity_controls = function () {
-        disp = $('#wordcloud_opacity_controls')
+        disp = $('#wordcloud_opacity_controls');
         if (opacity_controls_visible) {
             disp.hide();
             opacity_controls_visible = false;
@@ -311,12 +306,11 @@ function initialize_wordcloud_controls() {
             disp.show('slideDown');
             opacity_controls_visible = true;
         }
-        ;
     };
 
 
     toggle_wordcloud_size_controls = function () {
-        disp = $('#wordcloud_size_controls')
+        disp = $('#wordcloud_size_controls');
         if (size_controls_visible) {
             disp.hide();
             size_controls_visible = false;
@@ -331,12 +325,11 @@ function initialize_wordcloud_controls() {
             disp.show('slideDown');
             size_controls_visible = true;
         }
-        ;
     };
 
 
     toggle_wordcloud_description = function () {
-        disp = $('#wordcloud_description_output')
+        disp = $('#wordcloud_description_output');
         if (wordcloud_description_visible) {
             disp.hide();
             wordcloud_description_visible = false;
@@ -351,7 +344,6 @@ function initialize_wordcloud_controls() {
             disp.show('slideDown');
             wordcloud_description_visible = true;
         }
-        ;
     };
 
 
@@ -370,7 +362,7 @@ function initialize_wordcloud_controls() {
         //DEBUG//document.getElementById('common_cloud_controls_out').innerHTML = value + " " + orig_value;
         s.center_threshold = value;
         draw_wordcloud();
-    };
+    }
 
     /*
      $(function() {
@@ -394,12 +386,12 @@ function initialize_wordcloud_controls() {
             "step": s.center_step,
             "value": s.center_threshold,
             slide: function (event, ui) {
-                common_cloud_change(event, ui)
+                common_cloud_change(event, ui);
             },
             change: function (event, ui) {
-                common_cloud_change(event, ui)
+                common_cloud_change(event, ui);
             }
-        })
+        });
     });
 
 
@@ -509,10 +501,10 @@ function initialize_wordcloud_controls() {
             "step": 0.01,
             "value": s.size_frequency_weight,
             slide: function (event, ui) {
-                size_frequency_change(event, ui)
+                size_frequency_change(event, ui);
             },
             change: function (event, ui) {
-                size_frequency_change(event, ui)
+                size_frequency_change(event, ui);
             }
         });
     });
@@ -646,7 +638,7 @@ function initialize_wordcloud_controls() {
         //DEBUG//document.getElementById('base_fontsize_slider_out').innerHTML = value + " " + orig_value;
         s.base_fontsize = value;
         update_wordcloud();
-    };
+    }
     $(function () {
         handle = $('#base_fontside_slider');
         handle.slider();
@@ -682,7 +674,7 @@ function initialize_wordcloud_controls() {
     function base_opacity_change(event, ui) {
         var sli = $("#base_opacity_slider");
         //var orig_value = $( "#base_opacity_slider" ).slider( "values", num_words_max );
-        var orig_value = sli.slider("values", .5);
+        var orig_value = sli.slider("values", 0.5);
         value = orig_value;
         //DEBUG//document.getElementById('base_opacity_slider_out').innerHTML = value + " " + orig_value;
         //base_opacity = opacity_slider_max_value - value;
@@ -694,7 +686,7 @@ function initialize_wordcloud_controls() {
             "min": 0,
             "value": s.base_opacity,
             "max": s.opacity_slider_max_value,
-            "step": .01,
+            "step": 0.01,
             slide: function (event, ui) {
                 base_opacity_change(event, ui);
             },
@@ -713,7 +705,7 @@ function initialize_wordcloud_controls() {
 //What year is this that sum() is not defined by default!? --GAC
 function sum(l) {
     return l.reduce(function (a, b) {
-        return a + b
+        return a + b;
     });
 }
 /*
@@ -754,7 +746,7 @@ function clone(original, decoratorFunction) {
 
 //Passthrough for the moment, can adapt if the data is not in the expected form (e.g. arbreviz?)
 proc_query_data = function (query) {
-    return query
+    return query;
 };
 
 
@@ -765,7 +757,7 @@ function filter_for_idf(to_filter_dict) {
             delete to_filter_dict[key];
         }
     });
-};
+}
 
 //TODO: Make a function to take an arbitrary number of dicts to filter, and filter on the sum of their tfs
 
@@ -787,13 +779,13 @@ function filter_for_required_tf(to_filter_dicts) {
         });
         return;
     }
-    ;
+
     //If we're passed [{},{},...] sum the occurences of each token across all objects before applying filter
     var all_tokens = {}; //Keyed on token, value is summed tf
     for (var index = 0, len = to_filter_dicts.length; index < len; index++) {
         to_filter_dict = to_filter_dicts[index];
         $.each(Object.keys(to_filter_dict), function (index, key) {
-            this_tf = to_filter_dict[key]['tf']
+            this_tf = to_filter_dict[key]['tf'];
             if (key in all_tokens) {
                 all_tokens[key] += this_tf;
             }
@@ -813,9 +805,7 @@ function filter_for_required_tf(to_filter_dicts) {
                     delete to_filter_dict[key];
                 }
             }
-            ;
         }
-        ;
     });
 }
 
@@ -828,7 +818,7 @@ function filter_for_required_observations_and_idf(to_filter_dict) {
             delete to_filter_dict[key];
         }
     });
-};
+}
 
 //This function might not actually be needed, given how we constructed compute master data
 function filter_multiple_for_required_tf_and_idf(to_filter_dicts) {
@@ -836,10 +826,9 @@ function filter_multiple_for_required_tf_and_idf(to_filter_dicts) {
     for (var index = 0, len = to_filter_dicts.length; index < len; index++) {
         filter_for_idf(to_filter_dicts[index]);
     }
-    ;
     //Filter them jointly for tf
     filter_for_required_tf(to_filter_dicts);
-};
+}
 
 //TODO: Add displays necessary to make this function
 function filter_for_display_entities_types(to_filter) {
@@ -850,7 +839,6 @@ function filter_for_display_entities_types(to_filter) {
     if (s.display_words && s.display_user_mentions && s.display_hashtags) {
         return to_filter; //All types selected, this is just a passthrough
     }
-    ;
 
     //filtered = [];
     console.log(to_filter);
@@ -871,34 +859,33 @@ function filter_for_display_entities_types(to_filter) {
                 delete to_filter[i];
             }
         }
-        ;
     });
     //return filtered;
     return to_filter;
-};
+}
 
 
 //Sorting
 //TODO: Allow sorting on arbitrary variables.
 function sorter(to_sort, my_sort_type) {
     to_sort.sort(function (a, b) {
-        return b['text'] < a['text']
+        return b['text'] < a['text'];
     }); // The default is alphabetic
     my_sort_type === 'IDF' ? to_sort.sort(function (a, b) {
-        return b['idf'] - a['idf']
+        return b['idf'] - a['idf'];
     }) : null; // Reverse, so rarer words are on top
     my_sort_type === 'COUNT' ? to_sort.sort(function (a, b) {
-        return b['tf'] - a['tf']
+        return b['tf'] - a['tf'];
     }) : null;
     return to_sort;
-};
+}
 
 function preference_sorter(to_sort) {
     //Sort by what the user has specified
     s.sort_type = $("#radio :radio:checked").attr('id');
     sorted = sorter(to_sort, s.sort_type);
     return sorted;
-};
+}
 
 
 //Size and Opacity calculations
@@ -910,14 +897,12 @@ get_size = function (count, idf) {
     weighted_size *= (1 - s.size_frequency_weight) + s.size_frequency_weight * weighted_by_count;
     weighted_size *= (1 - s.size_rarity_weight) + (s.size_rarity_weight * weighted_by_rarity_size);
     if (weighted_size < 10) {
-        return 10
+        return 10;
     }
-    ;
     if (weighted_size > 40) {
-        return 40
+        return 40;
     }
-    ;
-    return(weighted_size)
+    return(weighted_size);
 };
 
 
@@ -930,11 +915,9 @@ get_opacity = function (count, idf) {
     if (weighted_opacity < 0.1) {
         weighted_opacity = 0.1;
     }
-    ;
     if (weighted_opacity > 1) {
         weighted_opacity = 1;
     }
-    ;
     return(weighted_opacity)
 };
 
@@ -952,7 +935,7 @@ function update_wordcloud() {
     }
     ;
     add_description_to_display();
-};
+}
 
 
 //function prepare_wordcloud_data(selected_datasets) {
@@ -972,7 +955,6 @@ function prepare_wordcloud_data() {
         //TODO: Need a better error message
         alert('Only supports up to two corpora, you have selected something other than that.');
     }
-    ;
 
 
     //Store the dataset(s) selected in current_data
@@ -986,7 +968,6 @@ function prepare_wordcloud_data() {
 
         current_data.push(dat);
     }
-    ;
 
     filter_for_required_tf(current_data);
 
@@ -1037,13 +1018,8 @@ function prepare_wordcloud_data() {
                 r_prop < l_prop ? left_list.push(L[token]) :
                     right_list.push(R[token]);
             }
-            ;
         }
-        ;
-
-
     }
-    ;
 
 
     //Sort
@@ -1063,20 +1039,20 @@ function prepare_wordcloud_data() {
      };
      */
 
-};
+}
 
 
 function tf_size_weight_str() {
-    return "TF:" + Math.round(s.size_frequency_weight * 100) / 100
+    return "TF:" + Math.round(s.size_frequency_weight * 100) / 100;
 }
 function idf_size_weight_str() {
-    return "IDF:" + Math.round(s.size_rarity_weight * 100) / 100
+    return "IDF:" + Math.round(s.size_rarity_weight * 100) / 100;
 }
 function tf_opacity_weight_str() {
-    return "TF:" + Math.round(s.opacity_frequency_weight * 100) / 100
+    return "TF:" + Math.round(s.opacity_frequency_weight * 100) / 100;
 }
 function idf_opacity_weight_str() {
-    return "IDF:" + Math.round(s.opacity_rarity_weight * 100) / 100
+    return "IDF:" + Math.round(s.opacity_rarity_weight * 100) / 100;
 }
 
 function add_description_to_display() {
@@ -1088,55 +1064,46 @@ function add_description_to_display() {
         if (s.size_rarity_weight > 0) {
             d += "Larger words frequently occur in the query and rarely occur in the corpus (TF*IDF). ";
             d += "[" + tf_size_weight_str() + "," + idf_size_weight_str() + "]";
-            d += "<BR>"
+            d += "<BR>";
         }
         else {
             d += "Larger words are more frquent in the query (TF). [" + tf_size_weight_str() + "]<BR>";
         }
-        ;
     }
     else {
         if (s.size_rarity_weight > 0) {
             d += "Larger words are rarer in the whole corpus (IDF). [" + idf_size_weight_str() + "<BR>";
         }
-        ;
     }
-    ;
 
     if (s.opacity_frequency_weight > 0) {
         if (s.opacity_rarity_weight < 1) {
-            d += "Darker words frequently occur in the query and rarely occur in the corpus (TF*IDF). "
+            d += "Darker words frequently occur in the query and rarely occur in the corpus (TF*IDF). ";
             d += "[" + tf_opacity_weight_str() + "," + idf_opacity_weight_str() + "]";
             d += "<BR>";
         }
         else {
             d += "Darker words are more frequent in the query (TF). [" + tf_opacity_weight_str() + "]<BR>";
         }
-        ;
     }
     else {
         if (s.opacity_rarity_weight < 1) {
             d += "Darker words are rarer in the whole corpus (IDF). [" + idf_opacity_weight_str() + "]<BR>";
         }
-        ;
     }
-    ;
 
     if (s.sort_type == "ALPHABETIC") {
         d += "Words are sorted alphabetically.<BR>";
     }
-    ;
     if (s.sort_type == "IDF") {
         d += "Words are sorted by those that occur in the fewest document to those that occur in the most, in the whole corpus (IDF).<BR>";
     }
-    ;
     if (s.sort_type == "COUNT") {
         d += "Words are sorted by many to few occurences in the query (TF).<BR>";
     }
-    ;
 
     $('#wordcloud_description_output').html(d);
-};
+}
 
 
 function paint_tokens(display, data, color) {
@@ -1157,15 +1124,15 @@ function paint_tokens(display, data, color) {
         //Actually add to the display
         display.append(token_element);
     });
-};
+}
 
 
 function draw_wordcloud() {
 
     //Prevent from running if we don't have datasets selected
-    if  (selected_datasets.length == 0){
-        return
-            };
+    if  (selected_datasets.length === 0){
+        return;
+    }
     console.log('hit draw' + selected_datasets);
     //selected_datasets = [0];//HARDCODE for testing
     //selected_datasets = [0,1];//HARDCODE for testing
@@ -1225,7 +1192,7 @@ function draw_wordcloud() {
 
 
 
-    
+
     //paint the tokens with defaults
     if (singlecloud) {
         display = $('span#commoncloud');
@@ -1236,7 +1203,6 @@ function draw_wordcloud() {
         paint_tokens($('span#commoncloud'), current_display_data[1], 'black');
         paint_tokens($('span#rightcloud'), current_display_data[2], 'red');
     }
-    ;
 
 
     // Call update to get actual values correct
@@ -1248,7 +1214,7 @@ function draw_wordcloud() {
     //var context_area = $('#' + wordcloud_element + '>table>tbody');
     context_area = $('#' + wordcloud_element + '>table>tbody');
     add_handlers(context_area);
-    
+
     // Turn the display on
     main_wordcloud_container.show();
 
@@ -1267,10 +1233,10 @@ function update_displayed_token(old_token, new_token){
             dataset[old_token].text = new_token;
             master_datasets[j].tokens[new_token] = dataset[old_token];
             delete master_datasets[j].tokens[old_token];
-        };
-    };
+        }
+    }
     draw_wordcloud();
-};
+}
 
 
 function junk_displayed_token(old_token){
@@ -1280,10 +1246,10 @@ function junk_displayed_token(old_token){
         dataset = master_datasets[j].tokens;
         if (old_token in dataset){
             delete master_datasets[j].tokens[old_token];
-        };
-    };
+        }
+    }
     draw_wordcloud();
-};
+}
 
 var counts = [];
 function compute_master_data(datasets) {
@@ -1320,10 +1286,10 @@ function compute_master_data(datasets) {
     //Put anything here we can precompute on load for all datasets, independent of view.
 
 
-    
+
     master_datasets = datasets;
     //TODO: Something breaks between here and the end of the function
-    
+
     mean_counts = sum(counts) / counts.length;
     mean_idf = sum(idfs) / idfs.length;
     counts.sort();
@@ -1368,7 +1334,7 @@ function initialize_wordcloud() {
     compute_master_data(); //Actually compute it here.
 }
         */
-        
+
 function dataset_selected() {
     var leftDatasetId = $('#left_dataset_selector')[0].value;
     var rightDatasetId = $('#right_dataset_selector')[0].value;
@@ -1402,12 +1368,12 @@ function make_me_a_venncloud(datasets, options) {
     for (var j in master_datasets){
         if (initialSelection.length < 2) {
             initialSelection.push(j);
-        }};
+        }}
     selected_datasets = initialSelection;
     draw_wordcloud();
-    
+
     //hide_example_windows();
-    
+
     main_wordcloud_container = $('#' + wordcloud_element);
     //var context_area = $('#' + wordcloud_element + '>table>tbody');
     context_area = $('#' + wordcloud_element + '>table>tbody');
