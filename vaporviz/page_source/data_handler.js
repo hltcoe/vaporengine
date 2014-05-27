@@ -188,7 +188,7 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
           [];
       var pt_ids = token_container.pt_ids;
       console.log(pt_ids);
-      pseudotermID = pt_ids[0]['$oid'];
+      pseudotermID = pt_ids[0];
       get_pseudoterm(pseudotermID, corpus); //Also posts to the global variable
 
       if (waveform_visualizer) {

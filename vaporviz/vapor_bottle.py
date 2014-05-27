@@ -289,6 +289,7 @@ def audio_events_for_pseudoterm(corpus,pseudoterm_id):
             utterance = find_utterances(db, _id=audio_event['utterance_id'])[0]
             audio_identifier_for_utterance_id[audio_event['utterance_id']] = utterance['audio_identifier']
         audio_event['audio_identifier'] = audio_identifier_for_utterance_id[audio_event['utterance_id']]
+        audio_event['utterance_id'] = str(audio_event['utterance_id'])
 
     return audio_events
 

@@ -54,7 +54,7 @@ def make_wc_datastructure(db, utterances):
             token = pseudoterm['eng_display']
             tf[token] = pseudoterm_id_totals[pseudoterm['_id']]
             tokens.append(token)
-            token_to_pseudoterm_ids[token] = token_to_pseudoterm_ids.get(token,[]) + [pseudoterm['_id']]
+            token_to_pseudoterm_ids[token] = token_to_pseudoterm_ids.get(token,[]) + [str(pseudoterm['_id'])]
 
     #Have to get idf somehow to include. For now everything is 1
 

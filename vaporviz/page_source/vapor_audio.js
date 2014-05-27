@@ -111,7 +111,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings) {
 
     totalButtons = self.audio_events.length;
     for (i = 0; i < totalButtons; i++) {
-      utteranceID = self.audio_events[i].utterance_id['$oid'];
+      utteranceID = self.audio_events[i].utterance_id;
       $('#' + utteranceID + '_utterance_button')
         .addClass('btn-default')
         .removeClass('btn-info');
@@ -137,9 +137,9 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings) {
       return;
     }
 
-    utteranceID = self.audio_events[marker.id].utterance_id['$oid'];
+    utteranceID = self.audio_events[marker.id].utterance_id;
     if (parseInt(marker.id) > 0) {
-      previousUtteranceID = self.audio_events[parseInt(marker.id) - 1].utterance_id['$oid'];
+      previousUtteranceID = self.audio_events[parseInt(marker.id) - 1].utterance_id;
     }
     if (utteranceID != previousUtteranceID && previousUtteranceID != -1) {
       $('#' + previousUtteranceID + '_utterance_button')
@@ -179,7 +179,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings) {
           'position': total_duration
       });
 
-      utterance_id = self.audio_events[i].utterance_id['$oid'];
+      utterance_id = self.audio_events[i].utterance_id;
       if (typeof(audio_events_per_utterance_id[utterance_id]) == 'undefined') {
         audio_events_per_utterance_id[utterance_id] = 0;
       }
