@@ -180,6 +180,7 @@
        will break if some of the DOM elements in the controls don't exist.
   -->
   <div style="display: none;">
+    <div id="floatdivleft"></div>
     <table width="600px">
       <tr>
         <td valign="top" width="100%">
