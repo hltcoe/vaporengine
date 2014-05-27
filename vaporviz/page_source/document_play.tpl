@@ -47,31 +47,30 @@
     }
 
     $(document).ready(function() {
-      addWaveformVisualizer('waveform_visualizer');
-      addControlsAndLoadAudioForWaveformVisualizer(
+      var waveformVisualizer = new WaveformVisualizer('waveform_visualizer');
+      waveformVisualizer.addControlsAndLoadAudio(
         $('#pt_snippets_audio_player'),
-        'waveform_visualizer',
         getURLforUtteranceWAV('{{corpus}}', '{{utterance_id}}')
       );
 
-      visualizers['waveform_visualizer'].wavesurfer.on('region-in', function(marker) {
+      waveformVisualizer.wavesurfer.on('region-in', function(marker) {
         $('#audio_event_span_' + marker.id).addClass('playover');
       });
 
-      visualizers['waveform_visualizer'].wavesurfer.on('region-out', function(marker) {
+      waveformVisualizer.wavesurfer.on('region-out', function(marker) {
         $('#audio_event_span_' + marker.id).removeClass('playover');
       });
 
-      visualizers['waveform_visualizer'].wavesurfer.on('ready', function() {
+      waveformVisualizer.wavesurfer.on('ready', function() {
         var i, audioEventSpan;
         for (i = 0; i < audio_events.length; i++) {
-          visualizers['waveform_visualizer'].wavesurfer.mark({
+          waveformVisualizer.wavesurfer.mark({
             'id': audio_events[i]['_id'],
             'color': 'blue',
             'position': audio_events[i]['start_offset']
           });
 
-          visualizers['waveform_visualizer'].wavesurfer.region({
+          waveformVisualizer.wavesurfer.region({
             'id': audio_events[i]['_id'],
             'startPosition': audio_events[i]['start_offset'],
             'endPosition': audio_events[i]['end_offset']
@@ -220,6 +219,7 @@
        will break if some of the DOM elements in the controls don't exist.
   -->
   <div style="display: none;">
+    <div id="floatdivleft"></div>
     <table width="600px">
       <tr>
         <td valign="top" width="100%">
