@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="/www/jquery-ui.css">
-  <link rel="stylesheet" href="/www/dynamic_wordclouds.css">
-
+  <link rel="stylesheet" href="/static/jquery-ui-1.10.4/css/ui-lightness/jquery-ui-1.10.4.css"/>
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap.css"/>
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap-theme.css"/>
 
+  <link rel="stylesheet" href="/www/dynamic_wordclouds.css">
+
   <script src="/static/jquery-1.11.0.min.js"></script>
+  <script src="/static/jquery-ui-1.10.4/js/jquery-ui-1.10.4.min.js"></script>
   <script src="/static/bootstrap-3.1.1/js/bootstrap.js"></script>
 
-  <script src="/www/jquery-ui.js"></script>
   <script src="/www/floating-1.12.js"></script>
   <script src="/www/dynamic_wordclouds.js"></script>
   <script src="/www/prettyprint.js"></script>
@@ -33,9 +33,6 @@
   </style>
 
   <script>
-    function create_wordcloud_for_utterance(utterance_id) {
-    }
-
     $(document).ready(function() {
       var waveformVisualizer = new WaveformVisualizer('waveform_visualizer');
       waveformVisualizer.addControls($('#pt_snippets_audio_player'));
@@ -75,9 +72,9 @@
             <label for="pt_native_display">Native</label>
             <input id="pt_native_display" disabled></input>
           </div>
-		  <div class="form-group">
-			<button class="btn btn-primary btn-xs" id="pt_junk_button"><i class="glyphicon glyphicon-trash"></i></button>
-		  </div>
+          <div class="form-group">
+            <button class="btn btn-primary btn-xs" id="pt_junk_button"><i class="glyphicon glyphicon-trash"></i></button>
+          </div>
           <div class="form-group">
             <div id="waveform_visualizer_utterance_list" style="padding-left: 1em;"></div>
           </div>
@@ -104,7 +101,19 @@
               <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Action</a></li>
+              <table style="width: 300px;">
+                <tr>
+                  <td style="text-align: center; width: 5%;">
+                    -
+                  </td>
+                  <td style="width: 90%;">
+                    <div id='common_cloud_controls'></div>
+                  </td>
+                  <td style="text-align: center; width: 5%;">
+                    +
+                  </td>
+                </tr>
+              </table>
             </ul>
           </div>
           <div class="btn-group">
