@@ -6,10 +6,8 @@ function WaveformVisualizer(visualizerID) {
   this.visualizerID = visualizerID;
   this.wavesurfer = Object.create(WaveSurfer);
 
-  // Private variables with closure scope - used by event handlers, which
-  // don't have access to 'this'
-  var closure_audio_events = this.audio_events;
-  var closure_wavesurfer = this.wavesurfer;
+  // Use 'self' to give event handler access to current instance ('this')
+  var self = this;
 
   // Initialization
   this.wavesurfer.init({
@@ -33,7 +31,7 @@ function WaveformVisualizer(visualizerID) {
 
     var playPauseButton = $('<button>')
       .addClass('btn btn-primary btn-xs')
-      .click(this.playPause)
+      .click(self.playPause)
       .html('<i class="glyphicon glyphicon-play"></i> / <i class="glyphicon glyphicon-pause"></i>');
 
     playerDiv.append(playPauseButton);
@@ -43,25 +41,25 @@ function WaveformVisualizer(visualizerID) {
 
   this.addControlsAndLoadAudio = function(parentElement, audioSourceURL) {
     var playerDiv = $('<div>')
-      .attr('id', this.visualizerID + '_audio_control')
+      .attr('id', self.visualizerID + '_audio_control')
       .addClass('audio_control');
 
     var playPauseButton = $('<button>')
       .addClass('btn btn-primary btn-xs')
-      .click(this.playPause)
+      .click(self.playPause)
       .html('<i class="glyphicon glyphicon-play"></i> / <i class="glyphicon glyphicon-pause"></i>');
 
     playerDiv.append(playPauseButton);
 
     parentElement.append(playerDiv);
 
-    loadURL(audioSourceURL);
+    this.loadURL(audioSourceURL);
   };
 
   this.loadAndPlayURL = function(audioSourceURL) {
     this.loadURL(audioSourceURL);
     this.wavesurfer.on('ready', function() {
-      closure_wavesurfer.play();
+      self.wavesurfer.play();
     });
   };
 
@@ -86,16 +84,16 @@ function WaveformVisualizer(visualizerID) {
 
   this.play = function() {
     rewindIfNecessary();
-    this.wavesurfer.play();
+    self.wavesurfer.play();
   };
 
   this.pause = function() {
-    this.wavesurfer.pause();
+    self.wavesurfer.pause();
   };
 
   this.playPause = function() {
     rewindIfNecessary();
-    this.wavesurfer.playPause();
+    self.wavesurfer.playPause();
   };
 
 
@@ -107,9 +105,9 @@ function WaveformVisualizer(visualizerID) {
       totalButtons,
       utteranceID;
 
-    totalButtons = closure_audio_events.length;
+    totalButtons = self.audio_events.length;
     for (i = 0; i < totalButtons; i++) {
-      utteranceID = closure_audio_events[i].utterance_id['$oid'];
+      utteranceID = self.audio_events[i].utterance_id['$oid'];
       $('#' + utteranceID + '_utterance_button')
         .addClass('btn-default')
         .removeClass('btn-info');
@@ -119,9 +117,9 @@ function WaveformVisualizer(visualizerID) {
   var rewindIfNecessary = function() {
     // If waveform progress indicator is at end of clip, move progress
     // indicator back to beginning of clip
-    if (Math.abs(closure_wavesurfer.getDuration() - closure_wavesurfer.getCurrentTime()) < 0.01) {
+    if (Math.abs(self.wavesurfer.getDuration() - self.wavesurfer.getCurrentTime()) < 0.01) {
       resetActiveDocumentButtons();
-      closure_wavesurfer.seekTo(0.0);
+      self.wavesurfer.seekTo(0.0);
     }
   };
 
@@ -131,13 +129,13 @@ function WaveformVisualizer(visualizerID) {
       utteranceID;
 
     // TODO: More sanity checks to verify that this handler is responsible for this region
-    if (!closure_audio_events[marker.id]) {
+    if (!self.audio_events[marker.id]) {
       return;
     }
 
-    utteranceID = closure_audio_events[marker.id].utterance_id['$oid'];
+    utteranceID = self.audio_events[marker.id].utterance_id['$oid'];
     if (parseInt(marker.id) > 0) {
-      previousUtteranceID = closure_audio_events[parseInt(marker.id) - 1].utterance_id['$oid'];
+      previousUtteranceID = self.audio_events[parseInt(marker.id) - 1].utterance_id['$oid'];
     }
     if (utteranceID != previousUtteranceID && previousUtteranceID != -1) {
       $('#' + previousUtteranceID + '_utterance_button')
@@ -159,30 +157,30 @@ function WaveformVisualizer(visualizerID) {
       utteranceListDiv,
       utteranceSpan;
 
-    closure_audio_events = audio_events;
-    closure_wavesurfer.clearMarks();
-    closure_wavesurfer.clearRegions();
+    self.audio_events = audio_events;
+    self.wavesurfer.clearMarks();
+    self.wavesurfer.clearRegions();
 
-    for (i in closure_audio_events) {
-      closure_wavesurfer.region({
+    for (i in self.audio_events) {
+      self.wavesurfer.region({
         'color': 'blue',
         'id': i,
         'startPosition': total_duration,
-        'endPosition': total_duration + closure_audio_events[i].duration/100.0 - 0.01
+        'endPosition': total_duration + self.audio_events[i].duration/100.0 - 0.01
       });
-      total_duration += closure_audio_events[i].duration / 100.0;
-      closure_wavesurfer.mark({
+      total_duration += self.audio_events[i].duration / 100.0;
+      self.wavesurfer.mark({
           'color': 'black',
           'id': i,
           'position': total_duration
       });
 
-      utterance_id = closure_audio_events[i].utterance_id['$oid'];
+      utterance_id = self.audio_events[i].utterance_id['$oid'];
       if (typeof(audio_events_per_utterance_id[utterance_id]) == 'undefined') {
         audio_events_per_utterance_id[utterance_id] = 0;
       }
       audio_events_per_utterance_id[utterance_id] += 1;
-      audio_identifier_for_utterance_id[utterance_id] = closure_audio_events[i].audio_identifier;
+      audio_identifier_for_utterance_id[utterance_id] = self.audio_events[i].audio_identifier;
     }
 
     utteranceListDiv = $('#' + visualizerID + '_utterance_list');
