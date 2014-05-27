@@ -47,7 +47,7 @@
     }
 
     $(document).ready(function() {
-      var waveformVisualizer = new WaveformVisualizer('waveform_visualizer');
+      var waveformVisualizer = new WaveformVisualizer('waveform_visualizer', {scrollParent: true});
       waveformVisualizer.addControlsAndLoadAudio(
         $('#pt_snippets_audio_player'),
         getURLforUtteranceWAV('{{corpus}}', '{{utterance_id}}')
