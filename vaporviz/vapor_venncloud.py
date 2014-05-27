@@ -27,6 +27,7 @@ def make_wc_datastructure(db, utterances):
     """
     pseudoterm_id_set = set()
     pseudoterm_id_totals = defaultdict(int)
+    pseudoterm_id_string_to_audio_event_ids = defaultdict(list)
     pseudoterm_id_string_to_utterance_ids = defaultdict(list)
     tf = defaultdict(int)
     tokens = []
@@ -58,6 +59,12 @@ def make_wc_datastructure(db, utterances):
             tokens.append(token)
             token_to_pseudoterm_id_strings[token].append(str(pseudoterm['_id']))
 
+    audio_events_cursor = db.audio_events.find({
+        "pt_id": {"$in": pseudoterm_object_ids},
+        "utterance_id": {"$in": utterance_object_ids}
+    })
+    for audio_event in audio_events_cursor:
+        pseudoterm_id_string_to_audio_event_ids[str(audio_event['pt_id'])].append(audio_event['_id'])
 
     #Have to get idf somehow to include. For now everything is 1
 
@@ -66,11 +73,15 @@ def make_wc_datastructure(db, utterances):
     #Now finally make the token feature vector
     token_vector = []
     for token, pseudoterm_id_strings in sorted(token_to_pseudoterm_id_strings.items()):
+        audio_event_id_strings_for_token = []
         utterance_id_strings_for_token = []
         for pseudoterm_id_string in pseudoterm_id_strings:
+            for audio_event_id in pseudoterm_id_string_to_audio_event_ids[pseudoterm_id_string]:
+                audio_event_id_strings_for_token.append(str(audio_event_id))
             for utterance_id in pseudoterm_id_string_to_utterance_ids[pseudoterm_id_string]:
                 utterance_id_strings_for_token.append(str(utterance_id))
         t = {
+            'audio_event_ids':audio_event_id_strings_for_token,
             'examples':[],
             'idf':1,  #TODO fix IDF
             'number_of_pts':len(pseudoterm_id_strings),
