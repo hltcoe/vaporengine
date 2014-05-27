@@ -26,7 +26,7 @@
     </ul>
 
     <hr />
-
+    <!--
     <h3><a href="/www/test_ajax_calls.html">AJAX Test</a></h3>
 
     <h3><a href="/www/audio_test.html">Audio Test</a></h3>
@@ -34,8 +34,10 @@
     <h3><a href="/www/test_pseudoterm_audio.html">Pseudoterm Audio Test</a></h3>
 
     <h3><a href="/www/test_cloud_data_call.html">Venncloud data call test</a></h3>
-
+    -->
     <h3><a href="/www/test_venncloud.html">Venncloud display test</a></h3>
+
+    <h3><a href="/www/test_bootstrap_venncloud.html">Venncloud display test - Bootstrap version</a></h3>
 
   </div><!-- /.container -->
 </body>
