@@ -765,12 +765,18 @@ proc_query_data = function (query) {
 
 
 function filter_for_idf(to_filter_dict) {
-    $.each(Object.keys(to_filter_dict), function (index, key) {
-        this_idf = to_filter_dict[key]['idf'];
-        if (this_idf < s.min_req_idf || this_idf > s.max_req_idf) {
-            delete to_filter_dict[key];
-        }
-    });
+    // If 'required_idf_slider' does not exist, then s.min_req_idf and s.max_req_idf
+    // will not be set properly by the callback functions attached to the slider.
+    // Without this guard condition, all words are filtered out when 'required_idf_slider'
+    // does not exist.
+    if (document.getElementById('required_idf_slider')) {
+        $.each(Object.keys(to_filter_dict), function (index, key) {
+            this_idf = to_filter_dict[key]['idf'];
+            if (this_idf < s.min_req_idf || this_idf > s.max_req_idf) {
+                delete to_filter_dict[key];
+            }
+        });
+    }
 }
 
 //TODO: Make a function to take an arbitrary number of dicts to filter, and filter on the sum of their tfs
