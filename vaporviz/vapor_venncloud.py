@@ -27,9 +27,10 @@ def make_wc_datastructure(db, utterances):
     """
     pseudoterm_id_set = set()
     pseudoterm_id_totals = defaultdict(int)
+    pseudoterm_id_string_to_utterance_ids = defaultdict(list)
     tf = defaultdict(int)
     tokens = []
-    token_to_pseudoterm_ids = {} #for graphemes that line up, these will be lists
+    token_to_pseudoterm_id_strings = defaultdict(list) #for graphemes that line up, these will be lists
     utterance_object_ids = []
 
     for raw_utt_id in utterances:
@@ -46,6 +47,7 @@ def make_wc_datastructure(db, utterances):
         for pseudoterm_id in utterance['pts']:
             pseudoterm_id_set.add(pseudoterm_id)
             pseudoterm_id_totals[pseudoterm_id] += 1
+            pseudoterm_id_string_to_utterance_ids[str(pseudoterm_id)].append(utterance['_id'])
     pseudoterm_object_ids = list(pseudoterm_id_set)
 
     pseudoterms_cursor = db.pseudoterms.find({"_id": {"$in": pseudoterm_object_ids}})
@@ -54,7 +56,8 @@ def make_wc_datastructure(db, utterances):
             token = pseudoterm['eng_display']
             tf[token] = pseudoterm_id_totals[pseudoterm['_id']]
             tokens.append(token)
-            token_to_pseudoterm_ids[token] = token_to_pseudoterm_ids.get(token,[]) + [str(pseudoterm['_id'])]
+            token_to_pseudoterm_id_strings[token].append(str(pseudoterm['_id']))
+
 
     #Have to get idf somehow to include. For now everything is 1
 
@@ -62,10 +65,20 @@ def make_wc_datastructure(db, utterances):
 
     #Now finally make the token feature vector
     token_vector = []
-    for token, pseudoterm_ids in sorted(token_to_pseudoterm_ids.items()):
-        t = {'text':token, 'tf':tf[token], 'idf':1, 'examples':[],
-             'number_of_pts':len(pseudoterm_ids), 'pt_ids':pseudoterm_ids} #TODO fix IDF
-        #TODO add pseudoterm length here too?
+    for token, pseudoterm_id_strings in sorted(token_to_pseudoterm_id_strings.items()):
+        utterance_id_strings_for_token = []
+        for pseudoterm_id_string in pseudoterm_id_strings:
+            for utterance_id in pseudoterm_id_string_to_utterance_ids[pseudoterm_id_string]:
+                utterance_id_strings_for_token.append(str(utterance_id))
+        t = {
+            'examples':[],
+            'idf':1,  #TODO fix IDF
+            'number_of_pts':len(pseudoterm_id_strings),
+            'pt_ids':pseudoterm_id_strings,
+            'text':token,
+            'tf':tf[token],
+            'utterance_ids':utterance_id_strings_for_token
+        }
         token_vector.append(t)
 
     return token_vector
