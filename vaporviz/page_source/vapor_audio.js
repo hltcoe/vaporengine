@@ -1,22 +1,26 @@
 
-function WaveformVisualizer(visualizerID) {
+function WaveformVisualizer(visualizerID, customWavesurferSettings) {
+
+  // Use 'self' to give event handler access to current instance ('this')
+  var self = this;
+
+  var combinedWavesurferSettings, defaultWavesurferSettings;
 
   // Public member variables
   this.audio_events = [];
   this.visualizerID = visualizerID;
   this.wavesurfer = Object.create(WaveSurfer);
 
-  // Use 'self' to give event handler access to current instance ('this')
-  var self = this;
-
   // Initialization
-  this.wavesurfer.init({
+  defaultWavesurferSettings = {
     container: document.querySelector('#' + this.visualizerID),
     dragSelection: false,
     normalize: true,
     progressColor: 'red',
     waveColor: 'pink',
-  });
+  };
+  combinedWavesurferSettings = $.extend({}, defaultWavesurferSettings, customWavesurferSettings);
+  this.wavesurfer.init(combinedWavesurferSettings);
   this.wavesurfer.on('region-in', function(marker) {
     updateActiveDocumentForAudioEvent(marker);
   });
