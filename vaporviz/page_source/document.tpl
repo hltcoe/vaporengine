@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap.css"/>
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap-theme.css"/>
 
-  <link rel="stylesheet" href="/www/dynamic_wordclouds.css">
+  <link rel="stylesheet" href="/www/dynamic_wordclouds.css"/>
 
   <script src="/static/jquery-1.11.0.min.js"></script>
   <script src="/static/jquery-ui-1.10.4/js/jquery-ui-1.10.4.min.js"></script>
@@ -41,7 +41,7 @@
         'dataset_name': 'Set1',
         'utterance_ids': ["{{utterance_id}}"]
       };
-      venncloud_from_utterances("{{corpus}}", [utterance_set1, utterance_set1], waveformVisualizer);
+      wordcloud_from_utterances("{{corpus}}", [utterance_set1], waveformVisualizer);
 
       $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
     });

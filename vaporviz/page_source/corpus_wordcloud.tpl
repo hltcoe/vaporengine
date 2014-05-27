@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap.css"/>
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap-theme.css"/>
 
-  <link rel="stylesheet" href="/www/dynamic_wordclouds.css">
+  <link rel="stylesheet" href="/www/dynamic_wordclouds.css"/>
 
   <script src="/static/jquery-1.11.0.min.js"></script>
   <script src="/static/jquery-ui-1.10.4/js/jquery-ui-1.10.4.min.js"></script>
@@ -55,7 +55,7 @@
             utterance_set1.utterance_ids.push(utterances[i]._id);
           }
 
-          venncloud_from_utterances("{{corpus}}", [utterance_set1, utterance_set1], waveform_visualizer);
+          wordcloud_from_utterances("{{corpus}}", [utterance_set1], waveform_visualizer);
         }
       });
     }
@@ -191,6 +191,7 @@
        will break if some of the DOM elements in the controls don't exist.
   -->
   <div style="display: none;">
+    <div id="floatdivleft"></div>
     <table width="600px">
       <tr>
         <td valign="top" width="100%">
