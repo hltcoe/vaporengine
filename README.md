@@ -22,9 +22,4 @@ In a separate terminal window, establish a tunnel to the proper port (12321 by d
 [you@local]: ssh -L 12321:test2:12321 you@external.hltcoe.jhu.edu
 
 Now, on your local machine point Firefox [Safari?] at:
-http://localhost:12321/www/test.html 
-
-This should give you a simple HTML page returned (from the vapor_bottle.py webserver).
-[this (and anything from http://localhost:12321/www/) serves up the page located at 
-$VEHOME/vaporviz/page_source/test.html]
-
+http://localhost:12321/
