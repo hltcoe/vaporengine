@@ -446,15 +446,8 @@ def document_list(corpus):
 def document_view(corpus, audio_identifier):
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
-    return template('document', corpus=corpus, utterance_id=str(utterance['_id']))
-
-
-@route('/corpus/<corpus>/document/play/<audio_identifier>')
-def document_play(corpus, audio_identifier):
-    db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
-    utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
     audio_events = find_audio_events(db, utterance_id=utterance['_id'])
-    return template('document_play',
+    return template('document',
                     audio_events=audio_events,
                     corpus=corpus,
                     utterance_id=str(utterance['_id']))

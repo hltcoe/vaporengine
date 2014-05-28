@@ -30,18 +30,53 @@
     #wordcloud_landing_zone thead {
       display: none;
     }
+
+    .playover {
+      background-color: yellow;
+    }
   </style>
 
   <script>
     $(document).ready(function() {
-      var waveformVisualizer = new WaveformVisualizer('waveform_visualizer');
-      waveformVisualizer.addControls($('#pt_snippets_audio_player'));
+      var waveformVisualizer = new WaveformVisualizer('document_visualizer', {scrollParent: true});
+      waveformVisualizer.addControlsAndLoadAudio(
+        $('#document_audio_controls'),
+        getURLforUtteranceWAV('{{corpus}}', '{{utterance_id}}')
+      );
+
+      waveformVisualizer.wavesurfer.on('region-in', function(marker) {
+        $('.audio_event_span_' + marker.id).addClass('playover');
+      });
+
+      waveformVisualizer.wavesurfer.on('region-out', function(marker) {
+        $('.audio_event_span_' + marker.id).removeClass('playover');
+      });
+
+      waveformVisualizer.wavesurfer.on('ready', function() {
+        var i, audioEventSpan;
+        for (i = 0; i < audio_events.length; i++) {
+          waveformVisualizer.wavesurfer.mark({
+            'id': audio_events[i]['_id'],
+            'color': 'blue',
+            'position': audio_events[i]['start_offset']
+          });
+
+          waveformVisualizer.wavesurfer.region({
+            'id': audio_events[i]['_id'],
+            'startPosition': audio_events[i]['start_offset'],
+            'endPosition': audio_events[i]['end_offset']
+          });
+        }
+      });
+
+      var pseudotermVisualizer = new WaveformVisualizer('pseudoterm_visualizer');
+      pseudotermVisualizer.addControls($('#pseudoterm_audio_controls'));
 
       var utterance_set1 = {
         'dataset_name': 'Set1',
         'utterance_ids': ["{{utterance_id}}"]
       };
-      wordcloud_from_utterances("{{corpus}}", [utterance_set1], waveformVisualizer);
+      wordcloud_from_utterances("{{corpus}}", [utterance_set1], pseudotermVisualizer);
 
       $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
     });
@@ -49,20 +84,38 @@
     $.get("/www/venncloud_template.html", function(data){
       $('#cloud_data_landing_zone').html(data);
     });
+
+    var audio_events = [
+      % for audio_event in audio_events:
+      {
+        'start_offset': {{audio_event['start_offset']}} / 100.0,
+        'end_offset': {{audio_event['end_offset']}} / 100.0,
+        'zr_pt_id': '{{audio_event['zr_pt_id']}}',
+        '_id': '{{audio_event['_id']}}'
+      },
+      % end
+    ];
   </script>
 </head>
-<body style="padding-top: 250px;">
+<body style="padding-top: 360px;">
 
 <div class="container">
+
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
+      <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em; width: 100%;">
+        <div id="document_visualizer"></div>
+      </div>
       <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em;">
-        <div id="waveform_visualizer"></div>
+        <div id="pseudoterm_visualizer"></div>
       </div>
       <div>
         <div class="form-inline">
           <div class="form-group">
-            <span id="pt_snippets_audio_player"></span>
+            <span id="document_audio_controls"></span>
+          </div>
+          <div class="form-group">
+            <span id="pseudoterm_audio_controls"></span>
           </div>
           <div class="form-group">
             <label for="pt_eng_display">English</label>
@@ -76,13 +129,10 @@
             <button class="btn btn-primary btn-xs" id="pt_junk_button"><i class="glyphicon glyphicon-trash"></i></button>
           </div>
           <div class="form-group">
-            <div id="waveform_visualizer_utterance_list" style="padding-left: 1em;"></div>
+            <div id="pseudoterm_visualizer_utterance_list" style="padding-left: 1em;"></div>
           </div>
         </div>
       </div>
-      <!-- Commented out code below: Experiments replacing existing wordcloud menus
-           with Bootstrap-styled wordcloud menus
-      -->
       <div style="margin: 0.5em;">
         <div class="btn-group">
           <!--
@@ -245,6 +295,14 @@
   </nav>
 
   <div id="wordcloud_landing_zone"></div>
+
+  <hr />
+
+  <!--
+  <h1>Playback</h1>
+
+  <div id="audio_event_list"></div>
+  -->
 
 </div><!-- /.container -->
 
