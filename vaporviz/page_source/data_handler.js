@@ -217,9 +217,35 @@ function wordcloud_from_utterances(corpus, utterances_list, waveform_visualizer)
     options = {};
     options.click = corpus_closure.set_up_annotate_pseudoterm_id;
 
-    u = utterances_list;
-    $.when(get_cloud_data(corpus, u[0] )).done( function(){
+    $.when(get_cloud_data(corpus, utterances_list[0])).done( function(){
+        var
+          dataset,
+          i,
+          j,
+          token,
+          token_name,
+          token_span_dom_id;
+
         make_me_a_venncloud( cloud_datasets, options );
+        // At this point, the wordcloud spans have been added to the DOM
+
+        dataset = cloud_datasets[utterances_list[0].dataset_name];
+        i = 0;
+        for (token_name in dataset.tokens) {
+          token_span = $('#token_' + i);
+          i += 1;
+
+          token = dataset.tokens[token_name];
+          for (j = 0; j < token.audio_event_ids.length; j++) {
+            token_span.addClass("audio_event_span_" + token.audio_event_ids[j]);
+          }
+          for (j = 0; j < token.pt_ids.length; j++) {
+            token_span.addClass("pseudoterm_span_" + token.pt_ids[j]);
+          }
+          for (j = 0; j < token.utterance_ids.length; j++) {
+            token_span.addClass("utterance_span_" + token.utterance_ids[j]);
+          }
+        }
     });
 }
 
