@@ -78,6 +78,14 @@
       );
       pseudotermVisualizer.addControls($('#pseudoterm_audio_controls'));
 
+      // Prevent two audio clips from playing simultaneously
+      pseudotermVisualizer.wavesurfer.on('play', function() {
+        waveformVisualizer.pause();
+      });
+      waveformVisualizer.wavesurfer.on('play', function() {
+        pseudotermVisualizer.pause();
+      });
+
       var utterance_set1 = {
         'dataset_name': 'Set1',
         'utterance_ids': ["{{utterance_id}}"]
@@ -319,14 +327,6 @@
   </nav>
 
   <div id="wordcloud_landing_zone"></div>
-
-  <hr />
-
-  <!--
-  <h1>Playback</h1>
-
-  <div id="audio_event_list"></div>
-  -->
 
 </div><!-- /.container -->
 
