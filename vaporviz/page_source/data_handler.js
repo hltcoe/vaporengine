@@ -221,31 +221,26 @@ function wordcloud_from_utterances(corpus, utterances_list, waveform_visualizer)
         var
           dataset,
           i,
-          j,
           token,
-          token_name,
-          token_span_dom_id;
+          token_name;
 
-        make_me_a_venncloud( cloud_datasets, options );
-        // At this point, the wordcloud spans have been added to the DOM
-
+        // Add class names for audio events, pseudoterms, utterances to token.span_classes
         dataset = cloud_datasets[utterances_list[0].dataset_name];
-        i = 0;
         for (token_name in dataset.tokens) {
-          token_span = $('#token_' + i);
-          i += 1;
-
           token = dataset.tokens[token_name];
-          for (j = 0; j < token.audio_event_ids.length; j++) {
-            token_span.addClass("audio_event_span_" + token.audio_event_ids[j]);
+          token.span_classes = [];
+          for (i = 0; i < token.audio_event_ids.length; i++) {
+            token.span_classes.push("audio_event_span_" + token.audio_event_ids[i]);
           }
-          for (j = 0; j < token.pt_ids.length; j++) {
-            token_span.addClass("pseudoterm_span_" + token.pt_ids[j]);
+          for (i = 0; i < token.pt_ids.length; i++) {
+            token.span_classes.push("pseudoterm_span_" + token.pt_ids[i]);
           }
-          for (j = 0; j < token.utterance_ids.length; j++) {
-            token_span.addClass("utterance_span_" + token.utterance_ids[j]);
+          for (i = 0; i < token.utterance_ids.length; i++) {
+            token.span_classes.push("utterance_span_" + token.utterance_ids[i]);
           }
         }
+
+        make_me_a_venncloud( cloud_datasets, options );
     });
 }
 
