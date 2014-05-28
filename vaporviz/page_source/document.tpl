@@ -109,194 +109,212 @@
 
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
-      <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em; width: 100%;">
-        <div id="document_visualizer"></div>
-      </div>
-      <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em;">
-        <div id="pseudoterm_visualizer"></div>
-      </div>
-      <div>
-        <div class="form-inline">
-          <div class="form-group">
-            <span id="document_audio_controls"></span>
-          </div>
-          <div class="form-group">
-            <span id="pseudoterm_audio_controls"></span>
-          </div>
-          <div class="form-group">
-            <label for="pt_eng_display">English</label>
-            <input id="pt_eng_display"></input>
-          </div>
-          <div class="form-group">
-            <label for="pt_native_display">Native</label>
-            <input id="pt_native_display" disabled></input>
-          </div>
-          <div class="form-group">
-            <button class="btn btn-primary btn-xs" id="pt_junk_button"><i class="glyphicon glyphicon-trash"></i></button>
-          </div>
-          <div class="form-group">
-            <div id="pseudoterm_visualizer_utterance_list" style="padding-left: 1em;"></div>
+      <div class="row">
+        <div class="col-md-1 text-right" style="padding-top: 20px;">
+          <span id="document_audio_controls"></span>
+        </div>
+        <div class="col-md-11">
+          <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em;">
+            <div id="document_visualizer"></div>
           </div>
         </div>
       </div>
-      <div style="margin: 0.5em;">
-        <div class="btn-group">
-          <!--
-          <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              Common Cloud
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <table style="width: 300px;">
-                <tr>
-                  <td style="text-align: center; width: 5%;">
-                    -
-                  </td>
-                  <td style="width: 90%;">
-                    <div id='common_cloud_controls'></div>
-                  </td>
-                  <td style="text-align: center; width: 5%;">
-                    +
-                  </td>
-                </tr>
-              </table>
-            </ul>
-          </div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              TF filter
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <table style="margin-left: 1em; margin-right: 1em; width: 300px;">
-                <tr>
-                  <td>
-                    <div id='required_observations_slider'></div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Required Times Observed:<span id="required_observations_out"></span>
-                  </td>
-                </tr>
-              </table>
-            </ul>
-          </div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              IDF filter
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <table style="margin-left: 1em; margin-right: 1em; width: 300px;">
-                <tr>
-                  <td>
-                    <div id='required_idf_slider'></div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Occurs between <span id="required_idf_out">x</span> documents.
-                  </td>
-                </tr>
-              </table>
-            </ul>
-          </div>
-          -->
-          <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              Size
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <table style="margin-left: 1em; margin-right: 1em; width: 400px;">
-                <tr>
-                  <td style="width: 20%;"><b>Frequency: 0</b></td>
-                  <td style="width: 75%;">
-                    <div id="size_frequency_slider"></div>
-                  </td>
-                  <td rowspan="2" style="text-align: center; width: 10%;"><b>+</b></td>
-                </tr>
-                <tr>
-                  <td style="width: 20%;"><b>Rarity: 0</b></td>
-                  <td>
-                    <div id="size_rarity_slider"></div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Smaller</td>
-                  <td>
-                    <div id="base_fontsize_slider"></div>
-                  </td>
-                  <td>Larger</td>
-                </tr>
-              </table>
-            </ul>
-          </div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              Opacity
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <table style="margin-left: 1em; margin-right: 1em; width: 400px;">
-                <tr>
-                  <td style="width: 20%;"><b>Frequency: <span "text-align: right;">0</span></b></td>
-                  <td style="width: 80%;">
-                    <div id="opacity_frequency_slider"></div>
-                  </td>
-                  <td rowspan="2" style="text-align: center; width: 10%;"><b>+</b></td>
-                </tr>
-                <tr>
-                  <td style="width: 20%;"><b>Rarity: <span align=right>0</span></b></td>
-                  <td>
-                    <div id="opacity_rarity_slider"></div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Light</td>
-                  <td>
-                    <div id="base_opacity_slider"></div>
-                  </td>
-                  <td>Dark</td>
-                </tr>
-              </table>
-            </ul>
-          </div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              Sort by
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu" style="padding-left: 1em;" id="radio">
-              <li>
-                <input type="radio" id="ALPHABETIC" name="radio" checked="checked" />
-                <label for="ALPHABETIC">Alphabetic</label>
-              </li>
-              <li>
-                <input type="radio" id="COUNT" name="radio" />
-                <label for="COUNT">Frequency of Occurence</label>
-              </li>
-              <li>
-                <input type="radio" id="IDF" name="radio" />
-                <label for="IDF">Rarity in Corpus</label>
-              </li>
-            </ul>
-          </div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              Legend
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <div style="margin-left: 1em; margin-right: 1em; width: 400px;">
-                <div id="wordcloud_description_output"></div>
-              </div>
-            </ul>
+
+      <div class="row">
+        <div class="col-md-1 text-right" style="padding-top: 20px;">
+          <span id="pseudoterm_audio_controls"></span>
+        </div>
+        <div class="col-md-11">
+          <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em;">
+            <div id="pseudoterm_visualizer"></div>
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-1 text-right">
+        </div>
+        <div class="col-md-11">
+          <div class="form-inline">
+            <div class="form-group">
+              <label for="pt_eng_display">English</label>
+              <input id="pt_eng_display"></input>
+            </div>
+            <div class="form-group">
+              <label for="pt_native_display">Native</label>
+              <input id="pt_native_display" disabled></input>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary btn-xs" id="pt_junk_button"><i class="glyphicon glyphicon-trash"></i></button>
+            </div>
+            <div class="form-group">
+              <div id="pseudoterm_visualizer_utterance_list" style="padding-left: 1em;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-1 text-right">
+        </div>
+        <div class="col-md-11">
+          <div class="btn-group">
+            <!--
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Common Cloud
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <table style="width: 300px;">
+                  <tr>
+                    <td style="text-align: center; width: 5%;">
+                      -
+                    </td>
+                    <td style="width: 90%;">
+                      <div id='common_cloud_controls'></div>
+                    </td>
+                    <td style="text-align: center; width: 5%;">
+                      +
+                    </td>
+                  </tr>
+                </table>
+              </ul>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                TF filter
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <table style="margin-left: 1em; margin-right: 1em; width: 300px;">
+                  <tr>
+                    <td>
+                      <div id='required_observations_slider'></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Required Times Observed:<span id="required_observations_out"></span>
+                    </td>
+                  </tr>
+                </table>
+              </ul>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                IDF filter
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <table style="margin-left: 1em; margin-right: 1em; width: 300px;">
+                  <tr>
+                    <td>
+                      <div id='required_idf_slider'></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      Occurs between <span id="required_idf_out">x</span> documents.
+                    </td>
+                  </tr>
+                </table>
+              </ul>
+            </div>
+            -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Size
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <table style="margin-left: 1em; margin-right: 1em; width: 400px;">
+                  <tr>
+                    <td style="width: 20%;"><b>Frequency: 0</b></td>
+                    <td style="width: 75%;">
+                      <div id="size_frequency_slider"></div>
+                    </td>
+                    <td rowspan="2" style="text-align: center; width: 10%;"><b>+</b></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 20%;"><b>Rarity: 0</b></td>
+                    <td>
+                      <div id="size_rarity_slider"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Smaller</td>
+                    <td>
+                      <div id="base_fontsize_slider"></div>
+                    </td>
+                    <td>Larger</td>
+                  </tr>
+                </table>
+              </ul>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Opacity
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <table style="margin-left: 1em; margin-right: 1em; width: 400px;">
+                  <tr>
+                    <td style="width: 20%;"><b>Frequency: <span "text-align: right;">0</span></b></td>
+                    <td style="width: 80%;">
+                      <div id="opacity_frequency_slider"></div>
+                    </td>
+                    <td rowspan="2" style="text-align: center; width: 10%;"><b>+</b></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 20%;"><b>Rarity: <span align=right>0</span></b></td>
+                    <td>
+                      <div id="opacity_rarity_slider"></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Light</td>
+                    <td>
+                      <div id="base_opacity_slider"></div>
+                    </td>
+                    <td>Dark</td>
+                  </tr>
+                </table>
+              </ul>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Sort by
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" style="padding-left: 1em;" id="radio">
+                <li>
+                  <input type="radio" id="ALPHABETIC" name="radio" checked="checked" />
+                  <label for="ALPHABETIC">Alphabetic</label>
+                </li>
+                <li>
+                  <input type="radio" id="COUNT" name="radio" />
+                  <label for="COUNT">Frequency of Occurence</label>
+                </li>
+                <li>
+                  <input type="radio" id="IDF" name="radio" />
+                  <label for="IDF">Rarity in Corpus</label>
+                </li>
+              </ul>
+            </div>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Legend
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <div style="margin-left: 1em; margin-right: 1em; width: 400px;">
+                  <div id="wordcloud_description_output"></div>
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.col-md-11 -->
+      </div><!-- /.row -->
     </div>
   </nav>
 
