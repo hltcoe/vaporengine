@@ -38,7 +38,10 @@
 
   <script>
     $(document).ready(function() {
-      var waveformVisualizer = new WaveformVisualizer('document_visualizer', {scrollParent: true});
+      var waveformVisualizer = new WaveformVisualizer(
+        'document_visualizer',
+        { height: 96, scrollParent: true }
+      );
       waveformVisualizer.addControlsAndLoadAudio(
         $('#document_audio_controls'),
         getURLforUtteranceWAV('{{corpus}}', '{{utterance_id}}')
@@ -69,7 +72,10 @@
         }
       });
 
-      var pseudotermVisualizer = new WaveformVisualizer('pseudoterm_visualizer');
+      var pseudotermVisualizer = new WaveformVisualizer(
+        'pseudoterm_visualizer',
+        { height: 96 }
+      );
       pseudotermVisualizer.addControls($('#pseudoterm_audio_controls'));
 
       var utterance_set1 = {
@@ -97,7 +103,7 @@
     ];
   </script>
 </head>
-<body style="padding-top: 360px;">
+<body style="padding-top: 290px;">
 
 <div class="container">
 
