@@ -56,11 +56,6 @@
       });
     }
 
-    $.get("/www/venncloud_template.html", function(data){
-      $('#cloud_data_landing_zone').html(data);
-    });
-
-
     $(document).ready(function() {
       var waveformVisualizer = new WaveformVisualizer('waveform_visualizer');
       waveformVisualizer.addControls($('#pt_snippets_audio_player'));
@@ -259,7 +254,7 @@
     </div>
   </nav>
 
-  <div id="wordcloud_landing_zone"></div>
+  <div id="wordcloud_location"></div>
 
 </div><!-- /.container -->
 

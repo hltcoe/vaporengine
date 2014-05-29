@@ -27,7 +27,7 @@
 
   <style>
     /* Hide drop-down boxes for selecting Left and Right datasets */
-    #wordcloud_landing_zone thead {
+    #wordcloud_location thead {
       display: none;
     }
 
@@ -326,7 +326,7 @@
     </div>
   </nav>
 
-  <div id="wordcloud_landing_zone"></div>
+  <div id="wordcloud_location"></div>
 
 </div><!-- /.container -->
 
