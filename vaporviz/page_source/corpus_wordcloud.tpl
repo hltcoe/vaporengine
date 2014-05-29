@@ -27,7 +27,7 @@
 
   <style>
     /* Hide drop-down boxes for selecting Left and Right datasets */
-    #wordcloud_landing_zone thead {
+    #wordcloud_location thead {
       display: none;
     }
   </style>
@@ -55,7 +55,12 @@
             utterance_set1.utterance_ids.push(utterances[i]._id);
           }
 
-          wordcloud_from_utterances("{{corpus}}", [utterance_set1], waveform_visualizer);
+          wordcloud_from_utterances(
+            "{{corpus}}",
+            [utterance_set1],
+            waveform_visualizer,
+            { base_fontsize: 10 }
+          );
         }
       });
     }
@@ -67,10 +72,6 @@
       create_wordcloud_from_all_utterances(waveformVisualizer);
 
 	    $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
-    });
-
-    $.get("/www/venncloud_template.html", function(data){
-      $('#cloud_data_landing_zone').html(data);
     });
   </script>
 </head>
@@ -264,7 +265,7 @@
     </div>
   </nav>
 
-  <div id="wordcloud_landing_zone"></div>
+  <div id="wordcloud_location"></div>
 
 </div><!-- /.container -->
 
