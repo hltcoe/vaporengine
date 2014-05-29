@@ -90,13 +90,14 @@
         'dataset_name': 'Set1',
         'utterance_ids': ["{{utterance_id}}"]
       };
-      wordcloud_from_utterances("{{corpus}}", [utterance_set1], pseudotermVisualizer);
+      wordcloud_from_utterances(
+        "{{corpus}}",
+        [utterance_set1],
+        pseudotermVisualizer,
+        { base_fontsize: 10 }
+      );
 
       $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
-    });
-
-    $.get("/www/venncloud_template.html", function(data){
-      $('#cloud_data_landing_zone').html(data);
     });
 
     var audio_events = [

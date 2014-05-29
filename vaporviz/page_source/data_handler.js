@@ -210,10 +210,12 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
 };
 
 // Create a wordcloud (not a venncloud) from a single corpus of utterances
-function wordcloud_from_utterances(corpus, utterances_list, waveform_visualizer){
+function wordcloud_from_utterances(corpus, utterances_list, waveform_visualizer, options){
     var corpus_closure = new CorpusClosureForSetupAnnotatePseudotermID(corpus, waveform_visualizer);
 
-    options = {};
+    if (options === undefined) {
+      options = {};
+    }
     options.click = corpus_closure.set_up_annotate_pseudoterm_id;
 
     $.when(get_cloud_data(corpus, utterances_list[0])).done( function(){
@@ -238,15 +240,16 @@ function wordcloud_from_utterances(corpus, utterances_list, waveform_visualizer)
             token.span_classes.push("utterance_span_" + token.utterance_ids[i]);
           }
         }
-
         make_me_a_venncloud( cloud_datasets, options );
     });
 }
 
-function venncloud_from_utterances(corpus, utterances_lists, waveform_visualizer){
+function venncloud_from_utterances(corpus, utterances_lists, waveform_visualizer, options){
     var corpus_closure = new CorpusClosureForSetupAnnotatePseudotermID(corpus, waveform_visualizer);
 
-    options = {};
+    if (options === undefined) {
+      options = {};
+    }
     options.click = corpus_closure.set_up_annotate_pseudoterm_id;
 
     //options.wordcloud_element = 'cloud_data_landing_zone';
