@@ -642,7 +642,7 @@ function initialize_wordcloud_controls() {
         update_wordcloud();
     }
     $(function () {
-        handle = $('#base_fontside_slider');
+        handle = $('#base_fontsize_slider');
         handle.slider();
         //$( "#base_fontsize_slider" ).slider();
         /*$( "#base_fontsize_slider" ).slider("option","min",5);
