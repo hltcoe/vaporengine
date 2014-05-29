@@ -1,4 +1,4 @@
-var cloud_datasets = {};
+var cloud_datasets = [];
 
 
 function get_cloud_data(corpus, utterance_list){
@@ -28,13 +28,12 @@ function get_cloud_data(corpus, utterance_list){
             defer.reject('Deferred error message');
         },
         success: function(data) {
-            //cloud_datasets = [data];
             wc_data = {};
             wc_data.dataset_name = dataset_name;
             wc_data.tokens = data;
             wc_data.num_tokens = data.length;
             wc_data.num_documents = utterance_ids.length;
-            cloud_datasets[dataset_name] = wc_data;
+            cloud_datasets.push(wc_data);
             //$('#cloud_data_landing_zone').html(prettyPrint(data));
             defer.resolve(data);
         }
@@ -225,7 +224,7 @@ function wordcloud_from_utterances(corpus, utterances_list, waveform_visualizer)
           token_name;
 
         // Add class names for audio events, pseudoterms, utterances to token.span_classes
-        dataset = cloud_datasets[utterances_list[0].dataset_name];
+        dataset = cloud_datasets[0];
         for (token_name in dataset.tokens) {
           token = dataset.tokens[token_name];
           token.span_classes = [];
