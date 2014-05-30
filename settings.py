@@ -40,6 +40,24 @@ fisher_spanish_localhost['ZRL_CLUSTERS'] = 'matches/master_graph.dedups'
 fisher_spanish_localhost['ZRL_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/fishsp200/')
 settings['fisher_spanish_localhost'] = fisher_spanish_localhost
 
+QASW = {}
+QASW['DB_HOST'] = 'r4n7'
+QASW['DB_NAME'] = 'QASW'
+QASW['DB_PORT'] = 27017
+QASW['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(8000.0,1,14)
+QASW['ZRL_CLUSTERS'] = 'matches/master_graph.dedups'
+QASW['ZRL_PATH'] = '/home/hltcoe/ajansen/discovery/exp/QASW'
+settings['QASW'] = QASW
+
+QASW_localhost = {}
+QASW_localhost['DB_HOST'] = 'localhost'
+QASW_localhost['DB_NAME'] = 'QASW'
+QASW_localhost['DB_PORT'] = 27017
+QASW_localhost['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(8000.0,1,14)
+QASW_localhost['ZRL_CLUSTERS'] = 'matches/master_graph.dedups'
+QASW_localhost['ZRL_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/QASW/')
+settings['QASW_localhost'] = QASW_localhost
+
 tagalog = {}
 tagalog['DB_HOST'] = 'r4n7'
 tagalog['DB_NAME'] = 'tagalog'
