@@ -76,4 +76,4 @@ tagalog_localhost['ZRL_CLUSTERS'] = 'matches/master_graph.dedups'
 tagalog_localhost['ZRL_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/tagalog300/')
 settings['tagalog_localhost'] = tagalog_localhost
 
-current_corpora = ['buckeye', 'fisher_spanish', 'tagalog']
+current_corpora = ['buckeye', 'fisher_spanish', 'QASW', 'tagalog']
