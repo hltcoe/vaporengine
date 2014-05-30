@@ -279,7 +279,7 @@ def audio_events_for_pseudoterm(corpus,pseudoterm_id):
     """
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
-    audio_event_cursor = find_audio_events(db, pt_id=pseudoterm['_id'], count=10)
+    audio_event_cursor = find_audio_events(db, pt_id=pseudoterm['_id'])
 
     audio_events = [audio_event for audio_event in audio_event_cursor]
 
