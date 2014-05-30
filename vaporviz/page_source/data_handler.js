@@ -197,6 +197,12 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
       $("#pt_eng_display")
           .focusout(function(){
               annotate_pt_eng_label(corpus);
+          })
+          .keydown(function(e) {
+              //Update annotation when users hit enter
+              if (e.keyCode === 13) {
+                  annotate_pt_eng_label(corpus);
+              }
           });
 
       $("#pt_native_display")
