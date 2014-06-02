@@ -116,7 +116,7 @@
 
 <div class="container">
 
-  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <nav id="waveform_navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-1 text-right" style="padding-top: 20px;">
