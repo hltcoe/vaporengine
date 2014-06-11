@@ -7,7 +7,7 @@
 
   <link rel="stylesheet" href="/www/dynamic_wordclouds.css"/>
 
-  <script src="/static/jquery-1.11.0.min.js"></script>
+  <script src="/static/jquery-1.11.1.min.js"></script>
   <script src="/static/jquery-ui-1.10.4/js/jquery-ui-1.10.4.min.js"></script>
   <script src="/static/bootstrap-3.1.1/js/bootstrap.js"></script>
 
