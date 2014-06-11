@@ -11,7 +11,7 @@ You must have an HLTCOE account to view the demo on test1.
 To view the demo running on test1 from outside the COE firewall, run
 this shell script:
 
-```
+```bash
 ./create_tunnel_to_test1_demo.sh YOUR_COE_USERNAME
 ```
 
@@ -32,9 +32,9 @@ Requirements
 * The Python packages listed in 'requirements.txt', which can be installed
   using the pip package manager by running the command:
 
-```
-pip install -r requirements.txt
-```
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 
 Configuring VaporEngine
@@ -44,7 +44,7 @@ Configure the MongoDB server settings and ZRL filepaths by editing the
 file ```settings.py```.  Here is a sample configuration for the
 'buckeye' corpora:
 
-```
+```python
 buckeye = {}
 buckeye['DB_HOST'] = 'r4n7'
 buckeye['DB_NAME'] = 'buckeye'
@@ -58,7 +58,7 @@ settings['buckeye'] = buckeye
 If you're not certain what SOX_SIGNAL_INFO parameters to use for your
 audio source files, you can run the command:
 
-```
+```bash
 soxi AUDIO_SOURCE_FILE
 ```
 
@@ -66,8 +66,13 @@ which will print out information about the format of your audio files,
 including the Sample Rate (for the 'buckeye' example, the rate is
 16000), number of Channels (1), and Precision (16 bits).
 
-Update the ```current_corpora``` variable at the end of the file so
-that the list only contains the names of locally installed corpora.
+Update the ```current_corpora``` variable at the end of the file:
+
+```python
+current_corpora = ['buckeye', 'fisher_spanish', 'QASW', 'tagalog']
+```
+
+so that the list only contains the names of locally installed corpora.
 
 
 Importing ZRL data into MongoDB
@@ -107,5 +112,5 @@ The scripts ```vaporgasp/backup_annotations.py``` and
 ```vaporgasp/restore_annotations.py``` can be used to backup and
 restore VaporEngine annotations.  The annotations will be saved to a
 TSV file with two columns:
-  * the Pseudoterm ID assigned by the ZRL system
-  * the text annotation for this Pseudoterm ID
+* the Pseudoterm ID assigned by the ZRL system
+* the text annotation for this Pseudoterm ID
