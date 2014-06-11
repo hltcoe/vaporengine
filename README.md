@@ -41,10 +41,33 @@ Configuring VaporEngine
 -----------------------
 
 Configure the MongoDB server settings and ZRL filepaths by editing the
-file ```settings.py```.
+file ```settings.py```.  Here is a sample configuration for the
+'buckeye' corpora:
 
-Update the ```current_corpora``` variable at the end of the file to
-list the locally installed corpora.
+```
+buckeye = {}
+buckeye['DB_HOST'] = 'r4n7'
+buckeye['DB_NAME'] = 'buckeye'
+buckeye['DB_PORT'] = 27017
+buckeye['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(16000.0,1,16)
+buckeye['ZRL_CLUSTERS'] = 'matches/master_graph.dedups.80'
+buckeye['ZRL_PATH'] = '/home/hltcoe/ajansen/discovery/exp/buckeye-T25/'
+settings['buckeye'] = buckeye
+```
+
+If you're not certain what SOX_SIGNAL_INFO parameters to use for your
+audio source files, you can run the command:
+
+```
+soxi AUDIO_SOURCE_FILE
+```
+
+which will print out information about the format of your audio files,
+including the Sample Rate (for the 'buckeye' example, the rate is
+16000), number of Channels (1), and Precision (16 bits).
+
+Update the ```current_corpora``` variable at the end of the file so
+that the list only contains the names of locally installed corpora.
 
 
 Importing ZRL data into MongoDB
