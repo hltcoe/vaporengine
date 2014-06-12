@@ -206,7 +206,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings) {
     // Adjust the padding at top of document when height of navbar changes
     // TODO: Have WaveformVisualizer call an (optional) callback function
     //       when the height of the navbar changes, move this code out of
-    //       the vapor_audio.js library
+    //       the waveform_visualizer.js library
     if ($('#waveform_navbar')) {
       var new_control_height = 5 + $('#waveform_navbar').height();
       $('body').attr('style', 'padding-top: ' + new_control_height + 'px;');
