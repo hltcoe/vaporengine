@@ -22,7 +22,7 @@ dbname = settings[dataset_name]['DB_NAME']
 
 db = init_dbconn(host=dbhost,name=dbname)
 
-zrl = ZRLoader(settings[dataset_name]['ZRL_PATH'], clusters=settings[dataset_name]['ZRL_CLUSTERS'])
+zrl = ZRLoader(settings[dataset_name]['ZR_PATH'], clusters=settings[dataset_name]['ZR_CLUSTERS'])
 
 
 audioevent_to_mongo_id = {}

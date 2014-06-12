@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ZRL</title>
+  <title>VaporEngine</title>
 
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap.css"/>
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap-theme.css"/>

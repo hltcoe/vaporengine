@@ -40,7 +40,7 @@ Requirements
 Configuring VaporEngine
 -----------------------
 
-Configure the MongoDB server settings and ZRL filepaths by editing the
+Configure the MongoDB server settings and ZR filepaths by editing the
 file ```settings.py```.  Here is a sample configuration for the
 'buckeye' corpora:
 
@@ -50,8 +50,8 @@ buckeye['DB_HOST'] = 'r4n7'
 buckeye['DB_NAME'] = 'buckeye'
 buckeye['DB_PORT'] = 27017
 buckeye['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(16000.0,1,16)
-buckeye['ZRL_CLUSTERS'] = 'matches/master_graph.dedups.80'
-buckeye['ZRL_PATH'] = '/home/hltcoe/ajansen/discovery/exp/buckeye-T25/'
+buckeye['ZR_CLUSTERS'] = 'matches/master_graph.dedups.80'
+buckeye['ZR_PATH'] = '/home/hltcoe/ajansen/discovery/exp/buckeye-T25/'
 settings['buckeye'] = buckeye
 ```
 
@@ -75,8 +75,8 @@ current_corpora = ['buckeye', 'fisher_spanish', 'QASW', 'tagalog']
 so that the list only contains the names of locally installed corpora.
 
 
-Importing ZRL data into MongoDB
--------------------------------
+Importing ZR data into MongoDB
+------------------------------
 
 Run the script:
 
@@ -84,7 +84,7 @@ Run the script:
 ./vaporgasp/vapor_inhaler.py DATASET_NAME
 ```
 
-where DATASET_NAME is the name one of the ZRL datasets specified
+where DATASET_NAME is the name one of the ZR datasets specified
 in ```settings.py```.
 
 
@@ -113,5 +113,5 @@ and ```vaporgasp/restore_annotations.py``` can be used to backup and
 restore VaporEngine annotations.  The annotations will be saved to a
 TSV file with two columns:
 
-1. the Pseudoterm ID assigned by the ZRL system
+1. the Pseudoterm ID assigned by the ZR system
 2. the text annotation for this Pseudoterm ID
