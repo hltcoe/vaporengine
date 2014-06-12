@@ -213,17 +213,3 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings) {
     }
   };
 }
-
-
-
-function getURLforAudioEventWAV(corpus_name, audioEventID) {
-  return '/corpus/' + corpus_name + '/audio/audio_event/' + audioEventID + '.wav';
-}
-
-function getURLforPseudotermWAV(corpus_name, pseudotermID) {
-  return '/corpus/' + corpus_name +'/audio/pseudoterm/' + pseudotermID + '.wav';
-}
-
-function getURLforUtteranceWAV(corpus_name, utteranceID) {
-  return '/corpus/' + corpus_name +'/audio/utterance/' + utteranceID + '.wav';
-}

@@ -133,6 +133,19 @@ function annotate_pt_native_label(corpus){
 }
 
 
+function getURLforAudioEventWAV(corpus_name, audioEventID) {
+  return '/corpus/' + corpus_name + '/audio/audio_event/' + audioEventID + '.wav';
+}
+
+function getURLforPseudotermWAV(corpus_name, pseudotermID) {
+  return '/corpus/' + corpus_name +'/audio/pseudoterm/' + pseudotermID + '.wav';
+}
+
+function getURLforUtteranceWAV(corpus_name, utteranceID) {
+  return '/corpus/' + corpus_name +'/audio/utterance/' + utteranceID + '.wav';
+}
+
+
 function junk_this_pseudoterm(event) {
     active_pt_id = active_pseudoterm._id;
     send = {};
