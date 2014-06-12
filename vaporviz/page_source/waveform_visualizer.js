@@ -1,10 +1,11 @@
 
-function WaveformVisualizer(visualizerID, customWavesurferSettings) {
+function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettings) {
 
   // Use 'self' to give event handler access to current instance ('this')
   var self = this;
 
   var combinedWavesurferSettings, defaultWavesurferSettings;
+  var defaultSettings;
 
   // Public member variables
   this.audio_events = [];
@@ -24,6 +25,14 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings) {
   this.wavesurfer.on('region-in', function(marker) {
     updateActiveDocumentForAudioEvent(marker);
   });
+
+  defaultSettings = {
+    controlsResizeCallback: undefined
+  };
+  this.settings = $.extend({}, defaultSettings, customSettings);
+
+  // When browser window size changes, the GUI controls may also change in size
+  $(window).resize(function() { callControlsResizeCallback(); });
 
 
   //// Public API
@@ -102,6 +111,12 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings) {
 
 
   //// Private functions, some of which are event handlers
+
+  var callControlsResizeCallback = function() {
+    if (self.settings.controlsResizeCallback) {
+      self.settings.controlsResizeCallback();
+    }
+  };
 
   var resetActiveDocumentButtons = function() {
     var
@@ -203,13 +218,6 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings) {
       utteranceListDiv.append(utteranceSpan);
     }
 
-    // Adjust the padding at top of document when height of navbar changes
-    // TODO: Have WaveformVisualizer call an (optional) callback function
-    //       when the height of the navbar changes, move this code out of
-    //       the waveform_visualizer.js library
-    if ($('#waveform_navbar')) {
-      var new_control_height = 5 + $('#waveform_navbar').height();
-      $('body').attr('style', 'padding-top: ' + new_control_height + 'px;');
-    }
+    callControlsResizeCallback();
   };
 }

@@ -37,10 +37,19 @@
   </style>
 
   <script>
+    // Adjust the padding at top of document when height of navbar changes
+    function updateBodyPaddingWhenControlsChangeSize() {
+      if ($('#waveform_navbar')) {
+        var new_control_height = 5 + $('#waveform_navbar').height();
+        $('body').attr('style', 'padding-top: ' + new_control_height + 'px;');
+      }
+    }
+
     $(document).ready(function() {
       var waveformVisualizer = new WaveformVisualizer(
         'document_visualizer',
-        { height: 96, scrollParent: true }
+        { height: 96, scrollParent: true },
+        { controlsResizeCallback: updateBodyPaddingWhenControlsChangeSize }
       );
       waveformVisualizer.addControlsAndLoadAudio(
         $('#document_audio_controls'),
@@ -74,7 +83,8 @@
 
       var pseudotermVisualizer = new WaveformVisualizer(
         'pseudoterm_visualizer',
-        { height: 96 }
+        { height: 96 },
+        { controlsResizeCallback: updateBodyPaddingWhenControlsChangeSize }
       );
       pseudotermVisualizer.addControls($('#pseudoterm_audio_controls'));
 

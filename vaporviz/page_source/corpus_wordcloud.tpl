@@ -65,17 +65,27 @@
       });
     }
 
+    // Adjust the padding at top of document when height of navbar changes
+    function updateBodyPaddingWhenControlsChangeSize() {
+      if ($('#waveform_navbar')) {
+        var new_control_height = 5 + $('#waveform_navbar').height();
+        $('body').attr('style', 'padding-top: ' + new_control_height + 'px;');
+      }
+    }
+
     $(document).ready(function() {
-      var waveformVisualizer = new WaveformVisualizer('waveform_visualizer');
+      var waveformVisualizer = new WaveformVisualizer(
+        'waveform_visualizer',
+        {},
+        { controlsResizeCallback: updateBodyPaddingWhenControlsChangeSize }
+      );
       waveformVisualizer.addControls($('#pt_snippets_audio_player'));
-
       create_wordcloud_from_all_utterances(waveformVisualizer);
-
-	    $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
+      $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
     });
   </script>
 </head>
-<body style="padding-top: 250px;">
+<body style="padding-top: 230px;">
 
 <div class="container">
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
