@@ -1,16 +1,15 @@
 VaporEngine
 ===========
 
-Zero Resource pseudoterm clustering + Vennclouds.
+VaporEngine is a web application that allows users to explore an audio
+corpus by listening to and annotating Pseudoterms.
 
 
 Using the VaporEngine demo on test1
 -----------------------------------
 
-You must have an HLTCOE account to view the demo on test1.
-
-To view the demo running on test1 from outside the COE firewall, run
-this shell script:
+You must have an HLTCOE account to view the demo on test1.  To view
+this demo from outside the COE firewall, run this shell script:
 
 ```bash
 ./create_tunnel_to_test1_demo.sh YOUR_COE_USERNAME
@@ -27,7 +26,7 @@ to use the VaporEngine demo
 Requirements
 ------------
 
-* An audio corpora that has been run through the ZRL pipeline
+* An audio corpora that has been run through Aren Jansen's Zero Resource pipeline
 * A MongoDB server running MongoDB v2.0.2 or higher
 * Python 2.7
 * The Python packages listed in 'requirements.txt', which can be installed
