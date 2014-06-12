@@ -1,11 +1,10 @@
 
-from settings import settings
-
 from lib.database import init_dbconn
+from settings import settings
 
 db = init_dbconn(name=settings['DB_NAME'],host=settings['DB_HOST'])
 
-from vaporgasp.queries import find_pseudoterms, find_utterances
+from lib.queries import find_pseudoterms, find_utterances
 
 cur = find_utterances(db, count=30)
 

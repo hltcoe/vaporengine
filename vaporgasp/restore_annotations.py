@@ -6,8 +6,8 @@ import codecs
 from bson import ObjectId
 
 from lib.database import init_dbconn
+from lib.queries import find_pseudoterms, update_pseudoterm
 from settings import settings
-from vaporgasp.queries import find_pseudoterms, update_pseudoterm
 
 parser = argparse.ArgumentParser()
 parser.add_argument("dataset_name")

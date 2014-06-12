@@ -4,8 +4,8 @@ import argparse
 import codecs
 
 from lib.database import init_dbconn
+from lib.queries import find_pseudoterms
 from settings import settings
-from vaporgasp.queries import find_pseudoterms
 
 parser = argparse.ArgumentParser()
 parser.add_argument("dataset_name")

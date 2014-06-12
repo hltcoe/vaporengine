@@ -16,7 +16,7 @@ from collections import defaultdict
 
 from bson import ObjectId
 
-from vaporgasp.queries import find_pseudoterms, find_utterances
+from lib.queries import find_pseudoterms, find_utterances
 
 
 

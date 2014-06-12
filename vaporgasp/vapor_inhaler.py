@@ -4,11 +4,10 @@ import os
 
 from ZRLoader import ZRLoader
 
-from vaporgasp.queries import (insert_utterance, insert_pseudoterm,
-                               insert_audio_event, insert_annotation,
-                               update_utterance)
-
 from lib.database import init_dbconn
+from lib.queries import (insert_utterance, insert_pseudoterm,
+                         insert_audio_event, insert_annotation,
+                         update_utterance)
 from settings import settings
 
 import argparse

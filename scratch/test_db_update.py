@@ -1,7 +1,7 @@
 
 #from settings import settings
 from lib.database import init_dbconn, init_apply_all_indexes
-from vaporgasp.queries import *
+from lib.queries import *
 
 
 db = init_dbconn()

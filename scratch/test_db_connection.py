@@ -1,7 +1,7 @@
 
 #from settings import settings
 from lib.database import init_dbconn, init_apply_all_indexes
-from vaporgasp.queries import *
+from lib.queries import *
 
 
 db = init_dbconn()
@@ -63,7 +63,7 @@ print "Finding:", find_annotations(db).next()
 
 
 #Test applying indexing
-from vaporgasp.queries import indexes
+from lib.queries import indexes
 apply_indices = init_apply_all_indexes(indexes)
 for collection in indexes.keys():
     apply_indices(db,collection)

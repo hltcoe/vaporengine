@@ -16,10 +16,12 @@ except:
 
 # Local modules
 from lib.database import init_dbconn
-from vaporgasp.queries import (find_annotations, find_utterances,
-                               find_pseudoterms, find_audio_events,
-                               update_pseudoterm)
+from lib.queries import (find_annotations, find_utterances,
+                         find_pseudoterms, find_audio_events,
+                         pseudoterm_is_junk,
+                         update_pseudoterm)
 from settings import current_corpora, settings
+from vaporviz.vapor_venncloud import make_wc_datastructure
 
 
 vaporviz_path = os.path.dirname(os.path.realpath(__file__))
@@ -179,7 +181,6 @@ def update_pseudoterm_header():
     return res
 
 
-from vaporgasp.queries import pseudoterm_is_junk
 @route('/junk_pseudoterm',method=['OPTIONS','POST'])
 @json_wrapper
 @enable_cors
@@ -197,7 +198,6 @@ def junk_pseudoterm():
     return res
 
 #Get Venncloud data for a single list of utterances
-from vaporviz.vapor_venncloud import make_wc_datastructure
 @route('/cloud_data_from_utterances',method=['OPTIONS','POST'])
 @json_wrapper
 @enable_cors
