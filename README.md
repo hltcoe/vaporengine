@@ -1,6 +1,7 @@
 VaporEngine
 ===========
 
+Zero Resource pseudoterm clustering + Vennclouds.
 
 
 Using the VaporEngine demo on test1
@@ -80,7 +81,7 @@ Importing ZRL data into MongoDB
 
 Run the script:
 
-```
+```bash
 ./vaporgasp/vapor_inhaler.py DATASET_NAME
 ```
 
@@ -93,7 +94,7 @@ Running the server
 
 Run the script:
 
-```
+```bash
 ./bin/start_webserver.sh
 ```
 
@@ -108,9 +109,10 @@ to view the VaporEngine demo running your machine.
 Backing up and Restoring Annotations
 ------------------------------------
 
-The scripts ```vaporgasp/backup_annotations.py``` and
-```vaporgasp/restore_annotations.py``` can be used to backup and
+The scripts ```vaporgasp/backup_annotations.py```
+and ```vaporgasp/restore_annotations.py``` can be used to backup and
 restore VaporEngine annotations.  The annotations will be saved to a
 TSV file with two columns:
-* the Pseudoterm ID assigned by the ZRL system
-* the text annotation for this Pseudoterm ID
+
+1. the Pseudoterm ID assigned by the ZRL system
+2. the text annotation for this Pseudoterm ID
