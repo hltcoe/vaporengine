@@ -7,37 +7,34 @@ function get_cloud_data(corpus, utterance_list){
     var dataset_name = utterance_list.dataset_name;
 
     return $.Deferred( function( defer ) {
+        send = {};
+        send.dataset = corpus;
+        send.utterances = utterance_ids;
 
+        $.ajaxSetup({
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        });
 
-    send = {};
-    send.dataset = corpus;
-    send.utterances = utterance_ids;
-
-
-    $.ajaxSetup({
-        contentType: "application/json; charset=utf-8",
-        dataType: "json"
-    });
-
-    $.ajax({
-        url: "/cloud_data_from_utterances",
-        type: "POST",
-        data: JSON.stringify(send),
-        error: function(xhr, error) {
-            alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
-            defer.reject('Deferred error message');
-        },
-        success: function(data) {
-            wc_data = {};
-            wc_data.dataset_name = dataset_name;
-            wc_data.tokens = data;
-            wc_data.num_tokens = data.length;
-            wc_data.num_documents = utterance_ids.length;
-            cloud_datasets.push(wc_data);
-            //$('#cloud_data_landing_zone').html(prettyPrint(data));
-            defer.resolve(data);
-        }
-    });
+        $.ajax({
+            url: "/cloud_data_from_utterances",
+            type: "POST",
+            data: JSON.stringify(send),
+            error: function(xhr, error) {
+                alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
+                defer.reject('Deferred error message');
+            },
+            success: function(data) {
+                wc_data = {};
+                wc_data.dataset_name = dataset_name;
+                wc_data.tokens = data;
+                wc_data.num_tokens = data.length;
+                wc_data.num_documents = utterance_ids.length;
+                cloud_datasets.push(wc_data);
+                //$('#cloud_data_landing_zone').html(prettyPrint(data));
+                defer.resolve(data);
+            }
+        });
     }).promise();
 }
 
