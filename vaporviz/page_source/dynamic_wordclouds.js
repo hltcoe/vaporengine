@@ -187,10 +187,7 @@ function initialize_wordcloud_controls() {
     function common_cloud_change(event, ui) {
         var orig_value = $("#common_cloud_controls").slider("values", 0);
         //Dynamic range seems to want to be between 0 and 0.03
-        //value = orig_value  / (100 / 0.01)
         var value = orig_value;
-        //value = orig_value * (100/55) / 5000 //Convert value to something more sensible for a threshold
-        //DEBUG//document.getElementById('common_cloud_controls_out').innerHTML = value + " " + orig_value;
         s.center_threshold = value;
         draw_wordcloud();
     }
@@ -233,9 +230,7 @@ function initialize_wordcloud_controls() {
     });
 
     function opacity_rarity_change(event, ui) {
-        //var orig_value = $( "#opacity_rarity_slider" ).slider( "values", num_words_max );
         var value = $("#opacity_rarity_slider").slider("values", 1);
-        //DEBUG//document.getElementById('opacity_rarity_slider_out').innerHTML = value + " " + orig_value;
         s.opacity_rarity_weight = 1 - value;
         update_wordcloud();
     }
@@ -253,12 +248,10 @@ function initialize_wordcloud_controls() {
             }
         });
     });
-//begin count sliders
+    //begin count sliders
 
 
     function size_frequency_change(event, ui) {
-        //var orig_value = $( "#size_frequency_slider" ).slider( "values", num_words_max );
-        //DEBUG//document.getElementById('size_frequency_slider_out').innerHTML = value + " " + orig_value;
         s.size_frequency_weight = $("#size_frequency_slider").slider("values", 1);
         update_wordcloud();
     }
@@ -279,27 +272,9 @@ function initialize_wordcloud_controls() {
     });
 
     function opacity_frequency_change(event, ui) {
-        //var orig_value = $( "#opacity_frequency_slider" ).slider( "values", num_words_max );
-        //DEBUG//document.getElementById('opacity_frequency_slider_out').innerHTML = value + " " + orig_value;
         s.opacity_frequency_weight = $("#opacity_frequency_slider").slider("values", 1);
         update_wordcloud();
     }
-    /*
-     $(function() {
-     $( "#opacity_frequency_slider" ).slider();
-     $( "#opacity_frequency_slider" ).slider("option","min",0);
-     $( "#opacity_frequency_slider" ).slider("option","max",1);
-     $( "#opacity_frequency_slider" ).slider("option","step",0.01);
-     $( "#opacity_frequency_slider" ).slider("option","value",s.opacity_frequency_weight);
-
-     $( "#opacity_frequency_slider" ).slider({
-     slide: function( event, ui ) { opacity_frequency_change(event,ui);},
-     change: function( event, ui ) { opacity_frequency_change(event,ui);}
-     });
-
-     });
-     */
-
     $(function () {
         $("#opacity_frequency_slider").slider({
             "min": 0,
@@ -341,11 +316,6 @@ function initialize_wordcloud_controls() {
 
     //begin Required Observations slider
     $(function () {
-        /*$( "#required_observations_slider" ).slider("option","min",1);
-         $( "#required_observations_slider" ).slider("option","max",overall_max_observed);
-         $( "#required_observations_slider" ).slider("option","step",1);
-         $( "#required_observations_slider" ).slider("option","values",[s.min_req_tf,s.max_req_tf]);
-         */
         $("#required_observations_slider").slider({
             range: true,
             min: 1,
@@ -353,17 +323,13 @@ function initialize_wordcloud_controls() {
             step: 1,
             value: [s.min_req_tf, s.max_req_tf],
             change: function (event, ui) {
-                //var orig_value = $( "#required_observations_slider" ).slider( "values", num_words_max );
                 var sli = $('#required_observations_slider');
                 var orig_value = sli.slider("values") || [s.min_req_tf, s.max_req_tf];
                 var value = orig_value;
 
-                //DEBUG//document.getElementById('required_observations_slider_out').innerHTML = value + " " + orig_value;
                 s.min_req_tf = value[0];
                 s.max_req_tf = value[1];
                 update_required_tf_filter_display([s.min_req_tf, s.max_req_tf]);
-                //required_observations = value;
-                //document.getElementById("required_observations_out").innerHTML = required_observations;
                 draw_wordcloud();
 
             },
@@ -378,12 +344,10 @@ function initialize_wordcloud_controls() {
         // attach click handlers to result display
         $( "#min_required_observations" ).on('click', function(event) { sliderValueInputHandler(event); });
         $( "#max_required_observations" ).on('click', function(event) { sliderValueInputHandler(event); });
-
     });
 
 
     function sliderValueInputHandler(event, conversionFunction){
-
         conversionFunction = conversionFunction || function(value) {return value;};
 
         var fieldValue;
@@ -424,9 +388,7 @@ function initialize_wordcloud_controls() {
                         eSlider.slider('option', 'value', conversionFunction(newInput.val()));
                         break;
                     }
-
                 }
-
             });
             newInput.on('blur', function(event){
                 // revert back to text
@@ -445,9 +407,6 @@ function initialize_wordcloud_controls() {
 
     //begin Required IDF slider
     function update_required_idf_filter_display(values) {
-        //var disp = '[' + Math.floor(values[0]) + ' , ' + Math.floor(values[1]) + ']';
-        //document.getElementById("required_idf_out").innerHTML = disp;
-
         // min value
         var min = $( "#min_required_idf" );
         if(min.attr('data-mode')==='input') {
@@ -468,20 +427,12 @@ function initialize_wordcloud_controls() {
     }
 
     $(function () {
-        /*
-         $( "#required_idf_slider" ).slider();
-         $( "#required_idf_slider" ).slider("option","min",1);
-         $( "#required_idf_slider" ).slider("option","max",1/overall_min_idf_observed);
-         $( "#required_idf_slider" ).slider("option","step",1);
-         $( "#required_idf_slider" ).slider("option","value",(1/overall_min_idf_observed)/4);
-         */
         $("#required_idf_slider").slider({
             min: 1,
             max: 1 / overall_min_idf_observed,
             step: 0.0001,
             values: [1 / s.max_req_idf, 1 / s.min_req_idf],
             change: function (event, ui) {
-                //var orig_value = 1/$( "#required_idf_slider" ).slider( "values", num_words_max );
                 var orig_value = $("#required_idf_slider").slider("values");
                 var value = orig_value;
                 s.min_req_idf = 1 / orig_value[1];
@@ -560,7 +511,6 @@ function initialize_wordcloud_controls() {
         //var orig_value = $( "#base_fontsize_slider" ).slider( "values", num_words_max );
         var orig_value = $("#base_fontsize_slider").slider("values", 12);
         var value = orig_value;
-        //DEBUG//document.getElementById('base_fontsize_slider_out').innerHTML = value + " " + orig_value;
         s.base_fontsize = value;
         update_wordcloud();
     }
@@ -584,11 +534,8 @@ function initialize_wordcloud_controls() {
 
     function base_opacity_change(event, ui) {
         var sli = $("#base_opacity_slider");
-        //var orig_value = $( "#base_opacity_slider" ).slider( "values", num_words_max );
         var orig_value = sli.slider("values", 0.5);
         var value = orig_value;
-        //DEBUG//document.getElementById('base_opacity_slider_out').innerHTML = value + " " + orig_value;
-        //base_opacity = opacity_slider_max_value - value;
         s.base_opacity = value;
         update_wordcloud();
     }
@@ -778,8 +725,6 @@ function filter_for_display_entities_types(to_filter) {
         return to_filter; //All types selected, this is just a passthrough
     }
 
-    //filtered = [];
-    //console.log(to_filter);
     $.each(Object.keys(to_filter), function (index, i) {
         var key = to_filter[i].text;
         if (key[0] === '@') {
@@ -798,7 +743,6 @@ function filter_for_display_entities_types(to_filter) {
             }
         }
     });
-    //return filtered;
     return to_filter;
 }
 
@@ -837,10 +781,8 @@ var get_size = function (count, idf) {
     //var weighted_by_rarity_size = 1 / Math.log(1 / idf); //HARDCODE turned off
     var weighted_by_rarity_size = 1;
     var weighted_size = s.base_fontsize; // A base size
-    //console.log(weighted_size, weighted_by_rarity_size, weighted_by_count, count, idf);
     weighted_size *= (1 - s.size_frequency_weight) + s.size_frequency_weight * weighted_by_count;
     weighted_size *= (1 - s.size_rarity_weight) + (s.size_rarity_weight * weighted_by_rarity_size);
-    //DEBUG.innerHTML = "~!" + (1-rarity_weight) * unweighted_by_rarity_size + "~~" + rarity_weight * idf + "!@!" + max_observed_count;
     if (weighted_size < 10) {
         return 10;
     }
@@ -957,7 +899,7 @@ function prepare_wordcloud_data(selected_datasets) {
                 Math.abs((l_prop - r_prop) / (l_prop + r_prop)) <= s.center_threshold) {
                 var common_token = {};
                 common_token.text = token;
-                common_token.tf = (l_tf + r_tf); // Shoudl we average instead of add?
+                common_token.tf = (l_tf + r_tf); // Should we average instead of add?
                 common_token.idf = L[token].idf;
                 //Add classifier scores?
                 common_list.push(common_token);
@@ -1125,10 +1067,6 @@ function draw_wordcloud() {
          display += "<td style='vertical-align:top'><span class='wordcloud-display' id='leftcloud'></span></td>";
          display += "<td style='vertical-align:top'><span class='wordcloud-display' id='commoncloud'></span></td>";
          display += "<td style='vertical-align:top'><span class='wordcloud-display' id='rightcloud'></span></td>";
-        /*display += "<td style='vertical-align:top' width='33%'><span class='wordcloud-display' id='leftcloud'></span></td>";
-        display += "<td style='vertical-align:top' width='34%'><span class='wordcloud-display' id='commoncloud'></span></td>";
-        display += "<td style='vertical-align:top' width='33%'><span class='wordcloud-display' id='rightcloud'></span></td>";
-	*/
     }
     else if (singlecloud) {
         display += "<td><span class='wordcloud-display' id='commoncloud'></span></td>";
@@ -1240,7 +1178,6 @@ function compute_master_data(datasets) {
     s.mean_idf = sum(idfs) / idfs.length;
     counts.sort();
     //Something here can figure out how many words we want to display overall
-    //s.min_req_tf = counts[Math.floor(counts.length/2)] * 2;
     if (counts.length > 500) {
         s.min_req_tf = counts[Math.floor(counts.length) - 500];
     }
@@ -1259,12 +1196,9 @@ function compute_master_data(datasets) {
     $("#required_idf_slider").slider("option", "max", 1 / overall_min_idf_observed);
     $("#required_characters_slider").slider("option", "max", overall_max_word_length_observed);
 
-    //////var tmp = $( "#required_idf_slider" ).slider("values",(1/overall_min_idf_observed)/4);
-    //////$( "#required_idf_slider" ).slider("option","value",tmp || (1/overall_min_idf_observed)/4);
     var tmp = [1 / s.max_req_idf, 1 / s.min_req_idf];
     $("#required_idf_slider").slider("option", "values", tmp);
 
-    //tmp = $( "#required_observations_slider" ).slider("values") || [s.min_req_tf,s.max_req_tf];
     tmp = [s.min_req_tf, s.max_req_tf];
     $("#required_observations_slider").slider("option", "values", tmp);
 
@@ -1276,7 +1210,6 @@ function compute_master_data(datasets) {
 }
 
 function add_handlers(zone) {
-    //console.log("Z:",zone);
     zone.on("click", function (e) {
         e = e || jQuery.Event;
         s.onclick_function(e.target.innerHTML.trim());
