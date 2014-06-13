@@ -184,8 +184,8 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
   this.corpus = corpus;
   this.waveform_visualizer = waveform_visualizer;
 
-  this.set_up_annotate_pseudoterm_id = function(token) {
-      if (token.length > 50){ return; } //If you mistakenly click the whole box
+  this.set_up_annotate_pseudoterm_id = function(token_text) {
+      if (token_text.length > 50){ return; } //If you mistakenly click the whole box
     /*
       $.get('/www/pseudoterm_template.html',function(data){
           alert("in");
@@ -195,8 +195,8 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
     */
 
       // master_datasets and selected_datasets are global variables defined in dynamic_wordclouds.js
-      var token_container = master_datasets[selected_datasets[0]].tokens[token] ||
-          master_datasets[selected_datasets[1]].tokens[token] ||
+      var token_container = master_datasets[selected_datasets[0]].tokens[token_text] ||
+          master_datasets[selected_datasets[1]].tokens[token_text] ||
           [];
       var pt_ids = token_container.pt_ids;
       console.log(pt_ids);

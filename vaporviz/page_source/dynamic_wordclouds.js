@@ -53,8 +53,8 @@ var s = {
     display_hashtags: true,
     display_user_mentions: true,
     wordcloud_element: 'wordcloud_location',
-    onclick_function: function (token) {
-        default_example_onclick(token);
+    onclick_function: function (token_text) {
+        default_example_onclick(token_text);
     },
     oncontextclick_function: function (token) {
     }
