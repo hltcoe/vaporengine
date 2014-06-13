@@ -159,7 +159,7 @@
             </div>
             <div class="form-group">
               <label for="pt_native_display">Native</label>
-              <input id="pt_native_display" disabled></input>
+              <input id="pt_native_display"></input>
             </div>
             <div class="form-group">
               <button class="btn btn-primary btn-xs" id="pt_junk_button"><i class="glyphicon glyphicon-trash"></i></button>
