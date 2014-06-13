@@ -649,8 +649,7 @@ function filter_for_required_tf(to_filter_dicts) {
         }
         $.each(Object.keys(to_filter_dict), function (index, key) {
             var this_tf = to_filter_dict[key].tf;
-            //if (this_tf < s.min_req_tf || this_tf > s.max_req_tf )  {
-            if (key !== 'orioles' && (this_tf < s.min_req_tf || this_tf > s.max_req_tf )) {///HARDCODE WHY!?
+            if (this_tf < s.min_req_tf || this_tf > s.max_req_tf ) {
                 delete to_filter_dict[key];
             }
         });
@@ -678,8 +677,7 @@ function filter_for_required_tf(to_filter_dicts) {
         if (combined_tf < s.min_req_tf || combined_tf > s.max_req_tf) {
             for (index = 0, len = to_filter_dicts.length; index < len; index++) {
                 to_filter_dict = to_filter_dicts[index];
-                //if (key in to_filter_dict){
-                if (key in to_filter_dict && key !== 'orioles') {
+                if (key in to_filter_dict) {
                     delete to_filter_dict[key];
                 }
             }
