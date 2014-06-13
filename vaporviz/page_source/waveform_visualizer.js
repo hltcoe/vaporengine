@@ -1,6 +1,8 @@
 
-function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettings) {
+/* global WaveSurfer */
 
+
+function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettings) {
   // Use 'self' to give event handler access to current instance ('this')
   var self = this;
 
@@ -77,14 +79,14 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
   };
 
   this.loadURL = function(audioSourceURL) {
-    var corpus, i, pseudotermID, updateCallback, wavesurfer;
+    var corpus, i, pseudotermID;
 
     this.wavesurfer.load(audioSourceURL);
 
     // If audio clip is a pseudoterm audio clip composed of multiple audio events,
     // add markers to waveform at audio event boundaries
     i = audioSourceURL.indexOf("/audio/pseudoterm/");
-    if (i != -1) {
+    if (i !== -1) {
       corpus = audioSourceURL.substr(8, i - 8);
       // Assumes that pseudotermID is a 24 character string
       pseudotermID = audioSourceURL.substr(i + 18, 24);
@@ -156,7 +158,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     if (parseInt(marker.id) > 0) {
       previousUtteranceID = self.audio_events[parseInt(marker.id) - 1].utterance_id;
     }
-    if (utteranceID != previousUtteranceID && previousUtteranceID != -1) {
+    if (utteranceID !== previousUtteranceID && previousUtteranceID !== -1) {
       $('#' + previousUtteranceID + '_utterance_button')
         .addClass('btn-default')
         .removeClass('btn-info');
@@ -180,7 +182,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     self.wavesurfer.clearMarks();
     self.wavesurfer.clearRegions();
 
-    for (i in self.audio_events) {
+    for (i = 0; i < self.audio_events.length; i++) {
       self.wavesurfer.region({
         'color': 'blue',
         'id': i,
@@ -195,7 +197,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       });
 
       utterance_id = self.audio_events[i].utterance_id;
-      if (typeof(audio_events_per_utterance_id[utterance_id]) == 'undefined') {
+      if (typeof(audio_events_per_utterance_id[utterance_id]) === 'undefined') {
         audio_events_per_utterance_id[utterance_id] = 0;
       }
       audio_events_per_utterance_id[utterance_id] += 1;

@@ -1,3 +1,12 @@
+
+// Global objects declared in dynamic_wordclouds.js
+/* global junk_displayed_token, make_me_a_venncloud, master_datasets, selected_datasets, update_displayed_token  */
+
+// Global objects declared in third-party libraries
+/* global prettyPrint */
+
+
+var active_pseudoterm;
 var cloud_datasets = [];
 
 
@@ -7,7 +16,7 @@ function get_cloud_data(corpus, utterance_list){
     var dataset_name = utterance_list.dataset_name;
 
     return $.Deferred( function( defer ) {
-        send = {};
+        var send = {};
         send.dataset = corpus;
         send.utterances = utterance_ids;
 
@@ -25,13 +34,12 @@ function get_cloud_data(corpus, utterance_list){
                 defer.reject('Deferred error message');
             },
             success: function(data) {
-                wc_data = {};
+                var wc_data = {};
                 wc_data.dataset_name = dataset_name;
                 wc_data.tokens = data;
                 wc_data.num_tokens = data.length;
                 wc_data.num_documents = utterance_ids.length;
                 cloud_datasets.push(wc_data);
-                //$('#cloud_data_landing_zone').html(prettyPrint(data));
                 defer.resolve(data);
             }
         });
@@ -40,8 +48,7 @@ function get_cloud_data(corpus, utterance_list){
 
 
 function get_pseudoterm(pt_id, corpus_name){
-
-    send = {};
+    var send = {};
     send.dataset=corpus_name;
     send.count = 1;
     send._id=(pt_id);
@@ -62,30 +69,23 @@ function get_pseudoterm(pt_id, corpus_name){
             active_pseudoterm = data[0]; //Global var
             $('#pt_eng_display')
                 .val(active_pseudoterm.eng_display);
-
             $('#pt_native_display')
                 .val(active_pseudoterm.native_display);
             $('#pt_stats_landing_zone')
                 .html(prettyPrint(active_pseudoterm));
-            $('#pt_snippets_play_button')
-                .click(function(){playPseudoterm('pt_player', pt_id);});
-            $('#pt_snippets_play_button')
-                .click(function(){playPseudoterm_with_context('pt_player', pt_id);});
-
-            //Also get audioevents and snippets
         }
     });
 }
 
 
 function annotate_pt_eng_label(corpus){
-    active_pt_id = active_pseudoterm._id;
-    annotation = $('#pt_eng_display').val();
-    if (active_pseudoterm.eng_display == annotation){
+    var active_pt_id = active_pseudoterm._id;
+    var annotation = $('#pt_eng_display').val();
+    if (active_pseudoterm.eng_display === annotation){
         return;
     }
     else {
-        send = {};
+        var send = {};
         send.dataset=corpus;
         send._id=active_pt_id;
         send.eng_display = annotation;
@@ -109,9 +109,9 @@ function annotate_pt_eng_label(corpus){
 
 
 function annotate_pt_native_label(corpus){
-    active_pt_id = active_pseudoterm._id;
-    annotation = $('#pt_native_display').val();
-    send = {};
+    var active_pt_id = active_pseudoterm._id;
+    var annotation = $('#pt_native_display').val();
+    var send = {};
     send.dataset=corpus;
     send._id=active_pt_id;
     send.native_display = annotation;
@@ -144,11 +144,10 @@ function getURLforUtteranceWAV(corpus_name, utteranceID) {
 
 
 function junk_this_pseudoterm(event) {
-    active_pt_id = active_pseudoterm._id;
-    send = {};
+    var active_pt_id = active_pseudoterm._id;
+    var send = {};
     send.dataset = event.data.corpus;
     send._id=active_pt_id;
-    send.native_display = annotation;
     $.ajax({
         url: "/junk_pseudoterm",
         type: "POST",
@@ -163,6 +162,10 @@ function junk_this_pseudoterm(event) {
     });
 
     junk_displayed_token( active_pseudoterm.eng_display );
+
+    //Clear input fields for "English" and "Native" labels
+    $("#pt_eng_display").val("");
+    $("#pt_native_display").val("");
 }
 
 
@@ -186,18 +189,20 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
 
   this.set_up_annotate_pseudoterm_id = function(token) {
       if (token.length > 50){ return; } //If you mistakenly click the whole box
+    /*
       $.get('/www/pseudoterm_template.html',function(data){
           alert("in");
           $('#annotation_landing_zone').html(data);
           alert("Past");
       });
+    */
 
       var token_container = master_datasets[selected_datasets[0]].tokens[token] ||
           master_datasets[selected_datasets[1]].tokens[token] ||
           [];
       var pt_ids = token_container.pt_ids;
       console.log(pt_ids);
-      pseudotermID = pt_ids[0];
+      var pseudotermID = pt_ids[0];
       get_pseudoterm(pseudotermID, corpus); //Also posts to the global variable
 
       if (waveform_visualizer) {
@@ -220,7 +225,7 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
               annotate_pt_native_label(corpus);
           });
 
-      //Autoselect the english display element
+      //Autoselect the english display element when user clicks on token
       $('#pt_eng_display').focus().select();
   };
 };
@@ -268,13 +273,8 @@ function venncloud_from_utterances(corpus, utterances_lists, waveform_visualizer
     }
     options.click = corpus_closure.set_up_annotate_pseudoterm_id;
 
-    //options.wordcloud_element = 'cloud_data_landing_zone';
-
-    //$.when(get_multiple_utterances_cloud_data(utterances_lists)).done( function(){
-    //HARDCODED below for the nonce.
-    u = utterances_lists;
+    var u = utterances_lists;
     $.when(get_cloud_data(corpus, u[0] ), get_cloud_data(corpus, u[1] )).done( function(){
-        //user cloud datasets
         make_me_a_venncloud( cloud_datasets, options );
     });
 }
