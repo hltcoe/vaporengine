@@ -201,10 +201,7 @@ def update_pseudoterm_header():
 def junk_pseudoterm():
     update = json.load(request.body)
     _id = update['_id']
-    del update['_id']
-
     dataset_name = update['dataset']
-    del update['dataset']
 
     db = init_dbconn(name=settings[dataset_name]['DB_NAME'], host=settings[dataset_name]['DB_HOST'])
     res = pseudoterm_is_junk(db, _id)
