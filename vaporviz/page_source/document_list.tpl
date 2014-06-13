@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="/www/jquery-ui.css">
-  <link rel="stylesheet" href="/www/dynamic_wordclouds.css">
-
+  <link rel="stylesheet" href="/static/jquery-ui-1.10.4/css/ui-lightness/jquery-ui-1.10.4.css"/>
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap.css"/>
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap-theme.css"/>
+
+  <link rel="stylesheet" href="/www/dynamic_wordclouds.css">
 
   <script src="/static/jquery-1.11.1.min.js"></script>
   <script src="/static/bootstrap-3.1.1/js/bootstrap.js"></script>
