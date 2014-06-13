@@ -293,8 +293,6 @@ function initialize_wordcloud_controls() {
     //end count slider
 
     function update_required_tf_filter_display(values) {
-        //document.getElementById("required_observations_out").innerHTML = '[' + values[0] + ' , ' + values[1] + ']';
-
         // min value
         var min = $( "#min_required_observations" );
         if(min.attr('data-mode')==='input') {
@@ -338,7 +336,6 @@ function initialize_wordcloud_controls() {
                 update_required_tf_filter_display(tmp);
             }
         });
-        //update_required_tf_filter_display($("required_observations_slider").slider("values"));
         update_required_tf_filter_display([s.min_req_tf, s.max_req_tf]); // Maybe we want to display overall_max_observed instead?
 
         // attach click handlers to result display
@@ -508,7 +505,6 @@ function initialize_wordcloud_controls() {
     //begin dynamic range
 
     function base_fontsize_change(event, ui) {
-        //var orig_value = $( "#base_fontsize_slider" ).slider( "values", num_words_max );
         var orig_value = $("#base_fontsize_slider").slider("values", 12);
         var value = orig_value;
         s.base_fontsize = value;
@@ -556,8 +552,6 @@ function initialize_wordcloud_controls() {
     });
 
     //end dynamic range sliders
-
-    //hide_all_controls();
 
 } //End of initialize_wordcloud_controls
 
@@ -1035,9 +1029,6 @@ function draw_wordcloud() {
 
     //Actually put the words on the screen -- before they have been properly sized/opacitized
 
-    //clear the existing display(s) and set it to not display
-    //main_wordcloud_container.hide();
-
     // before removing elements, unbind handlers
     $('#left_dataset_selector').off();
     $('#right_dataset_selector').off();
@@ -1062,9 +1053,9 @@ function draw_wordcloud() {
     display += "<tbody class='js-context-area'><tr>";
     if (venncloud) {
 	//TODO: Deal with space more effectively -- we should be able to estimate how much room each should get
-         display += "<td style='vertical-align:top'><span class='wordcloud-display' id='leftcloud'></span></td>";
-         display += "<td style='vertical-align:top'><span class='wordcloud-display' id='commoncloud'></span></td>";
-         display += "<td style='vertical-align:top'><span class='wordcloud-display' id='rightcloud'></span></td>";
+        display += "<td style='vertical-align:top'><span class='wordcloud-display' id='leftcloud'></span></td>";
+        display += "<td style='vertical-align:top'><span class='wordcloud-display' id='commoncloud'></span></td>";
+        display += "<td style='vertical-align:top'><span class='wordcloud-display' id='rightcloud'></span></td>";
     }
     else if (singlecloud) {
         display += "<td><span class='wordcloud-display' id='commoncloud'></span></td>";
