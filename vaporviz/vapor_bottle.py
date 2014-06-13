@@ -28,7 +28,7 @@ vaporviz_path = os.path.dirname(os.path.realpath(__file__))
 TEMPLATE_PATH.append(os.path.join(vaporviz_path, 'page_source'))
 
 
-# the decorator to ease some javascript pain (if memory serves)
+"""Decorator that enables Cross-Origin Resource Sharing (CORS)"""
 def enable_cors(fn):
     def _enable_cors(*args, **kwargs):
         # set CORS headers
@@ -42,6 +42,7 @@ def enable_cors(fn):
 
     return _enable_cors
 
+"""Decorator that returns HTTP response as JSON"""
 def json_wrapper(method):
     def rapper(*a, **kw):
         resp = method(*a, **kw)
@@ -50,6 +51,16 @@ def json_wrapper(method):
         # bson.json_util.dumps() knows how to convert Mongo ObjectId's to JSON
         return bson.json_util.dumps(resp)
     return rapper
+
+
+def bytestring_as_file_with_mimetype(bytestring, mimetype):
+    """
+    Based on static_file() in bottle.py
+    """
+    headers = dict()
+    headers['Content-Length'] = len(bytestring)
+    headers['Content-Type'] = mimetype
+    return HTTPResponse(bytestring, **headers)
 
 
 """For serving generic widgets and pages"""
@@ -66,6 +77,7 @@ def widget_handler(path):
     print "Returning what was found at:", source_path
     return page
 
+
 """For serving up pages that must be corpus aware"""
 @route('/corpus/<corpus_name>/<page_path>')
 def corpus_aware_handler(corpus_name,page_path):
@@ -77,6 +89,12 @@ def corpus_aware_handler(corpus_name,page_path):
         source_path = 'vaporviz/'+source_path
         print "Failing, trying  what was found at:", source_path
         return template(source_path, corpus_name=corpus_name)
+
+
+@route('/static/<filepath:path>')
+def static_files(filepath):
+    vaporviz_path = os.path.dirname(os.path.realpath(__file__))
+    return static_file(filepath, root=os.path.join(vaporviz_path, 'static'))
 
 
 def generic_find(find_function, metadata_filters):
@@ -104,8 +122,6 @@ def generic_find(find_function, metadata_filters):
     if 'sort_by' in metadata_filters:
         sort_by = metadata_filters['sort_by'] #Or do we need a conversion here
 
-
-
     print metadata_filters
     cursor = find_function(db, **metadata_filters)
 
@@ -120,8 +136,6 @@ def generic_find(find_function, metadata_filters):
         results.append(result)
     print "Results:", results
     return results
-
-
 
 @route('/find_annotations',method=['OPTIONS','POST'])
 @json_wrapper
@@ -197,7 +211,8 @@ def junk_pseudoterm():
 
     return res
 
-#Get Venncloud data for a single list of utterances
+
+"""Get Venncloud data for a single list of utterances"""
 @route('/cloud_data_from_utterances',method=['OPTIONS','POST'])
 @json_wrapper
 @enable_cors
@@ -215,20 +230,16 @@ def cloud_data_handler():
     return token_vector
 
 
-
 @route('/')
 def index_page():
     vaporviz_path = os.path.dirname(os.path.realpath(__file__))
     return template('index', current_corpora=current_corpora)
 
-@route('/static/<filepath:path>')
-def static_files(filepath):
-    vaporviz_path = os.path.dirname(os.path.realpath(__file__))
-    return static_file(filepath, root=os.path.join(vaporviz_path, 'static'))
 
 @route('/corpus/<corpus>/audio/audio_event/<audio_event_id>.wav')
 def audio_for_audio_event(corpus,audio_event_id):
     """
+    Creates a WAV file from a single audio event
     """
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     audio_event = find_audio_events(db, _id=ObjectId(audio_event_id))[0]
@@ -357,6 +368,8 @@ def audio_for_pseudoterm_with_context(corpus, pseudoterm_id):
 
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
     pseudoterm = find_pseudoterms(db, _id=ObjectId(pseudoterm_id))[0]
+    # TODO: Allow number of audio events to be specified as parameter, instead
+    #       of hard-coded to 10
     audio_events = find_audio_events(db, pt_id=pseudoterm['_id'], count=10)
 
     # Create a temporary directory
@@ -372,8 +385,6 @@ def audio_for_pseudoterm_with_context(corpus, pseudoterm_id):
         'w',
         settings[corpus]['SOX_SIGNAL_INFO'])
 
-    # TODO: Allow number of audio events to be specified as parameter, instead
-    #       of hard-coded to 10
     for audio_event in audio_events:
         initial_start_offset = audio_event['start_offset'] / 100.0
         initial_duration = audio_event['duration'] / 100.0
@@ -451,16 +462,6 @@ def document_view(corpus, audio_identifier):
                     audio_events=audio_events,
                     corpus=corpus,
                     utterance_id=str(utterance['_id']))
-
-
-def bytestring_as_file_with_mimetype(bytestring, mimetype):
-    """
-    Based on static_file() in bottle.py
-    """
-    headers = dict()
-    headers['Content-Length'] = len(bytestring)
-    headers['Content-Type'] = mimetype
-    return HTTPResponse(bytestring, **headers)
 
 
 
