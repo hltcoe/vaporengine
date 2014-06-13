@@ -579,7 +579,7 @@ function clone(original, decoratorFunction) {
     // check to see if original is an object, since objects are assigned by reference
     if (typeof original === "object") {
         // check if array since both arrays and objects will be identified as "object" by 'typeof'
-        if (jQuery.toString.call(original) === "[object Array]") {
+        if (toString.call(original) === "[object Array]") {
             copy = [];
             for (var i = 0, len = original.length; i < len; i += 1) {
                 copy.push(clone(original[i]));
