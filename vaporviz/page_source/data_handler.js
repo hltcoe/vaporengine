@@ -1,8 +1,11 @@
 
-// Global objects declared in dynamic_wordclouds.js
-/* global junk_displayed_token, make_me_a_venncloud, master_datasets, selected_datasets, update_displayed_token  */
+// Functions declared in dynamic_wordclouds.js
+/* global junk_displayed_token, make_me_a_venncloud, update_displayed_token  */
 
-// Global objects declared in third-party libraries
+// GLOBAL VARIABLES declared in dynamic_wordclouds.js
+/* global master_datasets, selected_datasets */
+
+// Functions declared in third-party libraries
 /* global prettyPrint */
 
 
@@ -101,8 +104,6 @@ function annotate_pt_eng_label(corpus){
                 get_pseudoterm(active_pt_id, corpus);
             }
         });
-        //TODO: Issue a call to redraw that token of the wordcloud.
-        //alert('updating'+send.eng_display);
         update_displayed_token( active_pseudoterm.eng_display , annotation);
     }
 }
@@ -154,10 +155,6 @@ function junk_this_pseudoterm(event) {
         data: JSON.stringify(send),
         error: function(xhr, error) {
             alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
-        },
-        success: function(data) {
-            //Reload the PT now to see the changes reflected
-            //get_pseudoterm( active_pt_id );
         }
     });
 
@@ -197,6 +194,7 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
       });
     */
 
+      // master_datasets and selected_datasets are global variables defined in dynamic_wordclouds.js
       var token_container = master_datasets[selected_datasets[0]].tokens[token] ||
           master_datasets[selected_datasets[1]].tokens[token] ||
           [];
