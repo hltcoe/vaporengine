@@ -105,6 +105,7 @@ function annotate_pt_eng_label(corpus){
             }
         });
         update_displayed_token( active_pseudoterm.eng_display , annotation);
+        set_active_wordcloud_token_by_text(annotation);
     }
 }
 
@@ -170,12 +171,22 @@ function junk_this_pseudoterm(event) {
 }
 
 
-function set_active_wordcloud_token(token_dom_id) {
+function set_active_wordcloud_token_by_dom_id(token_dom_id) {
     // There can be only one
     $(".active_wordcloud_token").removeClass("active_wordcloud_token");
     $("#" + token_dom_id).addClass("active_wordcloud_token");
 }
 
+
+function set_active_wordcloud_token_by_text(token_text) {
+    $("span.active_wordcloud_token").removeClass("active_wordcloud_token");
+
+    $("span.wordcloud_token").each(function(index, element) {
+        if (element.innerText === token_text) {
+            element.classList.add("active_wordcloud_token");
+        }
+    });
+}
 
 /*
   set_up_annotate_pseudoterm_id() is a callback handler that is
@@ -238,7 +249,7 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
         //Autoselect the english display element when user clicks on token
         $('#pt_eng_display').focus().select();
 
-        set_active_wordcloud_token(token_element.id);
+        set_active_wordcloud_token_by_dom_id(token_element.id);
     };
 };
 
