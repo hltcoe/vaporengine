@@ -71,6 +71,11 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     this.loadURL(audioSourceURL);
   };
 
+  this.clear = function() {
+    self.wavesurfer.seekTo(0.0);
+    self.wavesurfer.empty();
+  }
+
   this.loadAndPlayURL = function(audioSourceURL) {
     this.loadURL(audioSourceURL);
     this.wavesurfer.on('ready', function() {
