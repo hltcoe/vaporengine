@@ -23,10 +23,10 @@ span.playover {
 }
 
 span.wordcloud_token {
+    border: 1px solid transparent;
     padding-left: 5px;
     padding-right: 5px;
-    border: 1px solid transparent;
-    border: 1px solid transparent;
+    white-space: nowrap;
 }
 
 span.wordcloud_token:hover {
