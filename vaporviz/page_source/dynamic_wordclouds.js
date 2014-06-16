@@ -997,7 +997,7 @@ function paint_tokens(display, data, color) {
         attr.nodeValue = element_id;
         token_element.setAttributeNode(attr);
 
-        token_element.textContent = ' ' + t.text + ' ';
+        token_element.textContent = t.text;
 
         token_element.style.fontSize = '2pt';
         token_element.style.color = color;
@@ -1012,6 +1012,7 @@ function paint_tokens(display, data, color) {
 
         //Actually add to the display
         display.append(token_element);
+        display.append(" ");
     });
 }
 
