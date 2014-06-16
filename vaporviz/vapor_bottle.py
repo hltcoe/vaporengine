@@ -78,6 +78,20 @@ def widget_handler(path):
     return page
 
 
+"""
+For serving CSS
+
+static_file returns the CSS files with mime-type "text/css", while the
+"/www/<path>" route implemented by widget_handler() will return CSS files
+with mime-type "text/html".  Chrome 35, Firefox 30 and Safari 7 will not
+use CSS rules in a file if the file's mime-type is "text/html".
+"""
+@route('/css/<filepath:path>')
+def css_handler(filepath):
+    vaporviz_path = os.path.dirname(os.path.realpath(__file__))
+    return static_file(filepath, root=os.path.join(vaporviz_path, 'page_source'))
+
+
 """For serving up pages that must be corpus aware"""
 @route('/corpus/<corpus_name>/<page_path>')
 def corpus_aware_handler(corpus_name,page_path):
