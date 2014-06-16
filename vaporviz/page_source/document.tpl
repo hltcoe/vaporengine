@@ -5,7 +5,8 @@
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap.css"/>
   <link rel="stylesheet" href="/static/bootstrap-3.1.1/css/bootstrap-theme.css"/>
 
-  <link rel="stylesheet" href="/www/dynamic_wordclouds.css"/>
+  <link rel="stylesheet" href="/css/dynamic_wordclouds.css"/>
+  <link rel="stylesheet" href="/css/vapor_wordclouds.css"/>
 
   <script src="/static/jquery-1.11.1.min.js"></script>
   <script src="/static/jquery-ui-1.10.4/js/jquery-ui-1.10.4.min.js"></script>
@@ -23,17 +24,6 @@
   <script src="/www/dynamic_wordclouds.js"></script>
   <script src="/www/waveform_visualizer.js"></script>
   <script src="/www/data_handler.js"></script>
-
-  <style>
-    /* Hide drop-down boxes for selecting Left and Right datasets */
-    #wordcloud_location thead {
-      display: none;
-    }
-
-    .playover {
-      background-color: yellow;
-    }
-  </style>
 
   <script>
     // Adjust the padding at top of document when height of navbar changes
