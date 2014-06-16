@@ -53,8 +53,8 @@ var s = {
     display_hashtags: true,
     display_user_mentions: true,
     wordcloud_element: 'wordcloud_location',
-    onclick_function: function (token_text) {
-        default_example_onclick(token_text);
+    onclick_function: function (token_text, token_element) {
+        default_example_onclick(token_text, token_element);
     },
     oncontextclick_function: function (token) {
     }
@@ -129,8 +129,8 @@ function show_example_windows() {
     $('#floatdivleft').show();
 }
 
-function default_example_onclick(token) {
-    if (token.length > 50) {
+function default_example_onclick(token_text, token_element) {
+    if (token_text.length > 50) {
         //This happens if you click outside a word, ignore.
         return;
     }
@@ -138,16 +138,16 @@ function default_example_onclick(token) {
     if (venncloud) {
         var r_tokens = master_datasets[display_index_in_master_data[1]].tokens;
         var r_str_exs = 'N/A';
-        if (token in r_tokens) {
-            r_str_exs = r_tokens[token].examples.join('<BR><HR>');
+        if (token_text in r_tokens) {
+            r_str_exs = r_tokens[token_text].examples.join('<BR><HR>');
         }
         $('#examples_right').html(r_str_exs);
     }
     //Always display the left window
     var l_tokens = master_datasets[display_index_in_master_data[0]].tokens;
     var l_str_exs = 'N/A';
-    if (token in l_tokens) {
-        l_str_exs = l_tokens[token].examples.join('<BR><HR>');
+    if (token_text in l_tokens) {
+        l_str_exs = l_tokens[token_text].examples.join('<BR><HR>');
     }
     $('#examples_left').html(l_str_exs);
 
@@ -1003,9 +1003,9 @@ function paint_tokens(display, data, color) {
         token_element.style.color = color;
 
         if (t.span_classes) {
-          for (var i in t.span_classes) {
-            token_element.classList.add(t.span_classes[i]);
-          }
+            for (var i in t.span_classes) {
+                token_element.classList.add(t.span_classes[i]);
+            }
         }
 
         t.handle = token_element;
@@ -1201,7 +1201,7 @@ function compute_master_data(datasets) {
 function add_handlers(zone) {
     zone.on("click", function (e) {
         e = e || jQuery.Event;
-        s.onclick_function(e.target.innerHTML.trim());
+        s.onclick_function(e.target.innerHTML.trim(), e.target);
     });
     zone.on("contextmenu", function (e) {
         e = e || jQuery.Event;

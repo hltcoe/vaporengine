@@ -184,7 +184,7 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
     this.corpus = corpus;
     this.waveform_visualizer = waveform_visualizer;
 
-    this.set_up_annotate_pseudoterm_id = function(token_text) {
+    this.set_up_annotate_pseudoterm_id = function(token_text, token_element) {
         if (token_text.length > 50){ return; } //If you mistakenly click the whole box
 
         /*
