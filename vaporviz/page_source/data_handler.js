@@ -166,6 +166,13 @@ function junk_this_pseudoterm(event) {
 }
 
 
+function set_active_wordcloud_token(token_dom_id) {
+    // There can be only one
+    $(".active_wordcloud_token").removeClass("active_wordcloud_token");
+    $("#" + token_dom_id).addClass("active_wordcloud_token");
+}
+
+
 /*
   set_up_annotate_pseudoterm_id() is a callback handler that is
   invoked when a user clicks on a word in a wordcloud.
@@ -226,6 +233,8 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
 
         //Autoselect the english display element when user clicks on token
         $('#pt_eng_display').focus().select();
+
+        set_active_wordcloud_token(token_element.id);
     };
 };
 
@@ -249,7 +258,7 @@ function wordcloud_from_utterances(corpus, utterances_list, waveform_visualizer,
         dataset = cloud_datasets[0];
         for (token_name in dataset.tokens) {
             token = dataset.tokens[token_name];
-            token.span_classes = [];
+            token.span_classes = ['wordcloud_token'];
             for (i = 0; i < token.audio_event_ids.length; i++) {
                 token.span_classes.push("audio_event_span_" + token.audio_event_ids[i]);
             }
