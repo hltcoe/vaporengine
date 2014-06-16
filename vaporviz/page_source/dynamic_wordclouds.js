@@ -1212,13 +1212,6 @@ function add_handlers(zone) {
 }
 
 function initialize_wordcloud() {
-    // TODO: The 'required_idf' and 'required_observations' variables are not
-    //       global variables, but may have been used in an earlier
-    //       incarnation of the code.
-    /*
-    required_idf = overall_min_idf_observed;
-    required_observations = 4;
-    */
     compute_master_data(); //Actually compute it here.
 }
 
