@@ -163,6 +163,10 @@ function junk_this_pseudoterm(event) {
     //Clear input fields for "English" and "Native" labels
     $("#pt_eng_display").val("");
     $("#pt_native_display").val("");
+
+    if (event.data.waveform_visualizer) {
+        event.data.waveform_visualizer.clear();
+    }
 }
 
 

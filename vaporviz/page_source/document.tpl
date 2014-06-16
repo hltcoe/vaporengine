@@ -96,7 +96,9 @@
         { base_fontsize: 10 }
       );
 
-      $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
+      $('#pt_junk_button').click(
+        {'corpus': '{{corpus}}', 'waveform_visualizer': pseudotermVisualizer},
+        junk_this_pseudoterm);
     });
 
     var audio_events = [
