@@ -1119,6 +1119,20 @@ function update_displayed_token(old_token, new_token){
             delete master_datasets[j].tokens[old_token];
         }
     }
+
+    if (new_token.length > overall_max_word_length_observed) {
+        // filter_for_characters() will remove words longer than
+        // s.max_req_chars from the wordcloud.  If the updated token
+        // text is the longest token in the corpora, we update the
+        // upper bound for longest permissable tokens - as opposed to
+        // removing the token the user just added from the wordcloud.
+        //
+        // TODO: Update the range sliders, refactor update code into
+        //       separate function
+        overall_max_word_length_observed = new_token.length;
+        s.max_req_chars = overall_max_word_length_observed;
+    }
+
     draw_wordcloud();
 }
 
@@ -1207,7 +1221,6 @@ function compute_master_data(datasets) {
 
     tmp = [s.min_req_chars, s.max_req_chars];
     $("#required_characters_slider").slider("option", "values", tmp);
-
 
     return datasets;
 }
