@@ -246,10 +246,12 @@
                 <input type="radio" id="COUNT" name="radio" />
                 <label for="COUNT">Frequency of Occurence</label>
               </li>
+              <!--
               <li>
                 <input type="radio" id="IDF" name="radio" />
                 <label for="IDF">Rarity in Corpus</label>
               </li>
+              -->
             </ul>
           </div>
           <div class="btn-group">
