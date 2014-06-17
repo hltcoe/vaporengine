@@ -741,19 +741,32 @@ function filter_for_display_entities_types(to_filter) {
 
 //Sorting
 function sorter(to_sort, my_sort_type) {
-    to_sort.sort(function (a, b) {
-        return b.text < a.text;
-    }); // The default is alphabetic
     if (my_sort_type === 'IDF') {
         to_sort.sort(function (a, b) {
             return b.idf - a.idf;
         });
-    } // Reverse, so rarer words are on top
-    if (my_sort_type === 'COUNT') {
+    }
+    else if (my_sort_type === 'COUNT') {
         to_sort.sort(function (a, b) {
             return b.tf - a.tf;
         });
     }
+    else { // The default is alphabetic
+        to_sort.sort(function (a, b) {
+            var la = a.text.toLowerCase();
+            var lb = b.text.toLowerCase();
+            if (la < lb) {
+                return -1;
+            }
+            else if (la > lb) {
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        });
+    }
+
     return to_sort;
 }
 
