@@ -28,7 +28,7 @@
   <script>
     // Adjust the padding at top of document when height of navbar changes
     function updateBodyPaddingWhenControlsChangeSize() {
-      if ($('#waveform_navbar')) {
+      if ($('#waveform_navbar').length > 0) {
         var new_control_height = 5 + $('#waveform_navbar').height();
         $('body').attr('style', 'padding-top: ' + new_control_height + 'px;');
       }

@@ -60,7 +60,7 @@
 
     // Adjust the padding at top of document when height of navbar changes
     function updateBodyPaddingWhenControlsChangeSize() {
-      if ($('#waveform_navbar')) {
+      if ($('#waveform_navbar').length > 0) {
         var new_control_height = 5 + $('#waveform_navbar').height();
         $('body').attr('style', 'padding-top: ' + new_control_height + 'px;');
       }
@@ -81,7 +81,7 @@
 <body style="padding-top: 230px;">
 
 <div class="container">
-  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <nav id="waveform_navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
       <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em;">
         <div id="waveform_visualizer"></div>
