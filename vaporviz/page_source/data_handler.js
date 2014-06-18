@@ -13,14 +13,18 @@ var active_pseudoterm;
 var cloud_datasets = [];
 
 
-function get_cloud_data(corpus, utterance_list){
+/**
+ * @param {String} corpus_name
+ * @param {Array} utterance_list
+ */
+function get_cloud_data(corpus_name, utterance_list){
 
     var utterance_ids = utterance_list.utterance_ids;
     var dataset_name = utterance_list.dataset_name;
 
     return $.Deferred( function( defer ) {
         var send = {};
-        send.dataset = corpus;
+        send.dataset = corpus_name;
         send.utterances = utterance_ids;
 
         $.ajaxSetup({
@@ -50,6 +54,10 @@ function get_cloud_data(corpus, utterance_list){
 }
 
 
+/**
+ * @param {String} pt_id
+ * @param {String} corpus_name
+ */
 function get_pseudoterm(pt_id, corpus_name){
     var send = {};
     send.dataset=corpus_name;
@@ -81,7 +89,10 @@ function get_pseudoterm(pt_id, corpus_name){
 }
 
 
-function annotate_pt_eng_label(corpus){
+/**
+ * @param {String} corpus_name
+ */
+function annotate_pt_eng_label(corpus_name){
     var active_pt_id = active_pseudoterm._id;
     var annotation = $('#pt_eng_display').val();
     if (active_pseudoterm.eng_display === annotation){
@@ -89,7 +100,7 @@ function annotate_pt_eng_label(corpus){
     }
     else {
         var send = {};
-        send.dataset=corpus;
+        send.dataset=corpus_name;
         send._id=active_pt_id;
         send.eng_display = annotation;
         send.annotated = true;
@@ -101,7 +112,7 @@ function annotate_pt_eng_label(corpus){
                 alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
             },
             success: function(data) {
-                get_pseudoterm(active_pt_id, corpus);
+                get_pseudoterm(active_pt_id, corpus_name);
             }
         });
         update_displayed_token( active_pseudoterm.eng_display , annotation);
@@ -110,11 +121,14 @@ function annotate_pt_eng_label(corpus){
 }
 
 
-function annotate_pt_native_label(corpus){
+/**
+ * @param {String} corpus_name
+ */
+function annotate_pt_native_label(corpus_name){
     var active_pt_id = active_pseudoterm._id;
     var annotation = $('#pt_native_display').val();
     var send = {};
-    send.dataset=corpus;
+    send.dataset=corpus_name;
     send._id=active_pt_id;
     send.native_display = annotation;
     $.ajax({
@@ -126,29 +140,45 @@ function annotate_pt_native_label(corpus){
         },
         success: function(data) {
             //Reload the PT now to see the changes reflected
-            get_pseudoterm(active_pt_id, corpus);
+            get_pseudoterm(active_pt_id, corpus_name);
         }
     });
 }
 
 
+/**
+ * @param {String} corpus_name
+ * @param {String} audioEventID
+ */
 function getURLforAudioEventWAV(corpus_name, audioEventID) {
     return '/corpus/' + corpus_name + '/audio/audio_event/' + audioEventID + '.wav';
 }
 
+/**
+ * @param {String} corpus_name
+ * @param {String} audioEventID
+ */
 function getURLforPseudotermWAV(corpus_name, pseudotermID) {
     return '/corpus/' + corpus_name +'/audio/pseudoterm/' + pseudotermID + '.wav';
 }
 
+/**
+ * @param {String} corpus_name
+ * @param {String} audioEventID
+ */
 function getURLforUtteranceWAV(corpus_name, utteranceID) {
     return '/corpus/' + corpus_name +'/audio/utterance/' + utteranceID + '.wav';
 }
 
 
+/**
+ * @callback
+ * @param {MouseEvent} event
+ */
 function junk_this_pseudoterm(event) {
     var active_pt_id = active_pseudoterm._id;
     var send = {};
-    send.dataset = event.data.corpus;
+    send.dataset = event.data.corpus_name;
     send._id=active_pt_id;
     $.ajax({
         url: "/junk_pseudoterm",
@@ -171,6 +201,9 @@ function junk_this_pseudoterm(event) {
 }
 
 
+/**
+ * @param {String} token_dom_id
+ */
 function set_active_wordcloud_token_by_dom_id(token_dom_id) {
     // There can be only one
     $(".active_wordcloud_token").removeClass("active_wordcloud_token");
@@ -178,6 +211,9 @@ function set_active_wordcloud_token_by_dom_id(token_dom_id) {
 }
 
 
+/**
+ * @param {String} token_text
+ */
 function set_active_wordcloud_token_by_text(token_text) {
     $("span.active_wordcloud_token").removeClass("active_wordcloud_token");
 
@@ -195,15 +231,19 @@ function set_active_wordcloud_token_by_text(token_text) {
   The callback function is assigned from make_me_a_venncloud() in
   Glen's dynamic_wordclouds.js.  The make_me_a_venncloud() function
   does not allow any parameters but 'token' to be passed to callback
-  functions for words in the wordcloud - but we need to pass a 'corpus'
+  functions for words in the wordcloud - but we need to pass a 'corpus_name'
   parameter to set_up_annotate_pseudoterm_id().
 
   We use a constructor function to create a closure that allows
-  set_up_annotate_pseudoterm_id() to access the 'corpus' parameter,
-  without storing the 'corpus' parameter in a global variable.
+  set_up_annotate_pseudoterm_id() to access the 'corpus_name' parameter,
+  without storing the 'corpus_name' parameter in a global variable.
 */
-var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visualizer) {
-    this.corpus = corpus;
+/**
+ * @param {String} corpus_name
+ * @param {WaveformVisualizer} waveform_visualizer
+ */
+var CorpusClosureForSetupAnnotatePseudotermID = function(corpus_name, waveform_visualizer) {
+    this.corpus_name = corpus_name;
     this.waveform_visualizer = waveform_visualizer;
 
     this.set_up_annotate_pseudoterm_id = function(token_text, token_element) {
@@ -224,26 +264,26 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
         var pt_ids = token_container.pt_ids;
         console.log(pt_ids);
         var pseudotermID = pt_ids[0];
-        get_pseudoterm(pseudotermID, corpus); //Also posts to the global variable
+        get_pseudoterm(pseudotermID, corpus_name); //Also posts to the global variable
 
         if (waveform_visualizer) {
-            waveform_visualizer.loadAndPlayURL(getURLforPseudotermWAV(corpus, pseudotermID));
+            waveform_visualizer.loadAndPlayURL(getURLforPseudotermWAV(corpus_name, pseudotermID));
         }
 
         $("#pt_eng_display")
             .focusout(function(){
-                annotate_pt_eng_label(corpus);
+                annotate_pt_eng_label(corpus_name);
             })
             .keydown(function(e) {
                 //Update annotation when users hit enter
                 if (e.keyCode === 13) {
-                    annotate_pt_eng_label(corpus);
+                    annotate_pt_eng_label(corpus_name);
                 }
             });
 
         $("#pt_native_display")
             .focusout(function(){
-                annotate_pt_native_label(corpus);
+                annotate_pt_native_label(corpus_name);
             });
 
         //Autoselect the english display element when user clicks on token
@@ -253,16 +293,21 @@ var CorpusClosureForSetupAnnotatePseudotermID = function(corpus, waveform_visual
     };
 };
 
-// Create a wordcloud (not a venncloud) from a single corpus of utterances
-function wordcloud_from_utterances(corpus, utterances_list, waveform_visualizer, options){
-    var corpus_closure = new CorpusClosureForSetupAnnotatePseudotermID(corpus, waveform_visualizer);
+/** Create a wordcloud (not a venncloud) from a single corpus of utterances
+ * @param {String} corpus_name
+ * @param {Array} utterances_list
+ * @param {WaveformVisualizer} waveform_visualizer
+ * @param {Object} options
+ */
+function wordcloud_from_utterances(corpus_name, utterances_list, waveform_visualizer, options){
+    var corpus_closure = new CorpusClosureForSetupAnnotatePseudotermID(corpus_name, waveform_visualizer);
 
     if (options === undefined) {
         options = {};
     }
     options.click = corpus_closure.set_up_annotate_pseudoterm_id;
 
-    $.when(get_cloud_data(corpus, utterances_list[0])).done( function(){
+    $.when(get_cloud_data(corpus_name, utterances_list[0])).done( function(){
         var
           dataset,
           i,
@@ -288,8 +333,14 @@ function wordcloud_from_utterances(corpus, utterances_list, waveform_visualizer,
     });
 }
 
-function venncloud_from_utterances(corpus, utterances_lists, waveform_visualizer, options){
-    var corpus_closure = new CorpusClosureForSetupAnnotatePseudotermID(corpus, waveform_visualizer);
+/**
+ * @param {String} corpus_name
+ * @param {Array} utterances_lists
+ * @param {WaveformVisualizer} waveform_visualizer
+ * @param {Object} options
+ */
+function venncloud_from_utterances(corpus_name, utterances_lists, waveform_visualizer, options){
+    var corpus_closure = new CorpusClosureForSetupAnnotatePseudotermID(corpus_name, waveform_visualizer);
 
     if (options === undefined) {
         options = {};
@@ -297,7 +348,7 @@ function venncloud_from_utterances(corpus, utterances_lists, waveform_visualizer
     options.click = corpus_closure.set_up_annotate_pseudoterm_id;
 
     var u = utterances_lists;
-    $.when(get_cloud_data(corpus, u[0] ), get_cloud_data(corpus, u[1] )).done( function(){
+    $.when(get_cloud_data(corpus_name, u[0] ), get_cloud_data(corpus_name, u[1] )).done( function(){
         make_me_a_venncloud( cloud_datasets, options );
     });
 }
