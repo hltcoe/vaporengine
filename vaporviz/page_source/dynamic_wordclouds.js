@@ -1106,30 +1106,32 @@ function draw_wordcloud() {
 }
 
 
-function update_displayed_token(old_token, new_token){
-    console.log("updating "+old_token+" with "+new_token);
+function update_displayed_token(old_token_text, new_token_text){
+    console.log("updating "+old_token_text+" with "+new_token_text);
     //Loop through each dataset and update the token
     for (var j in master_datasets){
         var dataset = master_datasets[j].tokens;
         console.log(dataset);
         //TODO: this does not properly update and combine tokens!!
-        if (old_token in dataset){
-            dataset[old_token].text = new_token;
-            master_datasets[j].tokens[new_token] = dataset[old_token];
-            delete master_datasets[j].tokens[old_token];
+        if (old_token_text in dataset){
+            dataset[old_token_text].text = new_token_text;
+            master_datasets[j].tokens[new_token_text] = dataset[old_token_text];
+            delete master_datasets[j].tokens[old_token_text];
         }
     }
 
-    if (new_token.length > overall_max_word_length_observed) {
+    if (new_token_text.length > overall_max_word_length_observed) {
         // filter_for_characters() will remove words longer than
         // s.max_req_chars from the wordcloud.  If the updated token
         // text is the longest token in the corpora, we update the
-        // upper bound for longest permissable tokens - as opposed to
-        // removing the token the user just added from the wordcloud.
+        // upper bound for longest permissable token length. If we
+        // don't set the upper bound here, then the token we just
+        // updated will be filtered out of the wordcloud.
         //
-        // TODO: Update the range sliders, refactor update code into
-        //       separate function
-        overall_max_word_length_observed = new_token.length;
+        // TODO: Update the range slider UI controls with new upper
+        //       bound.  Refactor code for updating slider range
+        //       controls into a separate function.
+        overall_max_word_length_observed = new_token_text.length;
         s.max_req_chars = overall_max_word_length_observed;
     }
 
@@ -1137,13 +1139,13 @@ function update_displayed_token(old_token, new_token){
 }
 
 
-function junk_displayed_token(old_token){
-    console.log("junking "+old_token);
+function junk_displayed_token(old_token_text){
+    console.log("junking "+old_token_text);
     //Loop through each dataset and remove the token
     for (var j in master_datasets){
         var dataset = master_datasets[j].tokens;
-        if (old_token in dataset){
-            delete master_datasets[j].tokens[old_token];
+        if (old_token_text in dataset){
+            delete master_datasets[j].tokens[old_token_text];
         }
     }
     draw_wordcloud();

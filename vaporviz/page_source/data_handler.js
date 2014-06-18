@@ -267,12 +267,12 @@ function wordcloud_from_utterances(corpus, utterances_list, waveform_visualizer,
           dataset,
           i,
           token,
-          token_name;
+          token_text;
 
         // Add class names for audio events, pseudoterms, utterances to token.span_classes
         dataset = cloud_datasets[0];
-        for (token_name in dataset.tokens) {
-            token = dataset.tokens[token_name];
+        for (token_text in dataset.tokens) {
+            token = dataset.tokens[token_text];
             token.span_classes = ['wordcloud_token'];
             for (i = 0; i < token.audio_event_ids.length; i++) {
                 token.span_classes.push("audio_event_span_" + token.audio_event_ids[i]);
