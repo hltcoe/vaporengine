@@ -892,29 +892,29 @@ function prepare_wordcloud_data(selected_datasets) {
             all_tokens[k2] = true;
         }
 
-        for (var token in all_tokens) {
+        for (var token_text in all_tokens) {
             //TODO: classifier scores
 
-            var l_prop = L[token] && L[token].prop_tokens || 0;
-            var l_tf = L[token] && L[token].tf || 0;
-            var r_prop = R[token] && R[token].prop_tokens || 0;
-            var r_tf = R[token] && R[token].tf || 0;
+            var l_prop = L[token_text] && L[token_text].prop_tokens || 0;
+            var l_tf = L[token_text] && L[token_text].tf || 0;
+            var r_prop = R[token_text] && R[token_text].prop_tokens || 0;
+            var r_tf = R[token_text] && R[token_text].tf || 0;
 
             if (r_tf > 0 && l_tf > 0 &&
                 Math.abs((l_prop - r_prop) / (l_prop + r_prop)) <= s.center_threshold) {
                 var common_token = {};
-                common_token.text = token;
+                common_token.text = token_text;
                 common_token.tf = (l_tf + r_tf); // Should we average instead of add?
-                common_token.idf = L[token].idf;
+                common_token.idf = L[token_text].idf;
                 //Add classifier scores?
                 common_list.push(common_token);
             }
             else {
                 if (r_prop < l_prop) {
-                    left_list.push(L[token]);
+                    left_list.push(L[token_text]);
                 }
                 else {
-                    right_list.push(R[token]);
+                    right_list.push(R[token_text]);
                 }
             }
 
@@ -1168,13 +1168,13 @@ function compute_master_data(datasets) {
             var idf = tokens[i].idf;
             counts.push(tf);
             idfs.push(idf);
-            var token = tokens[i].text;
+            var token_text = tokens[i].text;
             tokens[i].opacity = 1;
             tokens[i].size = 9;
             tokens[i].handle = undefined; //This will be the jquery visual element handle for easy updates
             tokens[i].prop_docs = tf / num_documents;
             tokens[i].prop_tokens = tf / num_tokens;
-            tok_rep[token] = tokens[i];
+            tok_rep[token_text] = tokens[i];
 
             //update max and mins observed if needed
             if (tf > overall_max_observed) {
@@ -1183,8 +1183,8 @@ function compute_master_data(datasets) {
             if (idf < overall_min_idf_observed) {
                 overall_min_idf_observed = idf;
             }
-            if (token.length > overall_max_word_length_observed) {
-                overall_max_word_length_observed = token.length;
+            if (token_text.length > overall_max_word_length_observed) {
+                overall_max_word_length_observed = token_text.length;
             }
         }
         //Convert all master data arrays to dictionaries keyed on tokens
