@@ -129,6 +129,11 @@ function show_example_windows() {
     $('#floatdivleft').show();
 }
 
+/**
+ * @callback
+ * @param {String} token_text
+ * @param {HTMLElement} token_element
+ */
 function default_example_onclick(token_text, token_element) {
     if (token_text.length > 50) {
         //This happens if you click outside a word, ignore.
@@ -701,6 +706,9 @@ function filter_multiple_for_required_tf_and_idf(to_filter_dicts) {
     filter_for_required_tf(to_filter_dicts);
 }
 
+/**
+ * @param {Array} to_filter
+ */
 //TODO: Add displays necessary to make this function
 function filter_for_display_entities_types(to_filter) {
     if (document.getElementById('display_plain_words')) {
@@ -739,7 +747,10 @@ function filter_for_display_entities_types(to_filter) {
 }
 
 
-//Sorting
+/** Sorting
+ * @param {Array} to_sort
+ * @param {String} my_sort_type
+ */
 function sorter(to_sort, my_sort_type) {
     if (my_sort_type === 'IDF') {
         to_sort.sort(function (a, b) {
@@ -833,10 +844,10 @@ function update_wordcloud() {
     add_description_to_display();
 }
 
-
+/**
+ * @param {Array} selected_datasets - An array of length 1 or 2 indicating the index of the dataset(s) to be used
+ */
 function prepare_wordcloud_data(selected_datasets) {
-    //selected datasets is an array of length 1 or 2 indicating the index of the dataset(s) to be used
-
     //TODO:Move to where we switch modes
     //Determine whether we are working on one or two corpora
     singlecloud = false;
@@ -1002,6 +1013,11 @@ function add_description_to_display() {
 }
 
 
+/**
+ * @param {JQuery} display
+ * @param {Array} data
+ * @param {String} color
+ */
 function paint_tokens(display, data, color) {
     $.each(data, function (index, t) {
         var element_id = 'token_' + index;
@@ -1106,6 +1122,10 @@ function draw_wordcloud() {
 }
 
 
+/**
+ * @param {String} old_token_text
+ * @param {String} new_token_text
+ */
 function update_displayed_token(old_token_text, new_token_text){
     console.log("updating "+old_token_text+" with "+new_token_text);
     //Loop through each dataset and update the token
@@ -1139,6 +1159,9 @@ function update_displayed_token(old_token_text, new_token_text){
 }
 
 
+/**
+ * @param {String} old_token_text
+ */
 function junk_displayed_token(old_token_text){
     console.log("junking "+old_token_text);
     //Loop through each dataset and remove the token
@@ -1235,6 +1258,9 @@ function compute_master_data(datasets) {
     return datasets;
 }
 
+/**
+ * @param {JQuery} add_handlers
+ */
 function add_handlers(zone) {
     zone.on("click", function (e) {
         e = e || jQuery.Event;
@@ -1258,6 +1284,10 @@ function dataset_selected() {
     draw_wordcloud();
 }
 
+/**
+ * @param {Array} datasets
+ * @param {Object} options
+ */
 function make_me_a_venncloud(datasets, options) {
     //Datasets is always an array of token dictionaries
 
