@@ -71,9 +71,20 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     this.loadURL(audioSourceURL);
   };
 
+  // Remove UI information about current audio clip
   this.clear = function() {
     self.wavesurfer.seekTo(0.0);
     self.wavesurfer.empty();
+
+    // If this WaveformVisualizer instance has an associated <div> that
+    // contains buttons linking to source documents (utterances), remove
+    // the buttons when we clear the waveform.
+    var utteranceListDiv = $('#' + self.visualizerID + '_utterance_list');
+    if (utteranceListDiv.length > 0) {
+      // Delete existing buttons
+      utteranceListDiv.html('');
+      callControlsResizeCallback();
+    }
   }
 
   this.loadAndPlayURL = function(audioSourceURL) {
@@ -209,7 +220,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       audio_identifier_for_utterance_id[utterance_id] = self.audio_events[i].audio_identifier;
     }
 
-    utteranceListDiv = $('#' + visualizerID + '_utterance_list');
+    utteranceListDiv = $('#' + self.visualizerID + '_utterance_list');
     // Delete existing buttons
     utteranceListDiv.html('');
     // Add buttons for each distinct utterance
