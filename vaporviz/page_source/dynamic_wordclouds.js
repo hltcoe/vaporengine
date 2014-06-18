@@ -1153,6 +1153,10 @@ function junk_displayed_token(old_token_text){
 
 
 var counts = [];
+/**
+ * @param {Array} datasets - An array of 1-to-3 arrays of token objects
+ * @returns {Array} An array of 1-3 token object dictionaries, keyed by token object's "text" field
+ */
 function compute_master_data(datasets) {
     var idfs = [];
 
@@ -1174,6 +1178,10 @@ function compute_master_data(datasets) {
             tokens[i].handle = undefined; //This will be the jquery visual element handle for easy updates
             tokens[i].prop_docs = tf / num_documents;
             tokens[i].prop_tokens = tf / num_tokens;
+
+            // If multiple tokens have the same text field, only the
+            // final token with that text field will be part of the
+            // returned data structure.
             tok_rep[token_text] = tokens[i];
 
             //update max and mins observed if needed
