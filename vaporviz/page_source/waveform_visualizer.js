@@ -1,7 +1,12 @@
 
 /* global WaveSurfer */
 
-
+/**
+ * @constructor
+ * @param {String} visualizerID - DOM ID for element this instance will be attached to
+ * @param {Object} customWavesurferSettings - Settings for Wavesurfer instance
+ * @param {Object} customSettings - Settings for this WaveformVisualizer instance
+ */
 function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettings) {
   // Use 'self' to give event handler access to current instance ('this')
   var self = this;
@@ -39,6 +44,9 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
 
   //// Public API
 
+  /** Attach a Play/Pause button to DOM element
+   * @param {HTMLElement} parentElement - DOM ID of element to attach controls to
+   */
   this.addControls = function(parentElement) {
     var playerDiv = $('<div>')
       .attr('id', this.visualizerID + '_audio_control')
@@ -54,6 +62,10 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     parentElement.append(playerDiv);
   };
 
+  /** Attach a Play/Pause button to DOM element and load a WAV file from a URL
+   * @param {HTMLElement} parentElement - DOM ID of element to attach controls to
+   * @param {String} audioSourceURL
+   */
   this.addControlsAndLoadAudio = function(parentElement, audioSourceURL) {
     var playerDiv = $('<div>')
       .attr('id', self.visualizerID + '_audio_control')
@@ -71,7 +83,8 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     this.loadURL(audioSourceURL);
   };
 
-  // Remove UI information about current audio clip
+  /** Remove UI information about current audio clip
+   */
   this.clear = function() {
     self.wavesurfer.seekTo(0.0);
     self.wavesurfer.empty();
@@ -87,6 +100,9 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     }
   }
 
+  /** Load an audio file from a URL and start playing the file
+   * @param {String} audioSourceURL
+   */
   this.loadAndPlayURL = function(audioSourceURL) {
     this.loadURL(audioSourceURL);
     this.wavesurfer.on('ready', function() {
@@ -94,6 +110,9 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     });
   };
 
+  /** Load an audio file from a URL
+   * @param {String} audioSourceURL
+   */
   this.loadURL = function(audioSourceURL) {
     var corpus, i, pseudotermID;
 
@@ -160,6 +179,10 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     }
   };
 
+  /** Callback function invoked by WaveSurfer when audio playback reaches marker
+   * @callback
+   * @param {Object} marker
+   */
   var updateActiveDocumentForAudioEvent = function(marker) {
     var
       previousUtteranceID = -1,
@@ -184,6 +207,13 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       .removeClass('btn-default');
   };
 
+  /** Update UI with info about events associated with current audio clip.
+   *  Add markers for each audio event to WaveSurfer instance that
+   *  will be called when audio playback enters marker region.
+   * @callback
+   * @param {String} corpus
+   * @param {Array} audio_events
+   */
   var updateAudioEvents = function(corpus, audio_events) {
     var
       audio_events_per_utterance_id = {},
