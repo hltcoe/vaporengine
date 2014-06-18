@@ -34,3 +34,7 @@ span.wordcloud_token:hover {
     background-color: #F0F0F0;
     cursor: pointer;
 }
+
+span.active_wordcloud_token:hover {
+    background-color: pink;
+}
