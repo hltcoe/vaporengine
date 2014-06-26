@@ -297,6 +297,9 @@ function initialize_wordcloud_controls() {
 
     //end count slider
 
+    /**
+     * @param {Array} values - Two element array, [min_value, max_value]
+     */
     function update_required_tf_filter_display(values) {
         // min value
         var min = $( "#min_required_observations" );
@@ -349,6 +352,10 @@ function initialize_wordcloud_controls() {
     });
 
 
+    /**
+     * @param {MouseEvent} event -
+     * @param {Function} [conversionFunction]
+     */
     function sliderValueInputHandler(event, conversionFunction){
         conversionFunction = conversionFunction || function(value) {return value;};
 
@@ -408,6 +415,9 @@ function initialize_wordcloud_controls() {
     }
 
     //begin Required IDF slider
+    /**
+     * @param {Array} values - Two element array, [min_value, max_value]
+     */
     function update_required_idf_filter_display(values) {
         // min value
         var min = $( "#min_required_idf" );
@@ -454,6 +464,9 @@ function initialize_wordcloud_controls() {
         $( "#max_required_idf" ).on('click', function(event) { sliderValueInputHandler(event); });
     });
 
+    /**
+     * @param {Array} values - Two element array, [min_value, max_value]
+     */
     function update_required_characters_filter_display(values) {
         // min value
         var min = $( "#min_required_characters" );
@@ -781,6 +794,9 @@ function sorter(to_sort, my_sort_type) {
     return to_sort;
 }
 
+/** Sorting
+ * @param {Array} to_sort
+ */
 function preference_sorter(to_sort) {
     //Sort by what the user has specified
     s.sort_type = $("#radio :radio:checked").attr('id');
@@ -790,6 +806,10 @@ function preference_sorter(to_sort) {
 
 
 //Size and Opacity calculations
+/**
+ * @param {Number} count
+ * @param {Number} idf
+ */
 var get_size = function (count, idf) {
     var weighted_by_count = count * (10 / overall_max_observed); //HARDCODE??
     // When IDF=1, weighted_by_rarity_size=Infinity, which causes weighted_size
@@ -811,6 +831,10 @@ var get_size = function (count, idf) {
 };
 
 
+/**
+ * @param {Number} count
+ * @param {Number} idf
+ */
 var get_opacity = function (count, idf) {
     var weighted_opacity = s.base_opacity;
     var weighted_by_count = count / (s.mean_counts * 2);
@@ -1259,7 +1283,7 @@ function compute_master_data(datasets) {
 }
 
 /**
- * @param {JQuery} add_handlers
+ * @param {JQuery} zone
  */
 function add_handlers(zone) {
     zone.on("click", function (e) {
