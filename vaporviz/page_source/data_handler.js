@@ -178,7 +178,7 @@ function getURLforUtteranceWAV(corpus_name, utteranceID) {
 function junk_this_pseudoterm(event) {
     var active_pt_id = active_pseudoterm._id;
     var send = {};
-    send.dataset = event.data.corpus_name;
+    send.dataset = event.data.corpus;
     send._id=active_pt_id;
     $.ajax({
         url: "/junk_pseudoterm",
