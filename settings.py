@@ -4,7 +4,7 @@ import pysox
 settings = {}
 
 buckeye = {}
-buckeye['DB_HOST'] = 'r4n7'
+buckeye['DB_HOST'] = 'localhost'
 buckeye['DB_NAME'] = 'buckeye'
 buckeye['DB_PORT'] = 27017
 buckeye['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(16000.0,1,16)
@@ -23,7 +23,7 @@ buckeye_localhost['ZR_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/buck
 settings['buckeye_localhost'] = buckeye_localhost
 
 fisher_spanish = {}
-fisher_spanish['DB_HOST'] = 'r4n7'
+fisher_spanish['DB_HOST'] = 'localhost'
 fisher_spanish['DB_NAME'] = 'fisher_spanish'
 fisher_spanish['DB_PORT'] = 27017
 fisher_spanish['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(8000.0,1,16)
@@ -41,7 +41,7 @@ fisher_spanish_localhost['ZR_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datase
 settings['fisher_spanish_localhost'] = fisher_spanish_localhost
 
 QASW = {}
-QASW['DB_HOST'] = 'r4n7'
+QASW['DB_HOST'] = 'localhost'
 QASW['DB_NAME'] = 'QASW'
 QASW['DB_PORT'] = 27017
 QASW['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(8000.0,1,14)
@@ -59,7 +59,7 @@ QASW_localhost['ZR_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/QASW/')
 settings['QASW_localhost'] = QASW_localhost
 
 tagalog = {}
-tagalog['DB_HOST'] = 'r4n7'
+tagalog['DB_HOST'] = 'localhost'
 tagalog['DB_NAME'] = 'tagalog'
 tagalog['DB_PORT'] = 27017
 tagalog['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(8000.0,1,16)

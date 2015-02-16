@@ -5,18 +5,18 @@ VaporEngine is a web application that allows users to explore an audio
 corpus by listening to and annotating Pseudoterms.
 
 
-Using the VaporEngine demo on test1
------------------------------------
+Using the VaporEngine demo on kb
+---------------------------------
 
-You must have an HLTCOE account to view the demo on test1.  To view
-this demo from outside the COE firewall, run this shell script:
+You must have an HLTCOE account to view the demo on the kb server.
+To view this demo from outside the COE firewall, run this shell script:
 
 ```bash
-./create_tunnel_to_test1_demo.sh YOUR_COE_USERNAME
+./create_tunnel_to_kb_demo.sh YOUR_COE_USERNAME
 ```
 
 which will create an SSH tunnel to the VaporEngine server running on
-test1.  Then just point your favorite web browser at:
+kb.  Then just point your favorite web browser at:
 
   http://localhost:12321
 
@@ -84,8 +84,8 @@ Run the script:
 ./vaporgasp/vapor_inhaler.py DATASET_NAME
 ```
 
-where DATASET_NAME is the name one of the ZR datasets specified
-in ```settings.py```.
+where DATASET_NAME is the name of one of the ZR datasets specified in
+```settings.py```.
 
 
 Running the server
@@ -102,7 +102,7 @@ listen on port 12321.  Open this URL in your browser:
 
   http://localhost:12321
 
-to view the VaporEngine demo running your machine.
+to view the VaporEngine demo running on your machine.
 
 
 Backing up and Restoring Annotations
