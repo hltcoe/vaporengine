@@ -10,7 +10,7 @@ buckeye['DB_PORT'] = 27017
 buckeye['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(16000.0,1,16)
 #buckeye['ZR_CLUSTERS'] = 'matches/master_graph.dedups'
 buckeye['ZR_CLUSTERS'] = 'matches/master_graph.dedups.80'
-buckeye['ZR_PATH'] = '/home/hltcoe/ajansen/discovery/exp/buckeye-T25/'
+buckeye['ZR_PATH'] = '/home/hltcoe/ajansen/discovery/exp/buckeye-abx/'
 settings['buckeye'] = buckeye
 
 buckeye_localhost = {}
@@ -19,7 +19,7 @@ buckeye_localhost['DB_NAME'] = 'buckeye'
 buckeye_localhost['DB_PORT'] = 27017
 buckeye_localhost['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(16000.0,1,16)
 buckeye_localhost['ZR_CLUSTERS'] = 'matches/master_graph.dedups'
-buckeye_localhost['ZR_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/buckeye-T25/')
+buckeye_localhost['ZR_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/buckeye-abx/')
 settings['buckeye_localhost'] = buckeye_localhost
 
 fisher_spanish = {}
