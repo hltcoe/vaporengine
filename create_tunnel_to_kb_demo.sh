@@ -14,4 +14,4 @@ echo "Point your browser at:"
 echo "  http://localhost:12321/"
 echo 
 echo "[Kill this script when you want to close the tunnel]"
-ssh $1@external.hltcoe.jhu.edu -L 12321:test1:12321 -N
+ssh $1@external.hltcoe.jhu.edu -L 12321:kb.ad.hltcoe.jhu.edu:12321 -N
