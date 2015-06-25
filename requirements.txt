@@ -1,5 +1,5 @@
 bottle
-pymongo
+pymongo==2.8.1
 pysox>=0.3.6.alpha
 python-dateutil>=2.2
 ujson>=1.33
