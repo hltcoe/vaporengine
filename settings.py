@@ -76,4 +76,15 @@ tagalog_localhost['ZR_CLUSTERS'] = 'matches/master_graph.dedups'
 tagalog_localhost['ZR_PATH'] = os.path.join(os.getenv('HOME'), 'zr_datasets/tagalog300/')
 settings['tagalog_localhost'] = tagalog_localhost
 
-current_corpora = ['buckeye', 'fisher_spanish', 'QASW', 'tagalog']
+enron = {}
+enron['DB_HOST'] = 'localhost'
+enron['DB_NAME'] = 'enron'
+enron['DB_PORT'] = 27017
+enron['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(8000.0,1,16)
+enron['ZR_CLUSTERS'] = 'master_graph.dedups'
+enron['ZR_PATH'] = os.path.join(os.getenv('HOME'), 'pseudoterms')
+settings['enron'] = enron
+
+#current_corpora = ['buckeye', 'fisher_spanish', 'QASW', 'tagalog']
+current_corpora = ['enron']
+
