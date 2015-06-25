@@ -64,6 +64,10 @@ Then installed Mongo using:
 
   sudo yum install -y mongodb-org
 
+Start Mongo using:
+
+  sudo service mongod start
+
 
 Install pip
 -----------
