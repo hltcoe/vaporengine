@@ -29,7 +29,7 @@ Install it using:
 
 Create a symbolic link so that easy_install can find the sox.h file:
 
-  ln -s /usr/include/sox/sox.h /usr/include/sox.h
+  sudo ln -s /usr/include/sox/sox.h /usr/include/sox.h
 
 Install pysox:
 
@@ -63,3 +63,11 @@ which has the contents:
 Then installed Mongo using:
 
   sudo yum install -y mongodb-org
+
+
+Install pip
+-----------
+
+  wget https://bootstrap.pypa.io/get-pip.py
+
+  sudo python get-pip.py
