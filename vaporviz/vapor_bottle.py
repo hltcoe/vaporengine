@@ -21,7 +21,7 @@ from lib.queries import (find_annotations, find_utterances,
                          pseudoterm_is_junk,
                          update_pseudoterm)
 from settings import current_corpora, settings
-from vaporviz.vapor_venncloud import make_wc_datastructure
+from vapor_venncloud import make_wc_datastructure
 
 
 vaporviz_path = os.path.dirname(os.path.realpath(__file__))
