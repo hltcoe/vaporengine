@@ -9,11 +9,11 @@ Install RHEL packages
 
 Install essential packages:
 
-  sudo yum install -y git gcc python-devel wget
+    sudo yum install -y git gcc python-devel wget
 
 Install packages that Craig finds convenient:
 
-  sudo yum install -y emacs-nox screen
+    sudo yum install -y emacs-nox screen
 
 
 Install sox-devel and pysox
@@ -21,19 +21,19 @@ Install sox-devel and pysox
 
 Download the CentOS 7 version of the sox-devel package:
 
-  wget http://mirror.centos.org/centos/7/os/x86_64/Packages/sox-devel-14.4.1-6.el7.x86_64.rpm
+    wget http://mirror.centos.org/centos/7/os/x86_64/Packages/sox-devel-14.4.1-6.el7.x86_64.rpm
 
 Install it using:
 
-  sudo yum install -y sox-devel-14.4.1-6.el7.x86_64.rpm 
+    sudo yum install -y sox-devel-14.4.1-6.el7.x86_64.rpm 
 
 Create a symbolic link so that easy_install can find the sox.h file:
 
-  sudo ln -s /usr/include/sox/sox.h /usr/include/sox.h
+    sudo ln -s /usr/include/sox/sox.h /usr/include/sox.h
 
 Install pysox:
 
-  sudo easy_install pysox
+    sudo easy_install pysox
 
 easy_install will generate some compiler warnings, but these should be
 safely ignorable.
@@ -50,28 +50,28 @@ Here is the abbreviated version:
 
 Create the file:
 
-  /etc/yum.repos.d/mongodb-org-3.0.repo
+    /etc/yum.repos.d/mongodb-org-3.0.repo
 
 which has the contents:
 
-  [mongodb-org-3.0]
-  name=MongoDB Repository
-  baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.0/x86_64/
-  gpgcheck=0
-  enabled=1
+    [mongodb-org-3.0]
+    name=MongoDB Repository
+    baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/3.0/x86_64/
+    gpgcheck=0
+    enabled=1
 
 Then installed Mongo using:
 
-  sudo yum install -y mongodb-org
+    sudo yum install -y mongodb-org
 
 Start Mongo using:
 
-  sudo service mongod start
+    sudo service mongod start
 
 
 Install pip
 -----------
 
-  wget https://bootstrap.pypa.io/get-pip.py
+    wget https://bootstrap.pypa.io/get-pip.py
 
-  sudo python get-pip.py
+    sudo python get-pip.py
