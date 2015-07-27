@@ -3,6 +3,7 @@ import argparse
 import datetime as dt
 import os
 import tempfile
+import urllib
 
 # Third party modules
 from bottle import HTTPResponse, route, run, request, response, static_file, template, TEMPLATE_PATH
@@ -467,7 +468,12 @@ def document_list(corpus):
 @route('/corpus/<corpus>/document/view/<audio_identifier>')
 def document_view(corpus, audio_identifier):
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
-    utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
+    try:
+        utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
+    except IndexError:
+        # If the audio_identifier cannot be found, we try URL-encoding it.
+        # This fixes an issue with audio_identifier strings that contain a '%' character
+        utterance = find_utterances(db, audio_identifier=urllib.quote(audio_identifier))[0]
     audio_events = find_audio_events(db, utterance_id=utterance['_id'])
     return template('document',
                     audio_events=audio_events,
