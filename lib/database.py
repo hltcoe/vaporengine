@@ -5,10 +5,10 @@ import sys
 
 from lib.timestamping import datestring_to_millis
 from settings import settings
-#Default to buckeye
-DB_HOST = settings['buckeye']['DB_HOST']
-DB_NAME = settings['buckeye']['DB_NAME']
-DB_PORT = settings['buckeye']['DB_PORT']
+#Default to enron
+DB_HOST = settings['enron']['DB_HOST']
+DB_NAME = settings['enron']['DB_NAME']
+DB_PORT = settings['enron']['DB_PORT']
 
 
 ###
