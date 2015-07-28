@@ -459,7 +459,7 @@ def corpus_wordcloud(corpus):
 @route('/corpus/<corpus>/document/list/')
 def document_list(corpus):
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
-    utterance_cursor = find_utterances(db)
+    utterance_cursor = find_utterances(db, count=0)
     utterance_audio_identifiers = [utt['audio_identifier'] for utt in utterance_cursor]
     utterance_audio_identifiers.sort()
     return template('document_list', utterance_audio_identifiers=utterance_audio_identifiers)
