@@ -85,7 +85,7 @@ Run the script:
 ```
 
 where DATASET_NAME is the name of one of the ZR datasets specified in
-```settings.py```.
+`settings.py`.
 
 
 Running the server
