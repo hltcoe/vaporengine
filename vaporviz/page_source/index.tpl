@@ -25,11 +25,13 @@
       % end
     </ul>
 
+    <!--
     <hr />
 
     <h3><a href="/www/test_venncloud.html">Venncloud display test</a></h3>
 
     <h3><a href="/www/test_bootstrap_venncloud.html">Venncloud display test - Bootstrap version</a></h3>
+    -->
 
   </div><!-- /.container -->
 </body>

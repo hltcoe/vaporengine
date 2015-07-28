@@ -5,24 +5,6 @@ VaporEngine is a web application that allows users to explore an audio
 corpus by listening to and annotating Pseudoterms.
 
 
-Using the VaporEngine demo on kb
----------------------------------
-
-You must have an HLTCOE account to view the demo on the kb server.
-To view this demo from outside the COE firewall, run this shell script:
-
-```bash
-./create_tunnel_to_kb_demo.sh YOUR_COE_USERNAME
-```
-
-which will create an SSH tunnel to the VaporEngine server running on
-kb.  Then just point your favorite web browser at:
-
-  http://localhost:12321
-
-to use the VaporEngine demo
-
-
 Requirements
 ------------
 
