@@ -29,10 +29,11 @@ audioevent_to_mongo_id = {}
 pseudoterm_to_mongo_id = {}
 utterance_to_mongo_id = {}
 
-for utterance in zrl.AllUtterances():
+for utterance_index, utterance in enumerate(zrl.AllUtterances()):
     utterance_fields = {
         'audio_identifier': utterance,
-        'hltcoe_audio_path': zrl.filename_for_utterance[utterance]
+        'hltcoe_audio_path': zrl.filename_for_utterance[utterance],
+        'utterance_index': utterance_index
         }
     utterance_mongo_id = insert_utterance(db, utterance_fields)
     utterance_to_mongo_id[utterance] = utterance_mongo_id
