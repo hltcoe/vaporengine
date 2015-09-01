@@ -307,11 +307,14 @@ def audio_events_for_pseudoterm(corpus,pseudoterm_id):
     audio_events = [audio_event for audio_event in audio_event_cursor]
 
     audio_identifier_for_utterance_id = {}
+    utterance_index_for_utterance_id = {}
     for audio_event in audio_events:
         if audio_event['utterance_id'] not in audio_identifier_for_utterance_id:
             utterance = find_utterances(db, _id=audio_event['utterance_id'])[0]
             audio_identifier_for_utterance_id[audio_event['utterance_id']] = utterance['audio_identifier']
+            utterance_index_for_utterance_id[audio_event['utterance_id']] = utterance['utterance_index']
         audio_event['audio_identifier'] = audio_identifier_for_utterance_id[audio_event['utterance_id']]
+        audio_event['utterance_index'] = utterance_index_for_utterance_id[audio_event['utterance_id']]
         audio_event['utterance_id'] = str(audio_event['utterance_id'])
 
     return audio_events
@@ -459,21 +462,16 @@ def corpus_wordcloud(corpus):
 @route('/corpus/<corpus>/document/list/')
 def document_list(corpus):
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
-    utterance_cursor = find_utterances(db, count=0)
-    utterance_audio_identifiers = [utt['audio_identifier'] for utt in utterance_cursor]
-    utterance_audio_identifiers.sort()
-    return template('document_list', utterance_audio_identifiers=utterance_audio_identifiers)
+    utterance_indices = [utt['utterance_index'] for utt in find_utterances(db, count=0)]
+    utterance_indices.sort()
+    return template('document_list',
+                    utterance_indices=utterance_indices)
 
 
-@route('/corpus/<corpus>/document/view/<audio_identifier>')
-def document_view(corpus, audio_identifier):
+@route('/corpus/<corpus>/document/view/<utterance_index>')
+def document_view(corpus, utterance_index):
     db = init_dbconn(name=settings[corpus]['DB_NAME'], host=settings[corpus]['DB_HOST'])
-    try:
-        utterance = find_utterances(db, audio_identifier=audio_identifier)[0]
-    except IndexError:
-        # If the audio_identifier cannot be found, we try URL-encoding it.
-        # This fixes an issue with audio_identifier strings that contain a '%' character
-        utterance = find_utterances(db, audio_identifier=urllib.quote(audio_identifier))[0]
+    utterance = find_utterances(db, utterance_index=int(utterance_index))[0]
     audio_events = find_audio_events(db, utterance_id=utterance['_id'])
     return template('document',
                     audio_events=audio_events,

@@ -155,6 +155,14 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     }
   };
 
+  var formatUtteranceIndex = function(utteranceIndex, size) {
+    var s = utteranceIndex+"";
+    while (s.length < size) {
+      s = "0" + s;
+    }
+    return s;
+  };
+
   var resetActiveDocumentButtons = function() {
     var
       i,
@@ -221,6 +229,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       i,
       total_duration = 0.0,
       utterance_id,
+      utterance_index_for_utterance_id = {},
       utteranceListDiv,
       utteranceSpan;
 
@@ -248,6 +257,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       }
       audio_events_per_utterance_id[utterance_id] += 1;
       audio_identifier_for_utterance_id[utterance_id] = self.audio_events[i].audio_identifier;
+      utterance_index_for_utterance_id[utterance_id] = self.audio_events[i].utterance_index;
     }
 
     utteranceListDiv = $('#' + self.visualizerID + '_utterance_list');
@@ -258,10 +268,10 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       utteranceSpan = $('<a>')
         .addClass('btn btn-default btn-xs')
         .attr('id', utterance_id + '_utterance_button')
-        .attr('href', '/corpus/' + corpus +'/document/view/' + audio_identifier_for_utterance_id[utterance_id])
+        .attr('href', '/corpus/' + corpus +'/document/view/' + utterance_index_for_utterance_id[utterance_id])
         .attr('role', 'button')
         .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
-        .html(audio_identifier_for_utterance_id[utterance_id] +
+        .html(formatUtteranceIndex(utterance_index_for_utterance_id[utterance_id], 4) +
               ' <b>(x' + audio_events_per_utterance_id[utterance_id] + ')</b>');
       utteranceListDiv.append(utteranceSpan);
     }

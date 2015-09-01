@@ -21,9 +21,9 @@
 <div class="container">
   <h2>Document List</h2>
   <div>
-    % for audio_identifier in utterance_audio_identifiers:
+    % for utterance_index in utterance_indices:
     <span class="document_link">
-      <a href="../view/{{audio_identifier}}">{{audio_identifier}}</a>
+      <a href="../view/{{utterance_index}}">{{str(utterance_index).zfill(4)}}</a>
     </span>
     % end
   </div>
