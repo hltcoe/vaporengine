@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Corpora</h1>
+<ul>
+  {% for corpus in current_corpora %}
+  <li><h2>{{corpus.name}}</h2></li>
+  <ul>
+    <li>
+      <a href="{% url 'corpus_wordcloud' corpus.id %}">Corpus Wordcloud</a>
+    </li>
+    <li>
+      <a href="{% url 'corpus_document_list' corpus.id %}">Corpus Document List</a>
+    </li>
+  </ul>
+  {% endfor %}
+</ul>
+
+{% endblock content %}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  {% load staticfiles %}
+  <link rel="stylesheet" href="{% static "visualizer/jquery-ui-1.10.4/css/ui-lightness/jquery-ui-1.10.4.css" %}" />
+  <link rel="stylesheet" href="{% static "visualizer/bootstrap-3.1.1/css/bootstrap.css" %}" />
+  <link rel="stylesheet" href="{% static "visualizer/bootstrap-3.1.1/css/bootstrap-theme.css" %}" />
+
+  {% block head_style %}
+  {% endblock head_style %}
+
+  <style>
+    .document_link {
+      margin: 0.5em;
+    }
+  </style>
+
+  <script src="{% static "visualizer/jquery-1.11.1.min.js" %}"></script>
+  <script src="{% static "visualizer/jquery-ui-1.10.4/js/jquery-ui-1.10.4.min.js" %}"></script>
+  <script src="{% static "visualizer/bootstrap-3.1.1/js/bootstrap.js" %}"></script>
+  {% block head_scripts %}
+  {% endblock head_scripts %}
+</head>
+<body>
+
+  <div class="container">
+    {% block content %}
+    {% endblock content %}
+  </div><!-- /.container -->
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{% block title %}{% endblock %}</title>
+  {% load staticfiles %}
+  <link rel="stylesheet" href="{% static "visualizer/jquery-ui-1.10.4/css/ui-lightness/jquery-ui-1.10.4.css" %}" />
+  <link rel="stylesheet" href="{% static "visualizer/bootstrap-3.1.1/css/bootstrap.css" %}" />
+  <link rel="stylesheet" href="{% static "visualizer/bootstrap-3.1.1/css/bootstrap-theme.css" %}" />
+  <link rel="stylesheet" href="{% static "visualizer/dynamic_wordclouds.css" %}" />
+  <link rel="stylesheet" href="{% static "visualizer/vapor_wordclouds.css" %}" />
+
+  {% block head_style %}
+  {% endblock head_style %}
+
+  <style>
+    .document_link {
+      margin: 0.5em;
+    }
+  </style>
+
+  <script src="{% static "visualizer/jquery-1.11.1.min.js" %}"></script>
+  <script src="{% static "visualizer/jquery-ui-1.10.4/js/jquery-ui-1.10.4.min.js" %}"></script>
+  <script src="{% static "visualizer/bootstrap-3.1.1/js/bootstrap.js" %}"></script>
+  <script src="{% static "visualizer/floating-1.12.js" %}"></script>
+  <script src="{% static "visualizer/prettyprint.js" %}"></script>
+
+  <script src="{% static "visualizer/wavesurfer/wavesurfer.js" %}"></script>
+  <script src="{% static "visualizer/wavesurfer/webaudio.js" %}"></script>
+  <script src="{% static "visualizer/wavesurfer/webaudio.buffer.js" %}"></script>
+  <script src="{% static "visualizer/wavesurfer/webaudio.media.js" %}"></script>
+  <script src="{% static "visualizer/wavesurfer/drawer.js" %}"></script>
+  <script src="{% static "visualizer/wavesurfer/drawer.canvas.js" %}"></script>
+
+  <script src="{% static "visualizer/dynamic_wordclouds.js" %}"></script>
+  <script src="{% static "visualizer/waveform_visualizer.js" %}"></script>
+  <script src="{% static "visualizer/data_handler.js" %}"></script>
+
+  {% block head_scripts %}
+  {% endblock head_scripts %}
+</head>
+<body>
+
+  <div class="container">
+    {% block content %}
+    {% endblock content %}
+  </div><!-- /.container -->
+
+</body>
+</html>

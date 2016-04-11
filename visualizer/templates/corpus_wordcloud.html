@@ -1,0 +1,185 @@
+{% extends "base_wordcloud.html" %}
+
+{% block head_scripts %}
+  <script>
+    function create_wordcloud_from_all_utterances(waveform_visualizer) {
+      $.ajax({
+        url: "/find_utterances",
+        type: "POST",
+        data: JSON.stringify({'dataset': '{{corpus}}', 'count': 256}),
+        error: function(xhr, error) {
+          alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
+        },
+        success: function(utterances) {
+          var
+            i,
+            total_utterances,
+            utterance_set1 = {
+              'dataset_name': 'Set1',
+              'utterance_ids': []
+            },
+
+          total_utterances = utterances.length;
+          for (i = 0; i < total_utterances; i++) {
+            utterance_set1.utterance_ids.push(utterances[i]._id);
+          }
+
+          wordcloud_from_utterances(
+            "{{corpus}}",
+            [utterance_set1],
+            waveform_visualizer,
+            { base_fontsize: 10 }
+          );
+        }
+      });
+    }
+
+    // Adjust the padding at top of document when height of navbar changes
+    function updateBodyPaddingWhenControlsChangeSize() {
+      if ($('#waveform_navbar').length > 0) {
+        var new_control_height = 5 + $('#waveform_navbar').height();
+        $('body').attr('style', 'padding-top: ' + new_control_height + 'px;');
+      }
+    }
+
+    $(document).ready(function() {
+      var waveformVisualizer = new WaveformVisualizer(
+        'waveform_visualizer',
+        {},
+        { controlsResizeCallback: updateBodyPaddingWhenControlsChangeSize }
+      );
+      waveformVisualizer.addControls($('#pt_snippets_audio_player'));
+      create_wordcloud_from_all_utterances(waveformVisualizer);
+      $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
+    });
+  </script>
+{% endblock head_scripts %}
+
+{% block content %}
+
+<div class="container">
+  <nav id="waveform_navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em;">
+        <div id="waveform_visualizer"></div>
+      </div>
+      <div>
+        <div class="form-inline">
+          <div class="form-group">
+            <span id="pt_snippets_audio_player"></span>
+          </div>
+          <div class="form-group">
+            <label for="pt_eng_display">English</label>
+            <input id="pt_eng_display"></input>
+          </div>
+          <div class="form-group">
+            <label for="pt_native_display">Native</label>
+            <input id="pt_native_display"></input>
+          </div>
+		  <div class="form-group">
+			<button class="btn btn-primary btn-xs" id="pt_junk_button"><i class="glyphicon glyphicon-trash"></i></button>
+		  </div>
+          <div class="form-group">
+            <div id="waveform_visualizer_utterance_list" style="padding-left: 1em;"></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin: 0.5em;">
+        <div class="btn-group">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Size
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <table style="margin-left: 1em; margin-right: 1em; width: 400px;">
+                <tr>
+                  <td style="width: 20%;"><b>Frequency: 0</b></td>
+                  <td style="width: 75%;">
+                    <div id="size_frequency_slider"></div>
+                  </td>
+                  <td rowspan="2" style="text-align: center; width: 10%;"><b>+</b></td>
+                </tr>
+                <tr>
+                  <td style="width: 20%;"><b>Rarity: 0</b></td>
+                  <td>
+                    <div id="size_rarity_slider"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Smaller</td>
+                  <td>
+                    <div id="base_fontsize_slider"></div>
+                  </td>
+                  <td>Larger</td>
+                </tr>
+              </table>
+            </ul>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Opacity
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <table style="margin-left: 1em; margin-right: 1em; width: 400px;">
+                <tr>
+                  <td style="width: 20%;"><b>Frequency: <span "text-align: right;">0</span></b></td>
+                  <td style="width: 80%;">
+                    <div id="opacity_frequency_slider"></div>
+                  </td>
+                  <td rowspan="2" style="text-align: center; width: 10%;"><b>+</b></td>
+                </tr>
+                <tr>
+                  <td style="width: 20%;"><b>Rarity: <span align=right>0</span></b></td>
+                  <td>
+                    <div id="opacity_rarity_slider"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Light</td>
+                  <td>
+                    <div id="base_opacity_slider"></div>
+                  </td>
+                  <td>Dark</td>
+                </tr>
+              </table>
+            </ul>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Sort by
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" style="padding-left: 1em;" id="radio">
+              <li>
+                <input type="radio" id="ALPHABETIC" name="radio" checked="checked" />
+                <label for="ALPHABETIC">Alphabetic</label>
+              </li>
+              <li>
+                <input type="radio" id="COUNT" name="radio" />
+                <label for="COUNT">Frequency of Occurence</label>
+              </li>
+            </ul>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Legend
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <div style="margin-left: 1em; margin-right: 1em; width: 400px;">
+                <div id="wordcloud_description_output"></div>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="wordcloud_location"></div>
+
+<h1>Content goes here</h1>
+
+{% endblock content %}
