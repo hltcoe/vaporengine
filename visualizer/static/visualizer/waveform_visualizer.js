@@ -267,7 +267,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       utteranceSpan = $('<a>')
         .addClass('btn btn-default btn-xs')
         .attr('id', utterance_id + '_utterance_button')
-        .attr('href', '/corpus/' + corpus +'/document/view/' + utterance_index_for_utterance_id[utterance_id])
+        .attr('href', '/visualizer/' + corpus +'/document/' + utterance_index_for_utterance_id[utterance_id])
         .attr('role', 'button')
         .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
         .html(formatUtteranceIndex(utterance_index_for_utterance_id[utterance_id], 4) +
