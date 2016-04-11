@@ -111,6 +111,8 @@ class Corpus(models.Model):
                 audio_fragment.score = score
                 audio_fragment.save()
 
+    def terms(self):
+        return Term.objects.filter(audiofragment__document__corpus=self).distinct()
 
 class Document(models.Model):
     """An audio Document associated with an audio file
