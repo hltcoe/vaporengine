@@ -14,24 +14,6 @@ def corpus_wordcloud(request, corpus_id):
     context = {'corpus': corpus}
     return render(request, "corpus_wordcloud.html", context)
 
-def corpus_wordcloud_terms_as_json(request, corpus_id):
-    print "HELLO WORLD!!!!!!!"
-
-    corpus = Corpus.objects.get(id=corpus_id)
-    context = {'corpus': corpus}
-
-    terms_as_json = []
-    for term in corpus.terms():
-        terms_as_json.append({
-            'eng_display': term.eng_display,
-            'native_display': term.native_display,
-            # TODO: Remove temporary hack of using MongoDB '_id' field to store term ID
-            '_id': term.id,
-        })
-
-    print "--==<<%s>>==--" % terms_as_json
-    return JsonResponse(terms_as_json)
-
 def corpus_document_list(request, corpus_id):
     corpus = Corpus.objects.get(id=corpus_id)
     document_list = corpus.document_set.all()

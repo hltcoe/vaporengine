@@ -18,6 +18,4 @@ urlpatterns = [
         views.term_audio_fragments_as_json, name='term_audio_fragments_as_json'),
 
     url(r'^(?P<corpus_id>\d+)/wordcloud/', views.corpus_wordcloud, name='corpus_wordcloud'),
-    url(r'^(?P<corpus_id>\d+)/wordcloud/terms_as_json',
-        views.corpus_wordcloud_terms_as_json, name='corpus_wordcloud_terms_as_json'),
 ]
