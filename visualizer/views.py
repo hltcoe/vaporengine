@@ -80,7 +80,7 @@ def term_audio_fragments_as_json(request, corpus_id, term_id):
     term = Term.objects.get(id=term_id)
 
     audio_fragments_json = []
-    for audio_fragment in term.audiofragment_set.all()[:10]:
+    for audio_fragment in term.audiofragment_set.all():
         audio_fragments_json.append({
             'duration': audio_fragment.duration,
             'audio_identifier': audio_fragment.document.audio_identifier,
