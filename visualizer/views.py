@@ -94,6 +94,20 @@ def term_as_json(request, corpus_id, term_id):
     }
     return JsonResponse(term_json)
 
+def term_audio_fragments_as_json(request, corpus_id, term_id):
+    # TODO: This function is a hacky shim used while transitioning from MongoDB to Django
+    term = Term.objects.get(id=term_id)
+
+    audio_fragments_json = []
+    for audio_fragment in term.audiofragment_set.all()[:10]:
+        audio_fragments_json.append({
+            'duration': audio_fragment.duration,
+            'audio_identifier': audio_fragment.document.audio_identifier,
+            'utterance_index': audio_fragment.document_id
+        })
+
+    return JsonResponse(audio_fragments_json, safe=False)
+
 def term_wav_file(request, corpus_id, term_id):
     corpus = Corpus.objects.get(id=corpus_id)
     term = Term.objects.get(id=term_id)

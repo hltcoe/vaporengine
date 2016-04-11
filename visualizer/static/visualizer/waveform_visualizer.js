@@ -120,14 +120,13 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
 
     // If audio clip is a pseudoterm audio clip composed of multiple audio events,
     // add markers to waveform at audio event boundaries
-    i = audioSourceURL.indexOf("/audio/pseudoterm/");
-    if (i !== -1) {
-      corpus = audioSourceURL.substr(8, i - 8);
-      // Assumes that pseudotermID is a 24 character string
-      pseudotermID = audioSourceURL.substr(i + 18, 24);
+    var matches = /(\d+)\/term\/(\d+).wav/g.exec(audioSourceURL);
+    if (matches) {
+      corpus_id = matches[1];
+      term_id = matches[2];
 
-      $.getJSON('/corpus/' + corpus +"/audio/pseudoterm/" + pseudotermID + "_audio_events.json", function(audio_events) {
-        updateAudioEvents(corpus, audio_events);
+      $.getJSON('/visualizer/' + corpus_id + '/term/' + term_id + "_audio_fragments.json", function(audio_events) {
+        updateAudioEvents(corpus_id, audio_events);
       });
     }
   };
