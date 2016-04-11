@@ -4,7 +4,7 @@
   <script>
     function create_wordcloud_from_all_utterances(waveform_visualizer) {
       $.ajax({
-        url: "/find_utterances",
+        url: "/visualizer/{{corpus.id}}/wordcloud/terms_as_json",
         type: "POST",
         data: JSON.stringify({'dataset': '{{corpus}}', 'count': 256}),
         error: function(xhr, error) {
@@ -24,9 +24,8 @@
             utterance_set1.utterance_ids.push(utterances[i]._id);
           }
 
-          wordcloud_from_utterances(
-            "{{corpus}}",
-            [utterance_set1],
+          wordcloud_from_corpus(
+            "{{corpus.id}}",
             waveform_visualizer,
             { base_fontsize: 10 }
           );
@@ -179,7 +178,5 @@
   </nav>
 
   <div id="wordcloud_location"></div>
-
-<h1>Content goes here</h1>
 
 {% endblock content %}

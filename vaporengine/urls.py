@@ -18,7 +18,7 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^$', 'visualizer.views.index', name='home'),
-    url(r'^cloud_data_from_utterances', 'visualizer.views.cloud_data_from_utterances', name='cloud_data_from_utterances'),
+    url(r'^venncloud_json_for_document', 'visualizer.views.venncloud_json_for_document', name='venncloud_json_for_document'),
     url(r'visualizer/', include('visualizer.urls')),
     url(r'^admin/', admin.site.urls),
 ]

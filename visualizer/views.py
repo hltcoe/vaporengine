@@ -9,47 +9,28 @@ import ujson as json
 from visualizer.models import Corpus, Document, Term
 
 
-def cloud_data_from_utterances(request):
-    """Returns JSON for wordcloud in format expected by Glen' Venncloud code
-    """
-    # TODO: Rename this function while refactoring
-    request_data = json.loads(request.body) # Should have a 'dataset' and an 'utterances' field
-
-    first_document_id = int(request_data['utterances'][0])
-    document = Document.objects.get(id=first_document_id)
-
-    # Sample JSON for Token Vector:
-    #   [
-    #     {'tf': 2, 'utterance_ids': ['55e5b892841fd54738fcf336', '55e5b892841fd54738fcf336'], 'text': u'pt10525', 'examples': [], 'audio_event_ids': ['55e5b895841fd54738fd3ecd', '55e5b895841fd54738fd3ecf'], 'idf': 1, 'pt_ids': ['55e5b892841fd54738fcf35e'], 'number_of_pts': 1},
-    #     {'tf': 1, 'utterance_ids': ['55e5b892841fd54738fcf336'], 'text': u'pt1285', 'examples': [], 'audio_event_ids': ['55e5b895841fd54738fd3e20'], 'idf': 1, 'pt_ids': ['55e5b892841fd54738fcf344'], 'number_of_pts': 1},
-    #     {'tf': 1, 'utterance_ids': ['55e5b892841fd54738fcf336'], 'text': u'pt12890', 'examples': [], 'audio_event_ids': ['55e5b895841fd54738fd3ed2'], 'idf': 1, 'pt_ids': ['55e5b892841fd54738fcf35f'], 'number_of_pts': 1}]
-    token_vector = []
-    for term in document.associated_terms():
-        # TODO: Correctly implement TF and IDF measures
-        t = {
-            'audio_event_ids':term.audio_fragment_ids(),
-            'examples':[],
-            'idf':1,
-            'number_of_pts':1,
-            'pt_ids':[term.id],
-            'text':term.eng_display,
-            'tf':term.total_audio_fragments(),
-            'utterance_ids':term.document_ids(),
-        }
-        token_vector.append(t)
-
-    # TODO: For some reason, JsonResponse complains that arrays cannot
-    # be serialized, even when the safe flag is set to False
-#    return JsonResponse(token_vector, safe=False)
-
-    response = HttpResponse(content=json.dumps(token_vector))
-    response['Content-Type'] = 'application/json'
-    return response
-
 def corpus_wordcloud(request, corpus_id):
     corpus = Corpus.objects.get(id=corpus_id)
     context = {'corpus': corpus}
     return render(request, "corpus_wordcloud.html", context)
+
+def corpus_wordcloud_terms_as_json(request, corpus_id):
+    print "HELLO WORLD!!!!!!!"
+
+    corpus = Corpus.objects.get(id=corpus_id)
+    context = {'corpus': corpus}
+
+    terms_as_json = []
+    for term in corpus.terms():
+        terms_as_json.append({
+            'eng_display': term.eng_display,
+            'native_display': term.native_display,
+            # TODO: Remove temporary hack of using MongoDB '_id' field to store term ID
+            '_id': term.id,
+        })
+
+    print "--==<<%s>>==--" % terms_as_json
+    return JsonResponse(terms_as_json)
 
 def corpus_document_list(request, corpus_id):
     corpus = Corpus.objects.get(id=corpus_id)
@@ -108,6 +89,13 @@ def term_audio_fragments_as_json(request, corpus_id, term_id):
 
     return JsonResponse(audio_fragments_json, safe=False)
 
+def term_update(request, corpus_id, term_id):
+    request_data = json.loads(request.body)
+    term = Term.objects.get(id=term_id)
+    term.eng_display = request_data['eng_display']
+    term.save()
+    return JsonResponse({})
+
 def term_wav_file(request, corpus_id, term_id):
     corpus = Corpus.objects.get(id=corpus_id)
     term = Term.objects.get(id=term_id)
@@ -153,3 +141,51 @@ def term_wav_file(request, corpus_id, term_id):
     response = HttpResponse(content=wav_data)
     response['Content-Type'] = 'audio/wav'
     return response
+
+def venncloud_json_for_corpus(request):
+    request_data = json.loads(request.body)
+    corpus = Corpus.objects.get(id=request_data['corpus_id'])
+
+    terms = []
+    for term in corpus.terms():
+        terms.append(_venncloud_json_for_term(term))
+
+    response = HttpResponse(content=json.dumps(terms))
+    response['Content-Type'] = 'application/json'
+    return response
+
+def venncloud_json_for_document(request):
+    """Returns JSON for wordcloud in format expected by Glen' Venncloud code
+    """
+    request_data = json.loads(request.body) # Should have a 'dataset' and an 'utterances' field
+
+    first_document_id = int(request_data['utterances'][0])
+    document = Document.objects.get(id=first_document_id)
+
+    terms = []
+    for term in document.associated_terms():
+        terms.append(_venncloud_json_for_term(term))
+
+    response = HttpResponse(content=json.dumps(terms))
+    response['Content-Type'] = 'application/json'
+    return response
+
+def _venncloud_json_for_term(term):
+    # Sample JSON from old MongoDB implementation:
+    #   [
+    #     {'tf': 2, 'utterance_ids': ['55e5b892841fd54738fcf336', '55e5b892841fd54738fcf336'], 'text': u'pt10525', 'examples': [], 'audio_event_ids': ['55e5b895841fd54738fd3ecd', '55e5b895841fd54738fd3ecf'], 'idf': 1, 'pt_ids': ['55e5b892841fd54738fcf35e'], 'number_of_pts': 1},
+    #     {'tf': 1, 'utterance_ids': ['55e5b892841fd54738fcf336'], 'text': u'pt1285', 'examples': [], 'audio_event_ids': ['55e5b895841fd54738fd3e20'], 'idf': 1, 'pt_ids': ['55e5b892841fd54738fcf344'], 'number_of_pts': 1},
+    #     {'tf': 1, 'utterance_ids': ['55e5b892841fd54738fcf336'], 'text': u'pt12890', 'examples': [], 'audio_event_ids': ['55e5b895841fd54738fd3ed2'], 'idf': 1, 'pt_ids': ['55e5b892841fd54738fcf35f'], 'number_of_pts': 1}]
+
+    # TODO: Correctly implement TF and IDF measures
+    t = {
+        'audio_event_ids':term.audio_fragment_ids(),
+        'examples':[],
+        'idf':1,
+        'number_of_pts':1,
+        'pt_ids':[term.id],
+        'text':term.eng_display,
+        'tf':term.total_audio_fragments(),
+        'utterance_ids':term.document_ids(),
+    }
+    return t
