@@ -114,11 +114,11 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
    * @param {String} audioSourceURL
    */
   this.loadURL = function(audioSourceURL) {
-    var corpus, i, pseudotermID;
+    var corpus, i, termID;
 
     this.wavesurfer.load(audioSourceURL);
 
-    // If audio clip is a pseudoterm audio clip composed of multiple audio events,
+    // If audio clip is a term audio clip composed of multiple audio events,
     // add markers to waveform at audio event boundaries
     var matches = /(\d+)\/term\/(\d+).wav/g.exec(audioSourceURL);
     if (matches) {

@@ -46,19 +46,19 @@
         }
       });
 
-      var pseudotermVisualizer = new WaveformVisualizer(
-        'pseudoterm_visualizer',
+      var termVisualizer = new WaveformVisualizer(
+        'term_visualizer',
         { height: 96 },
         { controlsResizeCallback: updateBodyPaddingWhenControlsChangeSize }
       );
-      pseudotermVisualizer.addControls($('#pseudoterm_audio_controls'));
+      termVisualizer.addControls($('#term_audio_controls'));
 
       // Prevent two audio clips from playing simultaneously
-      pseudotermVisualizer.wavesurfer.on('play', function() {
+      termVisualizer.wavesurfer.on('play', function() {
         waveformVisualizer.pause();
       });
       waveformVisualizer.wavesurfer.on('play', function() {
-        pseudotermVisualizer.pause();
+        termVisualizer.pause();
       });
 
       var utterance_set1 = {
@@ -68,13 +68,13 @@
       wordcloud_from_utterances(
         "{{corpus.id}}",
         [utterance_set1],
-        pseudotermVisualizer,
+        termVisualizer,
         { base_fontsize: 10 }
       );
 
       $('#pt_junk_button').click(
-        {'corpus': '{{corpus}}', 'waveform_visualizer': pseudotermVisualizer},
-        junk_this_pseudoterm);
+        {'corpus': '{{corpus}}', 'waveform_visualizer': termVisualizer},
+        junk_this_term);
     });
 
     var audio_events = [
@@ -107,11 +107,11 @@
 
       <div class="row">
         <div class="col-md-1 text-right" style="padding-top: 20px;">
-          <span id="pseudoterm_audio_controls"></span>
+          <span id="term_audio_controls"></span>
         </div>
         <div class="col-md-11">
           <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em;">
-            <div id="pseudoterm_visualizer"></div>
+            <div id="term_visualizer"></div>
           </div>
         </div>
       </div>
@@ -134,7 +134,7 @@
             </div>
             -->
             <div class="form-group">
-              <div id="pseudoterm_visualizer_utterance_list" style="padding-left: 1em;"></div>
+              <div id="term_visualizer_utterance_list" style="padding-left: 1em;"></div>
             </div>
           </div>
         </div>

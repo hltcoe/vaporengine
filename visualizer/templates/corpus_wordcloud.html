@@ -49,7 +49,7 @@
       );
       waveformVisualizer.addControls($('#pt_snippets_audio_player'));
       create_wordcloud_from_all_utterances(waveformVisualizer);
-      $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_pseudoterm);
+      $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_term);
     });
   </script>
 {% endblock head_scripts %}
