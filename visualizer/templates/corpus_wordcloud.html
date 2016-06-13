@@ -2,7 +2,7 @@
 
 {% block head_scripts %}
   <script>
-    function create_wordcloud_from_all_utterances(waveform_visualizer) {
+    function create_wordcloud_from_all_documents(waveform_visualizer) {
       $.ajax({
         url: "/visualizer/{{corpus.id}}/wordcloud/terms_as_json",
         type: "POST",
@@ -10,18 +10,18 @@
         error: function(xhr, error) {
           alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
         },
-        success: function(utterances) {
+        success: function(documents) {
           var
             i,
-            total_utterances,
-            utterance_set1 = {
+            total_documents,
+            document_set1 = {
               'dataset_name': 'Set1',
-              'utterance_ids': []
+              'document_ids': []
             },
 
-          total_utterances = utterances.length;
-          for (i = 0; i < total_utterances; i++) {
-            utterance_set1.utterance_ids.push(utterances[i]._id);
+          total_documents = documents.length;
+          for (i = 0; i < total_documents; i++) {
+            document_set1.document_ids.push(documents[i]._id);
           }
 
           wordcloud_from_corpus(
@@ -48,7 +48,7 @@
         { controlsResizeCallback: updateBodyPaddingWhenControlsChangeSize }
       );
       waveformVisualizer.addControls($('#pt_snippets_audio_player'));
-      create_wordcloud_from_all_utterances(waveformVisualizer);
+      create_wordcloud_from_all_documents(waveformVisualizer);
       $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_term);
     });
   </script>
@@ -81,7 +81,7 @@
           </div>
           -->
           <div class="form-group">
-            <div id="waveform_visualizer_utterance_list" style="padding-left: 1em;"></div>
+            <div id="waveform_visualizer_document_list" style="padding-left: 1em;"></div>
           </div>
         </div>
       </div>

@@ -90,15 +90,15 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     self.wavesurfer.empty();
 
     // If this WaveformVisualizer instance has an associated <div> that
-    // contains buttons linking to source documents (utterances), remove
+    // contains buttons linking to source documents (documents), remove
     // the buttons when we clear the waveform.
-    var utteranceListDiv = $('#' + self.visualizerID + '_utterance_list');
-    if (utteranceListDiv.length > 0) {
+    var documentListDiv = $('#' + self.visualizerID + '_document_list');
+    if (documentListDiv.length > 0) {
       // Delete existing buttons
-      utteranceListDiv.html('');
+      documentListDiv.html('');
       callControlsResizeCallback();
     }
-  }
+  };
 
   /** Load an audio file from a URL and start playing the file
    * @param {String} audioSourceURL
@@ -114,7 +114,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
    * @param {String} audioSourceURL
    */
   this.loadURL = function(audioSourceURL) {
-    var corpus, i, termID;
+    var corpus_id, i, term_id;
 
     this.wavesurfer.load(audioSourceURL);
 
@@ -154,8 +154,8 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     }
   };
 
-  var formatUtteranceIndex = function(utteranceIndex, size) {
-    var s = utteranceIndex+"";
+  var formatDocumentIndex = function(documentIndex, size) {
+    var s = documentIndex+"";
     while (s.length < size) {
       s = "0" + s;
     }
@@ -166,12 +166,12 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
     var
       i,
       totalButtons,
-      utteranceID;
+      documentID;
 
     totalButtons = self.audio_events.length;
     for (i = 0; i < totalButtons; i++) {
-      utteranceID = self.audio_events[i].utterance_id;
-      $('#' + utteranceID + '_utterance_button')
+      documentID = self.audio_events[i].document_id;
+      $('#' + documentID + '_document_button')
         .addClass('btn-default')
         .removeClass('btn-info');
     }
@@ -192,24 +192,24 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
    */
   var updateActiveDocumentForAudioEvent = function(marker) {
     var
-      previousUtteranceID = -1,
-      utteranceID;
+      previousDocumentID = -1,
+      documentID;
 
     // TODO: More sanity checks to verify that this handler is responsible for this region
     if (!self.audio_events[marker.id]) {
       return;
     }
 
-    utteranceID = self.audio_events[marker.id].utterance_id;
+    documentID = self.audio_events[marker.id].document_id;
     if (parseInt(marker.id) > 0) {
-      previousUtteranceID = self.audio_events[parseInt(marker.id) - 1].utterance_id;
+      previousDocumentID = self.audio_events[parseInt(marker.id) - 1].document_id;
     }
-    if (utteranceID !== previousUtteranceID && previousUtteranceID !== -1) {
-      $('#' + previousUtteranceID + '_utterance_button')
+    if (documentID !== previousDocumentID && previousDocumentID !== -1) {
+      $('#' + previousDocumentID + '_document_button')
         .addClass('btn-default')
         .removeClass('btn-info');
     }
-    $('#' + utteranceID + '_utterance_button')
+    $('#' + documentID + '_document_button')
       .addClass('btn-info')
       .removeClass('btn-default');
   };
@@ -223,14 +223,14 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
    */
   var updateAudioEvents = function(corpus, audio_events) {
     var
-      audio_events_per_utterance_id = {},
-      audio_identifier_for_utterance_id = {},
+      audio_events_per_document_id = {},
+      audio_identifier_for_document_id = {},
       i,
       total_duration = 0.0,
-      utterance_id,
-      utterance_index_for_utterance_id = {},
-      utteranceListDiv,
-      utteranceSpan;
+      document_id,
+      document_index_for_document_id = {},
+      documentListDiv,
+      documentSpan;
 
     self.audio_events = audio_events;
     self.wavesurfer.clearMarks();
@@ -250,29 +250,29 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
           'position': total_duration
       });
 
-      utterance_id = self.audio_events[i].utterance_id;
-      if (typeof(audio_events_per_utterance_id[utterance_id]) === 'undefined') {
-        audio_events_per_utterance_id[utterance_id] = 0;
+      document_id = self.audio_events[i].document_id;
+      if (typeof(audio_events_per_document_id[document_id]) === 'undefined') {
+        audio_events_per_document_id[document_id] = 0;
       }
-      audio_events_per_utterance_id[utterance_id] += 1;
-      audio_identifier_for_utterance_id[utterance_id] = self.audio_events[i].audio_identifier;
-      utterance_index_for_utterance_id[utterance_id] = self.audio_events[i].utterance_index;
+      audio_events_per_document_id[document_id] += 1;
+      audio_identifier_for_document_id[document_id] = self.audio_events[i].audio_identifier;
+      document_index_for_document_id[document_id] = self.audio_events[i].document_index;
     }
 
-    utteranceListDiv = $('#' + self.visualizerID + '_utterance_list');
+    documentListDiv = $('#' + self.visualizerID + '_document_list');
     // Delete existing buttons
-    utteranceListDiv.html('');
-    // Add buttons for each distinct utterance
-    for (utterance_id in audio_events_per_utterance_id) {
-      utteranceSpan = $('<a>')
+    documentListDiv.html('');
+    // Add buttons for each distinct document
+    for (document_id in audio_events_per_document_id) {
+      documentSpan = $('<a>')
         .addClass('btn btn-default btn-xs')
-        .attr('id', utterance_id + '_utterance_button')
-        .attr('href', '/visualizer/' + corpus +'/document/' + utterance_index_for_utterance_id[utterance_id])
+        .attr('id', document_id + '_document_button')
+        .attr('href', '/visualizer/' + corpus +'/document/' + document_index_for_document_id[document_id])
         .attr('role', 'button')
         .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
-        .html(formatUtteranceIndex(utterance_index_for_utterance_id[utterance_id], 4) +
-              ' <b>(x' + audio_events_per_utterance_id[utterance_id] + ')</b>');
-      utteranceListDiv.append(utteranceSpan);
+        .html(formatDocumentIndex(document_index_for_document_id[document_id], 4) +
+              ' <b>(x' + audio_events_per_document_id[document_id] + ')</b>');
+      documentListDiv.append(documentSpan);
     }
 
     callControlsResizeCallback();

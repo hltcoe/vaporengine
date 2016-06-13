@@ -66,7 +66,7 @@ def term_audio_fragments_as_json(request, corpus_id, term_id):
         audio_fragments_json.append({
             'duration': audio_fragment.duration,
             'audio_identifier': audio_fragment.document.audio_identifier,
-            'utterance_index': audio_fragment.document_id
+            'document_index': audio_fragment.document_id
         })
 
     return JsonResponse(audio_fragments_json, safe=False)
@@ -139,9 +139,9 @@ def venncloud_json_for_corpus(request):
 def venncloud_json_for_document(request):
     """Returns JSON for wordcloud in format expected by Glen' Venncloud code
     """
-    request_data = json.loads(request.body) # Should have a 'dataset' and an 'utterances' field
+    request_data = json.loads(request.body) # Should have a 'dataset' and an 'documents' field
 
-    first_document_id = int(request_data['utterances'][0])
+    first_document_id = int(request_data['documents'][0])
     document = Document.objects.get(id=first_document_id)
 
     terms = []
@@ -168,6 +168,6 @@ def _venncloud_json_for_term(term):
         'pt_ids':[term.id],
         'text':term.eng_display,
         'tf':term.total_audio_fragments(),
-        'utterance_ids':term.document_ids(),
+        'document_ids':term.document_ids(),
     }
     return t

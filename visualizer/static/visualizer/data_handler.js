@@ -15,17 +15,17 @@ var cloud_datasets = [];
 
 /**
  * @param {String} corpus_name
- * @param {Array} utterance_list
+ * @param {Array} document_list
  */
-function get_cloud_data(corpus_id, utterance_list){
+function get_cloud_data(corpus_id, document_list){
 
-    var utterance_ids = utterance_list.utterance_ids;
-    var dataset_name = utterance_list.dataset_name;
+    var document_ids = document_list.document_ids;
+    var dataset_name = document_list.dataset_name;
 
     return $.Deferred( function( defer ) {
         var send = {};
         send.dataset = corpus_id;
-        send.utterances = utterance_ids;
+        send.documents = document_ids;
 
         $.ajaxSetup({
             contentType: "application/json; charset=utf-8",
@@ -45,7 +45,7 @@ function get_cloud_data(corpus_id, utterance_list){
                 wc_data.dataset_name = dataset_name;
                 wc_data.tokens = data;
                 wc_data.num_tokens = data.length;
-                wc_data.num_documents = utterance_ids.length;
+                wc_data.num_documents = document_ids.length;
                 cloud_datasets.push(wc_data);
                 defer.resolve(data);
             }
@@ -77,7 +77,7 @@ function get_corpus_venncloud_data(corpus_id) {
                 wc_data.dataset_name = "Ignored";
                 wc_data.tokens = data;
                 wc_data.num_tokens = data.length;
-                wc_data.num_documents = 1; // utterance_ids.length;
+                wc_data.num_documents = 1; // document_ids.length;
                 cloud_datasets.push(wc_data);
                 defer.resolve(data);
             }
@@ -197,8 +197,8 @@ function getURLforTermWAV(corpus_id, term_id) {
  * @param {String} corpus_name
  * @param {String} audioEventID
  */
-function getURLforUtteranceWAV(corpus_name, utteranceID) {
-    return '/corpus/' + corpus_name +'/audio/utterance/' + utteranceID + '.wav';
+function getURLforDocumentWAV(corpus_name, documentID) {
+    return '/corpus/' + corpus_name +'/audio/document/' + documentID + '.wav';
 }
 
 
@@ -344,7 +344,7 @@ function wordcloud_from_corpus(corpus_id, waveform_visualizer, options) {
           token,
           token_text;
 
-        // Add class names for audio events, terms, utterances to token.span_classes
+        // Add class names for audio events, terms, documents to token.span_classes
         dataset = cloud_datasets[0];
         for (token_text in dataset.tokens) {
             token = dataset.tokens[token_text];
@@ -355,8 +355,8 @@ function wordcloud_from_corpus(corpus_id, waveform_visualizer, options) {
             for (i = 0; i < token.pt_ids.length; i++) {
                 token.span_classes.push("term_span_" + token.pt_ids[i]);
             }
-            for (i = 0; i < token.utterance_ids.length; i++) {
-                token.span_classes.push("utterance_span_" + token.utterance_ids[i]);
+            for (i = 0; i < token.document_ids.length; i++) {
+                token.span_classes.push("document_span_" + token.document_ids[i]);
             }
         }
         make_me_a_venncloud( cloud_datasets, options );
@@ -364,13 +364,13 @@ function wordcloud_from_corpus(corpus_id, waveform_visualizer, options) {
 }
 
 
-/** Create a wordcloud (not a venncloud) from a single set of utterances
+/** Create a wordcloud (not a venncloud) from a single set of documents
  * @param {Integer} corpus_id
- * @param {Array} utterances_list
+ * @param {Array} documents_list
  * @param {WaveformVisualizer} waveform_visualizer
  * @param {Object} options
  */
-function wordcloud_from_utterances(corpus_id, utterances_list, waveform_visualizer, options){
+function wordcloud_from_documents(corpus_id, documents_list, waveform_visualizer, options){
     var corpus_closure = new CorpusClosureForSetupAnnotateTermID(corpus_id, waveform_visualizer);
 
     if (options === undefined) {
@@ -378,14 +378,14 @@ function wordcloud_from_utterances(corpus_id, utterances_list, waveform_visualiz
     }
     options.click = corpus_closure.set_up_annotate_term_id;
 
-    $.when(get_cloud_data(corpus_id, utterances_list[0])).done( function(){
+    $.when(get_cloud_data(corpus_id, documents_list[0])).done( function(){
         var
           dataset,
           i,
           token,
           token_text;
 
-        // Add class names for audio events, terms, utterances to token.span_classes
+        // Add class names for audio events, terms, documents to token.span_classes
         dataset = cloud_datasets[0];
         for (token_text in dataset.tokens) {
             token = dataset.tokens[token_text];
@@ -396,8 +396,8 @@ function wordcloud_from_utterances(corpus_id, utterances_list, waveform_visualiz
             for (i = 0; i < token.pt_ids.length; i++) {
                 token.span_classes.push("term_span_" + token.pt_ids[i]);
             }
-            for (i = 0; i < token.utterance_ids.length; i++) {
-                token.span_classes.push("utterance_span_" + token.utterance_ids[i]);
+            for (i = 0; i < token.document_ids.length; i++) {
+                token.span_classes.push("document_span_" + token.document_ids[i]);
             }
         }
         make_me_a_venncloud( cloud_datasets, options );
@@ -406,12 +406,12 @@ function wordcloud_from_utterances(corpus_id, utterances_list, waveform_visualiz
 
 /**
  * @param {Integer} corpus_id
- * @param {Array} utterances_lists
+ * @param {Array} documents_lists
  * @param {WaveformVisualizer} waveform_visualizer
  * @param {Object} options
  */
 /*
-function venncloud_from_utterances(corpus_id, utterances_lists, waveform_visualizer, options){
+function venncloud_from_documents(corpus_id, documents_lists, waveform_visualizer, options){
     var corpus_closure = new CorpusClosureForSetupAnnotateTermID(corpus_id, waveform_visualizer);
 
     if (options === undefined) {
@@ -419,7 +419,7 @@ function venncloud_from_utterances(corpus_id, utterances_lists, waveform_visuali
     }
     options.click = corpus_closure.set_up_annotate_term_id;
 
-    var u = utterances_lists;
+    var u = documents_lists;
     $.when(get_cloud_data(corpus_id, u[0] ), get_cloud_data(corpus_id, u[1] )).done( function(){
         make_me_a_venncloud( cloud_datasets, options );
     });
