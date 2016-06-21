@@ -147,6 +147,13 @@ class Document(models.Model):
     def associated_terms(self):
         return Term.objects.filter(audiofragment__document=self).distinct()
 
+    def duration_in_seconds(self):
+        return self.duration / 100.0
+
+    def total_terms(self):
+        return Term.objects.filter(audiofragment__document=self).distinct().count()
+
+
 class Term(models.Model):
     """
     """
@@ -160,11 +167,26 @@ class Term(models.Model):
     def audio_fragment_ids(self):
         return self.audiofragment_set.values_list('id', flat=True)
 
-    def total_audio_fragments(self):
-        return self.audiofragment_set.count()
+    def corpus_id(self):
+        # Assumes that all audio fragments for this term belong to the same corpus
+        return self.audiofragment_set.first().document.corpus.id
 
     def document_ids(self):
         return self.audiofragment_set.values_list('document__id', flat=True).distinct()
+
+    def first_start_offset_in_document(self, doc):
+        af = self.audiofragment_set.filter(document=doc).order_by('start_offset').first()
+        if af:
+            # Start offset is returned in seconds
+            return af.start_offset / 100.0
+        else:
+            return None
+
+    def total_audio_fragments(self):
+        return self.audiofragment_set.count()
+
+    def total_audio_fragments_in_document(self, doc):
+        return self.audiofragment_set.filter(document=doc).count()
 
     def total_documents(self):
         return Document.objects.filter(audiofragment__term=self).distinct().count()
