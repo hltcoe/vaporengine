@@ -58,7 +58,6 @@ def term_as_json(request, corpus_id, term_id):
     return JsonResponse(term_json)
 
 def term_audio_fragments_as_json(request, corpus_id, term_id):
-    # TODO: This function is a hacky shim used while transitioning from MongoDB to Django
     term = Term.objects.get(id=term_id)
 
     audio_fragments_json = []
@@ -66,12 +65,12 @@ def term_audio_fragments_as_json(request, corpus_id, term_id):
         audio_fragments_json.append({
             'duration': audio_fragment.duration,
             'audio_identifier': audio_fragment.document.audio_identifier,
-            'document_index': audio_fragment.document_id
+            'document_id': audio_fragment.document_id,
+            'document_index': audio_fragment.document.document_index
         })
-
     return JsonResponse(audio_fragments_json, safe=False)
 
-def term_update(request, corpus_id, term_id):
+def term_update(request, term_id):
     request_data = json.loads(request.body)
     term = Term.objects.get(id=term_id)
     term.eng_display = request_data['eng_display']
@@ -149,6 +148,37 @@ def venncloud_json_for_document(request):
         terms.append(_venncloud_json_for_term(term))
 
     response = HttpResponse(content=json.dumps(terms))
+    response['Content-Type'] = 'application/json'
+    return response
+
+def wordcloud_json_for_document(request, corpus_id, document_id):
+    document = Document.objects.get(id=document_id)
+
+    terms = []
+    for term in document.associated_terms():
+        terms.append({
+            'eng_display': term.eng_display,
+            'zr_pt_id': term.zr_pt_id,
+            'term_id': term.id,
+            'corpus_id': corpus_id,
+            'audio_event_ids': term.audio_fragment_ids(),
+            'document_ids': term.document_ids(),
+            'pt_ids': [term.id],
+            'first_start_offset_in_document': term.first_start_offset_in_document(document),
+            'total_audio_fragments': term.total_audio_fragments(),
+            'total_audio_fragments_in_document': term.total_audio_fragments_in_document(document),
+            'total_documents': term.total_documents()
+        })
+
+    response = HttpResponse(content=json.dumps({
+        'sort_keys': {
+            'total_documents': 'Documents appeared in',
+            'first_start_offset_in_document': 'First appearance',
+            'total_audio_fragments': 'Occurrences in corpus',
+            'total_audio_fragments_in_document': 'Occurences in document'
+        },
+        'terms': terms
+    }))
     response['Content-Type'] = 'application/json'
     return response
 

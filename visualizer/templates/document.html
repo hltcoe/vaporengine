@@ -61,6 +61,105 @@
         termVisualizer.pause();
       });
 
+      /**
+       *
+       */
+      function updateActiveTerm(event) {
+        var corpus_id = event.data.corpus_id;
+        var term_id = event.data.term_id;
+        $('#pt_eng_display')
+          .data('term_id', term_id)
+          .val($("#term_" + term_id).data("eng_display"));
+
+        // There can be only one active term at a time
+        $(".active_wordcloud_token").removeClass("active_wordcloud_token");
+        $("#term_" + term_id).addClass("active_wordcloud_token");
+
+        termVisualizer.loadAndPlayURL('/visualizer/' + corpus_id + '/term/' + term_id + '.wav');
+      }
+
+      function updateTermLabel() {
+        var label = $("#pt_eng_display").val();
+        var term_id = $("#pt_eng_display").data('term_id');
+
+        // Only update the term label if the user has previously selected a term
+        if (term_id) {
+          $("#term_" + term_id)
+            .data("eng_display", label)
+            // Update the term label shown in the word cloud
+            .text(label);
+
+          $.ajax({
+            url: "/visualizer/term/"+term_id+"/update",
+            type: "POST",
+            data: JSON.stringify({
+              "eng_display": label
+            })
+          });
+        }
+      }
+
+      // Add event handlers for when user changes the label for a term
+      $("#pt_eng_display")
+        .focusout(function() {
+          updateTermLabel();
+        })
+        .keydown(function(e) {
+          // Update annotation when users hit enter
+          if (e.keyCode === 13) {
+            updateTermLabel();
+          }
+        });
+
+      $.getJSON("{% url 'wordcloud_json_for_document' corpus.id document.id %}", function(data) {
+        var sort_keys = data.sort_keys;
+        var terms = data.terms;
+        var wordcloud_div = $("#wordcloud_div");
+
+        for (var termIndex in terms) {
+          var i;
+          var term = terms[termIndex];
+          var tooltip_text = "";
+
+          var wordcloud_span = $('<span>')
+            .attr('id', 'term_' + term.term_id)
+            .on('click', {'corpus_id': term.corpus_id, 'term_id': term.term_id}, updateActiveTerm);
+
+          $.each(term, function(key, value) {
+            wordcloud_span.data(key, value);
+            if (sort_keys[key]) {
+              tooltip_text += sort_keys[key] + ": " + value + "\n";
+            }
+          });
+
+          var span_classes = ['wordcloud_token'];
+          for (i = 0; i < term.audio_event_ids.length; i++) {
+            span_classes.push("audio_event_span_" + term.audio_event_ids[i]);
+          }
+          for (i = 0; i < term.pt_ids.length; i++) {
+            span_classes.push("term_span_" + term.pt_ids[i]);
+          }
+          for (i = 0; i < term.document_ids.length; i++) {
+            span_classes.push("document_span_" + term.document_ids[i]);
+          }
+          wordcloud_span.addClass(span_classes.join(" "));
+
+          // Add tooltip
+          wordcloud_span
+            .attr('data-placement', 'bottom')
+            .attr('data-toggle', 'tooltip')
+            .attr('title', tooltip_text)
+            .tooltip();
+
+          wordcloud_span.text(term.eng_display + " ");
+          wordcloud_div.append(wordcloud_span);
+
+          // Add whitespace after terms to enable word-wrapping
+          wordcloud_div.append(" ");
+        }
+      });
+
+      /*
       var document_set1 = {
         'dataset_name': 'Set1',
         'document_ids': ["{{document.id}}"]
@@ -75,6 +174,7 @@
       $('#pt_junk_button').click(
         {'corpus': '{{corpus}}', 'waveform_visualizer': termVisualizer},
         junk_this_term);
+      */
     });
 
     var audio_events = [
@@ -143,6 +243,9 @@
     </div>
   </nav>
 
+  <div id="wordcloud_div"></div>
+
   <div id="wordcloud_location"></div>
+
 
 {% endblock content %}
