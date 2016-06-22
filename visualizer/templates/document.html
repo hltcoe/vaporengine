@@ -151,30 +151,10 @@
             .attr('title', tooltip_text)
             .tooltip();
 
-          wordcloud_span.text(term.eng_display + " ");
+          wordcloud_span.text(term.eng_display);
           wordcloud_div.append(wordcloud_span);
-
-          // Add whitespace after terms to enable word-wrapping
-          wordcloud_div.append(" ");
         }
       });
-
-      /*
-      var document_set1 = {
-        'dataset_name': 'Set1',
-        'document_ids': ["{{document.id}}"]
-      };
-      wordcloud_from_documents(
-        "{{corpus.id}}",
-        [document_set1],
-        termVisualizer,
-        { base_fontsize: 10 }
-      );
-
-      $('#pt_junk_button').click(
-        {'corpus': '{{corpus}}', 'waveform_visualizer': termVisualizer},
-        junk_this_term);
-      */
     });
 
     var audio_events = [
