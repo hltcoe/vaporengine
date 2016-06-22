@@ -21,6 +21,40 @@ function addLabelEditorEventHandlers() {
 }
 
 
+function addSortControl(wordcloud_div_id, sort_keys) {
+  // Add sort options to select control
+  for (var i in sort_keys) {
+    $("#sort_key_select").append(
+      $('<option>')
+        .text(sort_keys[i].key_description)
+        .val(sort_keys[i].key_name));
+  }
+
+  // Dynamically added select options won't be displayed until we issue 'refresh' command
+  $("#sort_key_select").selectpicker('refresh');
+  $("#sort_key_select").on('change',
+                           {'selector': '#'+wordcloud_div_id+'>span'},
+                           function(event) {
+                             sortDOMElementsByDataField(event.data.selector, $(this).val());
+                           });
+
+
+  // Add sort options to drop-down menu
+  for (var i in sort_keys) {
+    $("#sort_menu_items").append(
+      $('<li>')
+        .html('<a href="#">' + sort_keys[i].key_description + '</a>')
+        .on('click',
+            {'dataSortField': sort_keys[i].key_name, 'selector': '#'+wordcloud_div_id+'>span'},
+            function(event) {
+              sortDOMElementsByDataField(event.data.selector, event.data.dataSortField);
+            })
+    );
+  }
+}
+
+
+
 /**
  *
  */
@@ -30,33 +64,7 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
     var terms = data.terms;
     var wordcloud_div = $("#" + wordcloud_div_id);
 
-    // Add sort options
-    for (var i in sort_keys) {
-      $("#sort_key_select").append(
-        $('<option>')
-          .text(sort_keys[i].key_description)
-          .val(sort_keys[i].key_name));
-    }
-
-    // Dynamically added select options won't be displayed until we issue 'refresh' command
-    $("#sort_key_select").selectpicker('refresh');
-    $("#sort_key_select").on('change',
-                             {'selector': '#'+wordcloud_div_id+'>span'},
-                             function(event) {
-                               sortDOMElementsByDataField(event.data.selector, $(this).val());
-                             });
-
-    for (var i in sort_keys) {
-      $("#sort_menu_items").append(
-        $('<li>')
-          .html('<a href="#">' + sort_keys[i].key_description + '</a>')
-          .on('click',
-              {'dataSortField': sort_keys[i].key_name, 'selector': '#'+wordcloud_div_id+'>span'},
-              function(event) {
-                sortDOMElementsByDataField(event.data.selector, event.data.dataSortField);
-              })
-      );
-    }
+    addSortControl(wordcloud_div_id, sort_keys);
 
     for (var termIndex in terms) {
       var term = terms[termIndex];
