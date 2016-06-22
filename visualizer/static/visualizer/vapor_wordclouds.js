@@ -1,7 +1,3 @@
-//
-//
-
-
 /** Add event handlers for when user changes the label for a term
  */
 function addLabelEditorEventHandlers() {
@@ -46,16 +42,14 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
       }})
     });
 */
+
     for (var key in sort_keys) {
       $("#sort_menu_items").append(
         $('<li>')
           .html('<a href="#">' + sort_keys[key] + '</a>')
-          .on('click', {'sort_type': key}, function(event) {
-            var sort_type = event.data.sort_type;
-            tinysort("#" + wordcloud_div_id + ">span", {sortFunction: function(a, b) {
-              return ($(a.elm).data(sort_type)) > ($(b.elm).data(sort_type)) ? 1 : -1;
-            }})
-          }));
+          .on('click',
+              {'dataSortField': key, 'selector': '#'+wordcloud_div_id+'>span'},
+              sortDOMElementsByDataField));
     }
 
     for (var termIndex in terms) {
@@ -93,6 +87,28 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
       wordcloud_div.append(wordcloud_span);
     }
   });
+}
+
+
+/** Uses TinySort to sort DOM elements based on specified data field
+ *
+ * The TinySort script (http://tinysort.sjeiti.com) nominally has
+ * support for sorting DOM elements by data fields using the syntax:
+ *   tinysort(selector, {data: dataSortField});
+ * but this syntax does not work for data fields that have been set using
+ * jQuery's data() function.  For more details about the way that $.data
+ * behaves vs. $.attr when accessing data-someAttribute, see this
+ * StackOverflow post:
+ *   http://stackoverflow.com/questions/7261619/jquery-data-vs-attr
+ *
+ * @param {Event} event - An Event object with data fields dataSortField and selector
+ */
+function sortDOMElementsByDataField(event) {
+  var dataSortField = event.data.dataSortField;
+  var selector = event.data.selector;
+  tinysort(selector, {sortFunction: function(a, b) {
+    return ($(a.elm).data(dataSortField)) > ($(b.elm).data(dataSortField)) ? 1 : -1;
+  }});
 }
 
 
