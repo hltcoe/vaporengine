@@ -129,10 +129,10 @@ def wordcloud_json_for_corpus(request, corpus_id):
         })
 
     response = HttpResponse(content=json.dumps({
-        'sort_keys': {
-            'total_documents': 'Documents appeared in',
-            'total_audio_fragments': 'Occurrences in corpus',
-        },
+        'sort_keys': [
+            {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
+            {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'}
+        ],
         'terms': terms
     }))
     response['Content-Type'] = 'application/json'
@@ -157,12 +157,12 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
         })
 
     response = HttpResponse(content=json.dumps({
-        'sort_keys': {
-            'total_documents': 'Documents appeared in',
-            'first_start_offset_in_document': 'First appearance',
-            'total_audio_fragments': 'Occurrences in corpus',
-            'total_audio_fragments_in_document': 'Occurences in document'
-        },
+        'sort_keys': [
+            {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
+            {'key_name': 'first_start_offset_in_document', 'key_description': 'First appearance'},
+            {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'},
+            {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurences in document'}
+        ],
         'terms': terms
     }))
     response['Content-Type'] = 'application/json'

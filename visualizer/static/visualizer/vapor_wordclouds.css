@@ -39,3 +39,7 @@ span.wordcloud_token:hover {
 span.active_wordcloud_token:hover {
     background-color: pink;
 }
+
+.tooltip-inner {
+    white-space: pre-wrap;
+}

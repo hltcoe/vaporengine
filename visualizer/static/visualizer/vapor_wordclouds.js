@@ -1,3 +1,10 @@
+// There is *extensive* coupling between this JavaScript file, the
+// controller, and the views.  The JavaScript code assumes that DOM
+// elements with certain ID's exist.  The code also assumes that
+// controller URLs both exist and will return data in an expected
+// format.
+
+
 /** Add event handlers for when user changes the label for a term
  */
 function addLabelEditorEventHandlers() {
@@ -24,67 +31,70 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
     var wordcloud_div = $("#" + wordcloud_div_id);
 
     // Add sort options
-/*
-    for (var key in sort_keys) {
+    for (var i in sort_keys) {
       $("#sort_key_select").append(
         $('<option>')
-          .text(sort_keys[key])
-          .val(key));
+          .text(sort_keys[i].key_description)
+          .val(sort_keys[i].key_name));
     }
 
     // Dynamically added select options won't be displayed until we issue 'refresh' command
     $("#sort_key_select").selectpicker('refresh');
+    $("#sort_key_select").on('change',
+                             {'selector': '#'+wordcloud_div_id+'>span'},
+                             function(event) {
+                               sortDOMElementsByDataField(event.data.selector, $(this).val());
+                             });
 
-    $("#sort_key_select").on('change', function(event) {
-      var sort_type = $(this).val();
-      tinysort("#wordcloud_div>span", {sortFunction: function(a, b) {
-        return ($(a.elm).data(sort_type)) > ($(b.elm).data(sort_type)) ? 1 : -1;
-      }})
-    });
-*/
-
-    for (var key in sort_keys) {
+    for (var i in sort_keys) {
       $("#sort_menu_items").append(
         $('<li>')
-          .html('<a href="#">' + sort_keys[key] + '</a>')
+          .html('<a href="#">' + sort_keys[i].key_description + '</a>')
           .on('click',
-              {'dataSortField': key, 'selector': '#'+wordcloud_div_id+'>span'},
-              sortDOMElementsByDataField));
+              {'dataSortField': sort_keys[i].key_name, 'selector': '#'+wordcloud_div_id+'>span'},
+              function(event) {
+                sortDOMElementsByDataField(event.data.selector, event.data.dataSortField);
+              })
+      );
     }
 
     for (var termIndex in terms) {
-      var i;
       var term = terms[termIndex];
-      var tooltip_text = "";
 
-      var wordcloud_span = $('<span>')
+      // Create <span> for term
+      var term_span = $('<span>')
         .attr('id', 'term_' + term.term_id)
         .on('click',
             {'corpus_id': term.corpus_id, 'term_id': term.term_id, 'termVisualizer': termVisualizer},
             updateActiveTerm);
 
-      $.each(term, function(key, value) {
-        wordcloud_span.data(key, value);
-        if (sort_keys[key]) {
-          tooltip_text += sort_keys[key] + ": " + value + "\n";
+      // Add data fields to <span> for term
+      for (var key in term) {
+        if (term.hasOwnProperty(key)) {
+          term_span.data(key, term[key]);
         }
-      });
+      }
 
+      // Add CSS classes to <span> for term
       var span_classes = ['wordcloud_token'];
-      for (i = 0; i < term.audio_event_ids.length; i++) {
+      for (var i = 0; i < term.audio_event_ids.length; i++) {
         span_classes.push("audio_event_span_" + term.audio_event_ids[i]);
       }
-      wordcloud_span.addClass(span_classes.join(" "));
+      term_span.addClass(span_classes.join(" "));
 
-      // Add tooltip
-      wordcloud_span
+      // Add tooltip to <span> for term
+      var tooltip_text = "";
+      for (var i in sort_keys) {
+        tooltip_text += sort_keys[i].key_description + ": " + term[sort_keys[i].key_name] + "\n";
+      }
+      term_span
         .attr('data-placement', 'bottom')
         .attr('data-toggle', 'tooltip')
         .attr('title', tooltip_text)
         .tooltip();
 
-      wordcloud_span.text(term.eng_display);
-      wordcloud_div.append(wordcloud_span);
+      term_span.text(term.eng_display);
+      wordcloud_div.append(term_span);
     }
   });
 }
@@ -101,11 +111,10 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
  * StackOverflow post:
  *   http://stackoverflow.com/questions/7261619/jquery-data-vs-attr
  *
- * @param {Event} event - An Event object with data fields dataSortField and selector
+ * @param {String} dataSortField - Name of data field to sort by
+ * @param {String} selector - CSS selector
  */
-function sortDOMElementsByDataField(event) {
-  var dataSortField = event.data.dataSortField;
-  var selector = event.data.selector;
+function sortDOMElementsByDataField(selector, dataSortField) {
   tinysort(selector, {sortFunction: function(a, b) {
     return ($(a.elm).data(dataSortField)) > ($(b.elm).data(dataSortField)) ? 1 : -1;
   }});
@@ -113,7 +122,7 @@ function sortDOMElementsByDataField(event) {
 
 
 /**
- *
+ * @param {Event} event - An Event object with data fields corpus_id, term_id, termVisualizer
  */
 function updateActiveTerm(event) {
   var corpus_id = event.data.corpus_id;
