@@ -13,7 +13,6 @@ class AudioFragment(models.Model):
     """An AudioFragment is a segment of an audio Document that may be (but
     is not necessarily) associated with a Term
     """
-    # { "_id" : ObjectId("55e5b895841fd54738fd3bc5"), "zr_pt_id" : 168, "start_offset" : 8534, "pt_id" : ObjectId("55e5b892841fd54738fcf338"), "utterance_id" : ObjectId("55e5b894841fd54738fd3172"), "time" : 1441118357000, "duration" : 54, "end_offset" : 8588 }
     document = models.ForeignKey('Document')
     term = models.ForeignKey('Term')
 
@@ -131,8 +130,6 @@ class Corpus(models.Model):
 class Document(models.Model):
     """An audio Document associated with an audio file
     """
-    # The 'utterance' MongoDB field has been renamed 'Document'
-    # { "_id" : ObjectId("55e5b893841fd54738fcfdec"), "utterance_index" : 19, "hltcoe_audio_path" : "/Users/charman/zr_datasets/BUCKEYE/s36/s3603b.wav", "audio_identifier" : "s3603b", "pts" : [ ObjectId("55e5b893841fd54738fcfded"), ObjectId("55e5b893841fd54738fcfdee"), ObjectId("55e5b893841fd54738fcfdee") ] }
     corpus = models.ForeignKey(Corpus)
 
     # The document_index is a zero-based document counter
@@ -157,7 +154,6 @@ class Document(models.Model):
 class Term(models.Model):
     """
     """
-    # { "_id" : ObjectId("55e5b892841fd54738fcf337"), "eng_display" : "pt159", "native_display" : "PT159", "zr_pt_id" : 159 }
     eng_display = models.TextField()
     native_display = models.TextField()
 
