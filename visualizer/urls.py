@@ -14,7 +14,6 @@ urlpatterns = [
 
     url(r'^term/(?P<term_id>\d+)/update', views.term_update, name='term_update'),
     url(r'^(?P<corpus_id>\d+)/term/(?P<term_id>\d+).wav', views.term_wav_file, name='term_wav_file'),
-    url(r'^(?P<corpus_id>\d+)/term/(?P<term_id>\d+).json', views.term_as_json, name='term_as_json'),
     url(r'^(?P<corpus_id>\d+)/term/(?P<term_id>\d+)_audio_fragments.json',
         views.term_audio_fragments_as_json, name='term_audio_fragments_as_json'),
 

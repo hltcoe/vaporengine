@@ -45,18 +45,6 @@ def index(request):
     context = {'current_corpora': current_corpora}
     return render(request, "index.html", context)
 
-def term_as_json(request, corpus_id, term_id):
-    # TODO: This function is a hacky shim used while transitioning from MongoDB to Django
-    request_data = json.loads(request.body)
-    term = Term.objects.get(id=request_data['term_id'])
-    term_json = {
-        'eng_display': term.eng_display,
-        'native_display': term.native_display,
-        # TODO: Remove temporary hack of using MongoDB '_id' field to store term ID
-        '_id': term.id,
-    }
-    return JsonResponse(term_json)
-
 def term_audio_fragments_as_json(request, corpus_id, term_id):
     term = Term.objects.get(id=term_id)
 
