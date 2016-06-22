@@ -2,45 +2,6 @@
 
 {% block head_scripts %}
   <script>
-    function create_wordcloud_from_all_documents(waveform_visualizer) {
-      $.ajax({
-        url: "/visualizer/{{corpus.id}}/wordcloud/terms_as_json",
-        type: "POST",
-        data: JSON.stringify({'dataset': '{{corpus}}', 'count': 256}),
-        error: function(xhr, error) {
-          alert('Error!  Status = ' + xhr.status + ' Message = ' + error);
-        },
-        success: function(documents) {
-          var
-            i,
-            total_documents,
-            document_set1 = {
-              'dataset_name': 'Set1',
-              'document_ids': []
-            },
-
-          total_documents = documents.length;
-          for (i = 0; i < total_documents; i++) {
-            document_set1.document_ids.push(documents[i]._id);
-          }
-
-          wordcloud_from_corpus(
-            "{{corpus.id}}",
-            waveform_visualizer,
-            { base_fontsize: 10 }
-          );
-        }
-      });
-    }
-
-    // Adjust the padding at top of document when height of navbar changes
-    function updateBodyPaddingWhenControlsChangeSize() {
-      if ($('#waveform_navbar').length > 0) {
-        var new_control_height = 5 + $('#waveform_navbar').height();
-        $('body').attr('style', 'padding-top: ' + new_control_height + 'px;');
-      }
-    }
-
     $(document).ready(function() {
       var waveformVisualizer = new WaveformVisualizer(
         'waveform_visualizer',
@@ -48,8 +9,15 @@
         { controlsResizeCallback: updateBodyPaddingWhenControlsChangeSize }
       );
       waveformVisualizer.addControls($('#pt_snippets_audio_player'));
-      create_wordcloud_from_all_documents(waveformVisualizer);
-      $('#pt_junk_button').click({'corpus': '{{corpus}}'}, junk_this_term);
+
+      // Update padding of body element after adding navigation controls
+      updateBodyPaddingWhenControlsChangeSize();
+
+      addLabelEditorEventHandlers();
+
+      createWordcloud('wordcloud_location',
+                      "{% url 'wordcloud_json_for_corpus' corpus.id %}",
+                      waveformVisualizer);
     });
   </script>
 {% endblock head_scripts %}
@@ -71,6 +39,15 @@
             <label for="pt_eng_display">English</label>
             <input id="pt_eng_display"></input>
           </div>
+
+          <div class="btn-group">
+              <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" id="sort_menu">
+                  Sort <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" id="sort_menu_items">
+              </ul>
+          </div>
+
           <!--
           <div class="form-group">
             <label for="pt_native_display">Native</label>

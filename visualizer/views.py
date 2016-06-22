@@ -151,6 +151,34 @@ def venncloud_json_for_document(request):
     response['Content-Type'] = 'application/json'
     return response
 
+def wordcloud_json_for_corpus(request, corpus_id):
+    corpus = Corpus.objects.get(id=corpus_id)
+
+    terms = []
+
+    for term in corpus.terms():
+        terms.append({
+            'eng_display': term.eng_display,
+            'zr_pt_id': term.zr_pt_id,
+
+            'term_id': term.id,
+            'corpus_id': corpus_id,
+            'audio_event_ids': term.audio_fragment_ids(),
+
+            'total_audio_fragments': term.total_audio_fragments(),
+            'total_documents': term.total_documents()
+        })
+
+    response = HttpResponse(content=json.dumps({
+        'sort_keys': {
+            'total_documents': 'Documents appeared in',
+            'total_audio_fragments': 'Occurrences in corpus',
+        },
+        'terms': terms
+    }))
+    response['Content-Type'] = 'application/json'
+    return response
+
 def wordcloud_json_for_document(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)
 
@@ -159,11 +187,11 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
         terms.append({
             'eng_display': term.eng_display,
             'zr_pt_id': term.zr_pt_id,
+
             'term_id': term.id,
             'corpus_id': corpus_id,
             'audio_event_ids': term.audio_fragment_ids(),
-            'document_ids': term.document_ids(),
-            'pt_ids': [term.id],
+
             'first_start_offset_in_document': term.first_start_offset_in_document(document),
             'total_audio_fragments': term.total_audio_fragments(),
             'total_audio_fragments_in_document': term.total_audio_fragments_in_document(document),
