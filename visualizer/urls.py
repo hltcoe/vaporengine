@@ -4,8 +4,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^venncloud_json_for_corpus', views.venncloud_json_for_corpus, name='venncloud_json_for_corpus'),
-    url(r'^venncloud_json_for_document', views.venncloud_json_for_document, name='venncloud_json_for_document'),
 
     url(r'^(?P<corpus_id>\d+)/terms.json', views.wordcloud_json_for_corpus, name='wordcloud_json_for_corpus'),
     url(r'^(?P<corpus_id>\d+)/document/(?P<document_id>\d+)/terms.json',

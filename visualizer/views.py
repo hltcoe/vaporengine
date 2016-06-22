@@ -123,34 +123,6 @@ def term_wav_file(request, corpus_id, term_id):
     response['Content-Type'] = 'audio/wav'
     return response
 
-def venncloud_json_for_corpus(request):
-    request_data = json.loads(request.body)
-    corpus = Corpus.objects.get(id=request_data['corpus_id'])
-
-    terms = []
-    for term in corpus.terms():
-        terms.append(_venncloud_json_for_term(term))
-
-    response = HttpResponse(content=json.dumps(terms))
-    response['Content-Type'] = 'application/json'
-    return response
-
-def venncloud_json_for_document(request):
-    """Returns JSON for wordcloud in format expected by Glen' Venncloud code
-    """
-    request_data = json.loads(request.body) # Should have a 'dataset' and an 'documents' field
-
-    first_document_id = int(request_data['documents'][0])
-    document = Document.objects.get(id=first_document_id)
-
-    terms = []
-    for term in document.associated_terms():
-        terms.append(_venncloud_json_for_term(term))
-
-    response = HttpResponse(content=json.dumps(terms))
-    response['Content-Type'] = 'application/json'
-    return response
-
 def wordcloud_json_for_corpus(request, corpus_id):
     corpus = Corpus.objects.get(id=corpus_id)
 
@@ -209,23 +181,3 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
     }))
     response['Content-Type'] = 'application/json'
     return response
-
-def _venncloud_json_for_term(term):
-    # Sample JSON from old MongoDB implementation:
-    #   [
-    #     {'tf': 2, 'utterance_ids': ['55e5b892841fd54738fcf336', '55e5b892841fd54738fcf336'], 'text': u'pt10525', 'examples': [], 'audio_event_ids': ['55e5b895841fd54738fd3ecd', '55e5b895841fd54738fd3ecf'], 'idf': 1, 'pt_ids': ['55e5b892841fd54738fcf35e'], 'number_of_pts': 1},
-    #     {'tf': 1, 'utterance_ids': ['55e5b892841fd54738fcf336'], 'text': u'pt1285', 'examples': [], 'audio_event_ids': ['55e5b895841fd54738fd3e20'], 'idf': 1, 'pt_ids': ['55e5b892841fd54738fcf344'], 'number_of_pts': 1},
-    #     {'tf': 1, 'utterance_ids': ['55e5b892841fd54738fcf336'], 'text': u'pt12890', 'examples': [], 'audio_event_ids': ['55e5b895841fd54738fd3ed2'], 'idf': 1, 'pt_ids': ['55e5b892841fd54738fcf35f'], 'number_of_pts': 1}]
-
-    # TODO: Correctly implement TF and IDF measures
-    t = {
-        'audio_event_ids':term.audio_fragment_ids(),
-        'examples':[],
-        'idf':1,
-        'number_of_pts':1,
-        'pt_ids':[term.id],
-        'text':term.eng_display,
-        'tf':term.total_audio_fragments(),
-        'document_ids':term.document_ids(),
-    }
-    return t

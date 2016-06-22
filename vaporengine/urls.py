@@ -20,7 +20,6 @@ import visualizer.views
 
 urlpatterns = [
     url(r'^$', visualizer.views.index, name='home'),
-    url(r'^venncloud_json_for_document', visualizer.views.venncloud_json_for_document, name='venncloud_json_for_document'),
     url(r'visualizer/', include('visualizer.urls')),
     url(r'^admin/', admin.site.urls),
 ]
