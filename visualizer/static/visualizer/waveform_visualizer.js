@@ -15,7 +15,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
   var defaultSettings;
 
   // Public member variables
-  this.audio_events = [];
+  this.audio_fragments = [];
   this.visualizerID = visualizerID;
   this.wavesurfer = Object.create(WaveSurfer);
 
@@ -30,7 +30,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
   combinedWavesurferSettings = $.extend({}, defaultWavesurferSettings, customWavesurferSettings);
   this.wavesurfer.init(combinedWavesurferSettings);
   this.wavesurfer.on('region-in', function(marker) {
-    updateActiveDocumentForAudioEvent(marker);
+    updateActiveDocumentForAudioFragment(marker);
   });
 
   defaultSettings = {
@@ -125,8 +125,8 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       corpus_id = matches[1];
       term_id = matches[2];
 
-      $.getJSON('/visualizer/' + corpus_id + '/term/' + term_id + "_audio_fragments.json", function(audio_events) {
-        updateAudioEvents(corpus_id, audio_events);
+      $.getJSON('/visualizer/' + corpus_id + '/term/' + term_id + "_audio_fragments.json", function(audio_fragments) {
+        updateAudioFragments(corpus_id, audio_fragments);
       });
     }
   };
@@ -168,9 +168,9 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       totalButtons,
       documentID;
 
-    totalButtons = self.audio_events.length;
+    totalButtons = self.audio_fragments.length;
     for (i = 0; i < totalButtons; i++) {
-      documentID = self.audio_events[i].document_id;
+      documentID = self.audio_fragments[i].document_id;
       $('#' + documentID + '_document_button')
         .addClass('btn-default')
         .removeClass('btn-info');
@@ -190,19 +190,19 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
    * @callback
    * @param {Object} marker
    */
-  var updateActiveDocumentForAudioEvent = function(marker) {
+  var updateActiveDocumentForAudioFragment = function(marker) {
     var
       previousDocumentID = -1,
       documentID;
 
     // TODO: More sanity checks to verify that this handler is responsible for this region
-    if (!self.audio_events[marker.id]) {
+    if (!self.audio_fragments[marker.id]) {
       return;
     }
 
-    documentID = self.audio_events[marker.id].document_id;
+    documentID = self.audio_fragments[marker.id].document_id;
     if (parseInt(marker.id) > 0) {
-      previousDocumentID = self.audio_events[parseInt(marker.id) - 1].document_id;
+      previousDocumentID = self.audio_fragments[parseInt(marker.id) - 1].document_id;
     }
     if (documentID !== previousDocumentID && previousDocumentID !== -1) {
       $('#' + previousDocumentID + '_document_button')
@@ -214,16 +214,16 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       .removeClass('btn-default');
   };
 
-  /** Update UI with info about events associated with current audio clip.
-   *  Add markers for each audio event to WaveSurfer instance that
+  /** Update UI with info about fragments associated with current audio clip.
+   *  Add markers for each audio fragment to WaveSurfer instance that
    *  will be called when audio playback enters marker region.
    * @callback
    * @param {String} corpus
-   * @param {Array} audio_events
+   * @param {Array} audio_fragments
    */
-  var updateAudioEvents = function(corpus, audio_events) {
+  var updateAudioFragments = function(corpus, audio_fragments) {
     var
-      audio_events_per_document_id = {},
+      audio_fragments_per_document_id = {},
       audio_identifier_for_document_id = {},
       i,
       total_duration = 0.0,
@@ -232,38 +232,38 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
       documentListDiv,
       documentSpan;
 
-    self.audio_events = audio_events;
+    self.audio_fragments = audio_fragments;
     self.wavesurfer.clearMarks();
     self.wavesurfer.clearRegions();
 
-    for (i = 0; i < self.audio_events.length; i++) {
+    for (i = 0; i < self.audio_fragments.length; i++) {
       self.wavesurfer.region({
         'color': 'blue',
         'id': i,
         'startPosition': total_duration,
-        'endPosition': total_duration + self.audio_events[i].duration/100.0 - 0.01
+        'endPosition': total_duration + self.audio_fragments[i].duration/100.0 - 0.01
       });
-      total_duration += self.audio_events[i].duration / 100.0;
+      total_duration += self.audio_fragments[i].duration / 100.0;
       self.wavesurfer.mark({
           'color': 'black',
           'id': i,
           'position': total_duration
       });
 
-      document_id = self.audio_events[i].document_id;
-      if (typeof(audio_events_per_document_id[document_id]) === 'undefined') {
-        audio_events_per_document_id[document_id] = 0;
+      document_id = self.audio_fragments[i].document_id;
+      if (typeof(audio_fragments_per_document_id[document_id]) === 'undefined') {
+        audio_fragments_per_document_id[document_id] = 0;
       }
-      audio_events_per_document_id[document_id] += 1;
-      audio_identifier_for_document_id[document_id] = self.audio_events[i].audio_identifier;
-      document_index_for_document_id[document_id] = self.audio_events[i].document_index;
+      audio_fragments_per_document_id[document_id] += 1;
+      audio_identifier_for_document_id[document_id] = self.audio_fragments[i].audio_identifier;
+      document_index_for_document_id[document_id] = self.audio_fragments[i].document_index;
     }
 
     documentListDiv = $('#' + self.visualizerID + '_document_list');
     // Delete existing buttons
     documentListDiv.html('');
     // Add buttons for each distinct document
-    for (document_id in audio_events_per_document_id) {
+    for (document_id in audio_fragments_per_document_id) {
       documentSpan = $('<a>')
         .addClass('btn btn-default btn-xs')
         .attr('id', document_id + '_document_button')
@@ -271,7 +271,7 @@ function WaveformVisualizer(visualizerID, customWavesurferSettings, customSettin
         .attr('role', 'button')
         .attr('style', 'margin-left: 0.5em; margin-right: 0.5em;')
         .html(formatDocumentIndex(document_index_for_document_id[document_id], 4) +
-              ' <b>(x' + audio_events_per_document_id[document_id] + ')</b>');
+              ' <b>(x' + audio_fragments_per_document_id[document_id] + ')</b>');
       documentListDiv.append(documentSpan);
     }
 

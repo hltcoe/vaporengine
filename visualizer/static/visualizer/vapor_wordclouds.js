@@ -85,8 +85,8 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
 
       // Add CSS classes to <span> for term
       var span_classes = ['wordcloud_token'];
-      for (var i = 0; i < term.audio_event_ids.length; i++) {
-        span_classes.push("audio_event_span_" + term.audio_event_ids[i]);
+      for (var i = 0; i < term.audio_fragment_ids.length; i++) {
+        span_classes.push("audio_fragment_span_" + term.audio_fragment_ids[i]);
       }
       term_span.addClass(span_classes.join(" "));
 

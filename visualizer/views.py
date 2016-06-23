@@ -70,7 +70,7 @@ def term_wav_file(request, corpus_id, term_id):
     term = Term.objects.get(id=term_id)
     sox_signal_info = pysox.CSignalInfo(corpus.audio_rate, corpus.audio_channels, corpus.audio_precision)
 
-    # TODO: Allow number of audio events to be specified as parameter, instead
+    # TODO: Allow number of audio fragments to be specified as parameter, instead
     #       of hard-coded to 10
     audio_fragments = term.audiofragment_set.all()[:10]
 
@@ -122,7 +122,7 @@ def wordcloud_json_for_corpus(request, corpus_id):
 
             'term_id': term.id,
             'corpus_id': corpus_id,
-            'audio_event_ids': term.audio_fragment_ids(),
+            'audio_fragment_ids': term.audio_fragment_ids(),
 
             'total_audio_fragments': term.total_audio_fragments(),
             'total_documents': term.total_documents()
@@ -148,7 +148,7 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
 
             'term_id': term.id,
             'corpus_id': corpus_id,
-            'audio_event_ids': term.audio_fragment_ids(),
+            'audio_fragment_ids': term.audio_fragment_ids(),
 
             'first_start_offset_in_document': term.first_start_offset_in_document(document),
             'total_audio_fragments': term.total_audio_fragments(),
