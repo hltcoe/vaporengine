@@ -1,10 +1,10 @@
+import json
 import os
 import tempfile
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 import pysox
-import ujson as json
 
 from visualizer.models import Corpus, Document, Term
 
