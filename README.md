@@ -2,98 +2,138 @@ VaporEngine
 ===========
 
 VaporEngine is a web application that allows users to explore an audio
-corpus by listening to and annotating Pseudoterms.
+corpus by listening to and annotating "(Pseudo)Terms".
 
 
 Requirements
-------------
+============
 
-* An audio corpora that has been run through Aren Jansen's Zero Resource pipeline
-* A MongoDB server running MongoDB v2.0.2 or higher
 * Python 2.7
-* The Python packages listed in 'requirements.txt', which can be installed
-  using the pip package manager by running the command:
+* The SoX (Sound eXchange) audio library:
+  http://sox.sourceforge.net
+* The Python packages listed in 'requirements.txt':
+  * Django - https://www.djangoproject.com
+  * pysox - https://pythonhosted.org/pysox/
+* An audio corpora that has been run through Aren Jansen's Zero Resource pipeline:
+  https://github.com/arenjansen/ZRTools
 
-    ```bash
+
+Installing Requirements
+=======================
+
+If you have the pip package manager installed, you can install the
+Python packages listed in 'requirements.txt' using the command:
+
     pip install -r requirements.txt
-    ```
+
+The steps for installing SoX and pysox will depend on your platform.
+Here are instructions for several different platforms:
+
+
+Installing SoX and pysox - on Ubuntu
+------------------------------------
+
+Install the Python development libraries using:
+
+    sudo apt-get install python-dev
+
+Install the SoX development libraries using:
+
+    sudo apt-get install libsox-dev
+
+Install pysox using:
+
+    sudo easy_install pysox
+
+easy_install will generate some compiler warnings, but these should be
+safely ignorable.
+
+
+Installing SoX and pysox - on RHEL on EC2
+-----------------------------------------
+
+These instructions are for an Amazon Web Services (AWS) instance of
+Red Hat Enterprise Linux (RHEL) 7.1.
+
+Install the Python development libraries using:
+
+    sudo yum install -y python-devel
+
+Download the CentOS 7 version of the `sox-devel` package:
+
+    wget http://mirror.centos.org/centos/7/os/x86_64/Packages/sox-devel-14.4.1-6.el7.x86_64.rpm
+
+Install the downloaded version of `sox-devel` using:
+
+    sudo yum install -y sox-devel-14.4.1-6.el7.x86_64.rpm
+
+Create a symbolic link so that easy_install can find the sox.h file:
+
+    sudo ln -s /usr/include/sox/sox.h /usr/include/sox.h
+
+Install pysox using:
+
+    sudo easy_install pysox
+
+easy_install will generate some compiler warnings, but these should be
+safely ignorable.
+
+
+Installing SoX and pysox - on OS X 10.11
+----------------------------------------
+
+Install SoX using the Homebrew package manager (http://brew.sh):
+
+    brew install sox
+
+Install pysox using:
+
+    export CFLAGS=-I/usr/local/include
+    export LDFLAGS=-L/usr/local/lib
+    easy_install pysox
+
+easy_install will generate some compiler warnings, but these should be
+safely ignorable.
 
 
 Configuring VaporEngine
------------------------
+=======================
 
-Configure the MongoDB server settings and ZR filepaths by editing the
-file ```settings.py```.  Here is a sample configuration for the
-'buckeye' corpora:
+Before using VaporEngine for the first time, you will need to create
+the VaporEngine database file (`db.sqlite3`) using the command:
 
-```python
-buckeye = {}
-buckeye['DB_HOST'] = 'r4n7'
-buckeye['DB_NAME'] = 'buckeye'
-buckeye['DB_PORT'] = 27017
-buckeye['SOX_SIGNAL_INFO'] = pysox.CSignalInfo(16000.0,1,16)
-buckeye['ZR_CLUSTERS'] = 'matches/master_graph.dedups.80'
-buckeye['ZR_PATH'] = '/home/hltcoe/ajansen/discovery/exp/buckeye-T25/'
-settings['buckeye'] = buckeye
-```
-
-If you're not certain what SOX_SIGNAL_INFO parameters to use for your
-audio source files, you can run the command:
-
-```bash
-soxi AUDIO_SOURCE_FILE
-```
-
-which will print out information about the format of your audio files,
-including the Sample Rate (for the 'buckeye' example, the rate is
-16000), number of Channels (1), and Precision (16 bits).
-
-Update the ```current_corpora``` variable at the end of the file:
-
-```python
-current_corpora = ['buckeye', 'fisher_spanish', 'QASW', 'tagalog']
-```
-
-so that the list only contains the names of locally installed corpora.
+    ./manage.py migrate
 
 
-Importing ZR data into MongoDB
-------------------------------
+Importing ZRTools data
+======================
 
-Run the script:
+ZRTools data format
+-------------------
 
-```bash
-./vaporgasp/vapor_inhaler.py DATASET_NAME
-```
+When the ZRTools tool is used to analyze an audio corpus, the tool
+will generate multiple output files.  VaporEngine uses the data from
+three ZRTools files:
 
-where DATASET_NAME is the name of one of the ZR datasets specified in
-`settings.py`.
+* **files.lst** - A text file with the names of all of the audio source
+  files in the corpus
 
+* **matches/master_graph.nodes** - "Pseudoterm" tokens, one per line;
+  one per line; the first three columns specify the input file, start
+  frame, and end frame (frames = seconds*100)
 
-Running the server
-------------------
+* **matches/master_graph.dedups** - "Pseudoterm" cluster definitions,
+  one line per cluster, each consisting of a list of node IDs that
+  corresponds to the line number in the .nodes file
 
-Run the script:
+Importing ZRTools data
+----------------------
 
-```bash
-./bin/start_webserver.sh
-```
+ZRTools data can be imported into VaporEngine by running the
+`zrtools_import` command with these parameters:
 
-This command will start a Bottle webserver, which by default will
-listen on port 12321.  Open this URL in your browser:
+    ./manage.py zrtools_import CORPUS_NAME PATH_TO_ZRTOOLS_OUTPUT
 
-  http://localhost:12321
+e.g.:
 
-to view the VaporEngine demo running on your machine.
-
-
-Backing up and Restoring Annotations
-------------------------------------
-
-The scripts ```vaporgasp/backup_annotations.py```
-and ```vaporgasp/restore_annotations.py``` can be used to backup and
-restore VaporEngine annotations.  The annotations will be saved to a
-TSV file with two columns:
-
-1. the Pseudoterm ID assigned by the ZR system
-2. the text annotation for this Pseudoterm ID
+    ./manage.py zrtools_import DAPS ~/zr_datasets/daps
