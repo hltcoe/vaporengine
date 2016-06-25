@@ -10,7 +10,7 @@
       );
       waveformVisualizer.addControlsAndLoadAudio(
         $('#document_audio_controls'),
-        "{% url 'document_wav_file' corpus.id document.id %}"
+        "{% url 'document_wav_file' corpus_id document_id %}"
       );
 
       waveformVisualizer.wavesurfer.on('region-in', function(marker) {
@@ -58,7 +58,7 @@
       addLabelEditorEventHandlers();
 
       createWordcloud('wordcloud_div',
-                      "{% url 'wordcloud_json_for_document' corpus.id document.id %}",
+                      "{% url 'wordcloud_json_for_document' corpus_id document_id %}",
                       termVisualizer
       );
     });

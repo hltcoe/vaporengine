@@ -21,14 +21,11 @@ def corpus_document_list(request, corpus_id):
     return render(request, "corpus_document_list.html", context)
 
 def document(request, corpus_id, document_id):
-    corpus = Corpus.objects.get(id=corpus_id)
     document = Document.objects.get(id=document_id)
-    terms = document.associated_terms()
     audio_fragments = document.audiofragment_set.all()
     context = {
-        'corpus': corpus,
-        'document': document,
-        'terms': terms,
+        'corpus_id': corpus_id,
+        'document_id': document_id,
         'audio_fragments': audio_fragments,
     }
     return render(request, "document.html", context)
