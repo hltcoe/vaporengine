@@ -78,6 +78,11 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
 
       // Add term data to <span> for term
       term_span.data('term', term);
+      for (var key in term) {
+        if (term.hasOwnProperty(key)) {
+          term_span.data(key, term[key]);
+        }
+      }
 
       // Add CSS classes to <span> for term
       var span_classes = ['wordcloud_token'];
