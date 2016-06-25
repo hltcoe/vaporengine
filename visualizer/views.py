@@ -122,6 +122,7 @@ def wordcloud_json_for_corpus(request, corpus_id):
     for term in corpus.terms():
         terms_json.append({
             'label': term.label,
+            'zr_term_index': term.zr_term_index,
 
             'term_id': term.id,
             'corpus_id': corpus_id,
@@ -148,6 +149,7 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
     for term in document.associated_terms():
         terms_json.append({
             'label': term.label,
+            'zr_term_index': term.zr_term_index,
 
             'term_id': term.id,
             'corpus_id': corpus_id,

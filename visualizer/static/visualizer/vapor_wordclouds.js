@@ -76,12 +76,8 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
             {'corpus_id': term.corpus_id, 'term_id': term.term_id, 'termVisualizer': termVisualizer},
             updateActiveTerm);
 
-      // Add data fields to <span> for term
-      for (var key in term) {
-        if (term.hasOwnProperty(key)) {
-          term_span.data(key, term[key]);
-        }
-      }
+      // Add term data to <span> for term
+      term_span.data('term', term);
 
       // Add CSS classes to <span> for term
       var span_classes = ['wordcloud_token'];
@@ -101,7 +97,7 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
         .attr('title', tooltip_text)
         .tooltip();
 
-      term_span.text(term.label);
+      term_span.text(termLabelText(term));
       wordcloud_div.append(term_span);
     }
   });
@@ -129,6 +125,16 @@ function sortDOMElementsByDataField(selector, dataSortField) {
 }
 
 
+function termLabelText(term) {
+  if (term.label) {
+    return term.label;
+  }
+  else {
+    return "T" + term.zr_term_index;
+  }
+}
+
+
 /**
  * @param {Event} event - An Event object with data fields corpus_id, term_id, termVisualizer
  */
@@ -136,15 +142,18 @@ function updateActiveTerm(event) {
   var corpus_id = event.data.corpus_id;
   var term_id = event.data.term_id;
   var termVisualizer = event.data.termVisualizer;
+  var term = $("#term_" + term_id).data('term')
 
+  // Update text box for editing the label of the active term
   $('#term_label')
     .data('term_id', term_id)
-    .val($("#term_" + term_id).data("label"));
+    .val(termLabelText(term));
 
   // There can be only one active term at a time
   $(".active_wordcloud_token").removeClass("active_wordcloud_token");
   $("#term_" + term_id).addClass("active_wordcloud_token");
 
+  // Load and play audio file for this term
   termVisualizer.loadAndPlayURL('/visualizer/' + corpus_id + '/term/' + term_id + '.wav');
 }
 
@@ -160,16 +169,19 @@ function updateBodyPaddingWhenControlsChangeSize() {
 
 
 function updateTermLabel() {
-  var label = $("#term_label").val();
   var term_id = $("#term_label").data('term_id');
 
   // Only update the term label if the user has previously selected a term
   if (term_id) {
+    var label = $("#term_label").val().trim();
+    var term = $("#term_" + term_id).data("term");
+    term.label = label;
+
     $("#term_" + term_id)
-      // Store the label field as data attached to DOM element for the wordcloud word
-      .data("label", label)
+      // Update the term data attached to DOM element for the wordcloud term
+      .data("term", term)
       // Update the term label shown in the word cloud
-      .text(label);
+      .text(termLabelText(term));
 
     $.ajax({
       url: "/visualizer/term/"+term_id+"/update",
