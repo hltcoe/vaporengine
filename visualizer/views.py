@@ -66,7 +66,7 @@ def term_audio_fragments_as_json(request, corpus_id, term_id):
 def term_update(request, term_id):
     request_data = json.loads(request.body)
     term = Term.objects.get(id=term_id)
-    term.eng_display = request_data['eng_display']
+    term.label = request_data['label']
     term.save()
     return JsonResponse({})
 
@@ -121,7 +121,7 @@ def wordcloud_json_for_corpus(request, corpus_id):
     terms_json = []
     for term in corpus.terms():
         terms_json.append({
-            'eng_display': term.eng_display,
+            'label': term.label,
 
             'term_id': term.id,
             'corpus_id': corpus_id,
@@ -147,7 +147,7 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
     terms_json = []
     for term in document.associated_terms():
         terms_json.append({
-            'eng_display': term.eng_display,
+            'label': term.label,
 
             'term_id': term.id,
             'corpus_id': corpus_id,

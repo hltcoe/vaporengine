@@ -8,7 +8,7 @@
 /** Add event handlers for when user changes the label for a term
  */
 function addLabelEditorEventHandlers() {
-  $("#pt_eng_display")
+  $("#term_label")
     .focusout(function() {
       updateTermLabel();
     })
@@ -101,7 +101,7 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
         .attr('title', tooltip_text)
         .tooltip();
 
-      term_span.text(term.eng_display);
+      term_span.text(term.label);
       wordcloud_div.append(term_span);
     }
   });
@@ -137,9 +137,9 @@ function updateActiveTerm(event) {
   var term_id = event.data.term_id;
   var termVisualizer = event.data.termVisualizer;
 
-  $('#pt_eng_display')
+  $('#term_label')
     .data('term_id', term_id)
-    .val($("#term_" + term_id).data("eng_display"));
+    .val($("#term_" + term_id).data("label"));
 
   // There can be only one active term at a time
   $(".active_wordcloud_token").removeClass("active_wordcloud_token");
@@ -160,14 +160,14 @@ function updateBodyPaddingWhenControlsChangeSize() {
 
 
 function updateTermLabel() {
-  var label = $("#pt_eng_display").val();
-  var term_id = $("#pt_eng_display").data('term_id');
+  var label = $("#term_label").val();
+  var term_id = $("#term_label").data('term_id');
 
   // Only update the term label if the user has previously selected a term
   if (term_id) {
     $("#term_" + term_id)
       // Store the label field as data attached to DOM element for the wordcloud word
-      .data("eng_display", label)
+      .data("label", label)
       // Update the term label shown in the word cloud
       .text(label);
 
@@ -175,7 +175,7 @@ function updateTermLabel() {
       url: "/visualizer/term/"+term_id+"/update",
       type: "POST",
       data: JSON.stringify({
-        "eng_display": label
+        "label": label
       })
     });
   }
