@@ -49,20 +49,11 @@
       // Update padding of body element after adding navigation controls
       updateBodyPaddingWhenControlsChangeSize();
 
-      // Prevent two audio clips from playing simultaneously
-      termVisualizer.wavesurfer.on('play', function() {
-        waveformVisualizer.pause();
-      });
-      waveformVisualizer.wavesurfer.on('play', function() {
-        termVisualizer.pause();
-      });
-
       addLabelEditorEventHandlers();
 
       createWordcloud('wordcloud_div',
                       "{% url 'wordcloud_json_for_document' corpus_id document_id %}",
-                      termVisualizer
-      );
+                      termVisualizer);
     });
   </script>
 {% endblock head_scripts %}
