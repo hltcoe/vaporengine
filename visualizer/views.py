@@ -118,11 +118,9 @@ def term_wav_file(request, corpus_id, term_id):
 
 def wordcloud_json_for_corpus(request, corpus_id):
     corpus = Corpus.objects.get(id=corpus_id)
-
-    terms = []
-
+    terms_json = []
     for term in corpus.terms():
-        terms.append({
+        terms_json.append({
             'eng_display': term.eng_display,
 
             'term_id': term.id,
@@ -134,23 +132,21 @@ def wordcloud_json_for_corpus(request, corpus_id):
             'total_audio_fragments': term.total_audio_fragments(),
             'total_documents': term.total_documents()
         })
-
     response = HttpResponse(content=json.dumps({
         'sort_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'}
         ],
-        'terms': terms
+        'terms': terms_json
     }))
     response['Content-Type'] = 'application/json'
     return response
 
 def wordcloud_json_for_document(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)
-
-    terms = []
+    terms_json = []
     for term in document.associated_terms():
-        terms.append({
+        terms_json.append({
             'eng_display': term.eng_display,
 
             'term_id': term.id,
@@ -164,7 +160,6 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             'total_audio_fragments_in_document': term.total_audio_fragments_in_document(document),
             'total_documents': term.total_documents()
         })
-
     response = HttpResponse(content=json.dumps({
         'sort_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
@@ -172,7 +167,7 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'},
             {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurences in document'}
         ],
-        'terms': terms
+        'terms': terms_json
     }))
     response['Content-Type'] = 'application/json'
     return response
