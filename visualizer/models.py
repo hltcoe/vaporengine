@@ -98,7 +98,7 @@ class Corpus(models.Model):
         term_for_audio_fragment_index = {}
         for (term_index, cluster_line) in enumerate(cluster_lines):
             term = Term()
-            term.label = 'T%d' % term_index
+            term.label = ''
             term.zr_term_index = term_index
             term.save()
             for audio_fragment_index in cluster_line.split():
