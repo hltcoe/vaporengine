@@ -21,14 +21,22 @@ def corpus_document_list(request, corpus_id):
     return render(request, "corpus_document_list.html", context)
 
 def document(request, corpus_id, document_id):
-    document = Document.objects.get(id=document_id)
-    audio_fragments = document.audiofragment_set.all()
     context = {
         'corpus_id': corpus_id,
         'document_id': document_id,
-        'audio_fragments': audio_fragments,
     }
     return render(request, "document.html", context)
+
+def document_audio_fragments_as_json(request, corpus_id, document_id):
+    document = Document.objects.get(id=document_id)
+    audio_fragments_json = []
+    for audio_fragment in document.audiofragment_set.all():
+        audio_fragments_json.append({
+            'audio_fragment_id': audio_fragment.id,
+            'start_offset': audio_fragment.start_offset,
+            'end_offset': audio_fragment.end_offset
+        })
+    return JsonResponse(audio_fragments_json, safe=False)
 
 def document_wav_file(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)
