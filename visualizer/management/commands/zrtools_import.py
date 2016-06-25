@@ -28,7 +28,11 @@ class Command(BaseCommand):
             raise CommandError('Cannot find audio file "%s" listed on first line of file "%s"' % \
                                (first_audio_filename, filenames_path))
 
-        audio = pysox.CSoxStream(first_audio_filename)
+        try:
+            audio = pysox.CSoxStream(first_audio_filename)
+        except IOError as e:
+            raise CommandError('Unable to read audio data from file "%s": %s' % \
+                               (first_audio_filename, e))
         signal_info = audio.get_signal().get_signalinfo()
 
         corpus = Corpus()
