@@ -136,6 +136,7 @@ def wordcloud_json_for_corpus(request, corpus_id):
             'total_documents': term.total_documents()
         })
     response = HttpResponse(content=json.dumps({
+        'default_size_key': 'total_documents',
         'sort_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'label', 'key_description': 'Label'},
@@ -166,6 +167,7 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             'total_documents': term.total_documents()
         })
     response = HttpResponse(content=json.dumps({
+        'default_size_key': 'total_documents',
         'sort_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'first_start_offset_in_document', 'key_description': 'First appearance'},

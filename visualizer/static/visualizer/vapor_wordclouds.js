@@ -60,6 +60,7 @@ function addSortControl(wordcloud_div_id, sort_keys) {
  */
 function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
   $.getJSON(json_term_data_url, function(data) {
+    var default_size_key = data.default_size_key;
     var sort_keys = data.sort_keys;
     var terms = data.terms;
     var wordcloud_div = $("#" + wordcloud_div_id);
@@ -83,6 +84,9 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
           term_span.data(key, term[key]);
         }
       }
+
+      // Adjust font size
+      term_span.css('font-size', Math.sqrt(term[default_size_key]) + 'em');
 
       // Add CSS classes to <span> for term
       var span_classes = ['wordcloud_token'];
