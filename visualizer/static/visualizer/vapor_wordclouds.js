@@ -21,6 +21,31 @@ function addLabelEditorEventHandlers() {
 }
 
 
+function addSizeControl(wordcloud_div_id, default_size_key, size_keys) {
+  // Add size options to select control
+  for (var i in size_keys) {
+    $("#size_key_select").append(
+      $('<option>')
+        .text(size_keys[i].key_description)
+        .val(size_keys[i].key_name));
+  }
+
+  $("#size_key_select").val(default_size_key);
+
+  // Dynamically added select options won't be displayed until we issue 'refresh' command
+  $("#size_key_select").selectpicker('refresh');
+  $("#size_key_select").on('change',
+                           {'selector': '#'+wordcloud_div_id+'>span.wordcloud_token'},
+                           function(event) {
+                             var size_key = $("#size_key_select").val();
+                             $(event.data.selector).each(function() {
+                               var term = $(this).data('term');
+                               $(this).css('font-size', Math.sqrt(term[size_key]) + 'em');
+                             });
+                           });
+}
+
+
 function addSortControl(wordcloud_div_id, default_sort_key, sort_keys) {
   // Add sort options to select control
   for (var i in sort_keys) {
@@ -64,10 +89,12 @@ function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
   $.getJSON(json_term_data_url, function(data) {
     var default_size_key = data.default_size_key;
     var default_sort_key = data.default_sort_key;
+    var size_keys = data.size_keys;
     var sort_keys = data.sort_keys;
     var terms = data.terms;
     var wordcloud_div = $("#" + wordcloud_div_id);
 
+    addSizeControl(wordcloud_div_id, default_size_key, size_keys);
     addSortControl(wordcloud_div_id, default_sort_key, sort_keys);
 
     for (var termIndex in terms) {
