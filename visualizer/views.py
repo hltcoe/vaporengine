@@ -135,8 +135,11 @@ def wordcloud_json_for_corpus(request, corpus_id):
             'total_audio_fragments': term.total_audio_fragments(),
             'total_documents': term.total_documents()
         })
+    default_sort_key = 'label'
+    terms_json = sorted(terms_json, key=lambda k: k[default_sort_key])
     response = HttpResponse(content=json.dumps({
         'default_size_key': 'total_documents',
+        'default_sort_key': default_sort_key,
         'sort_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'label', 'key_description': 'Label'},
@@ -166,8 +169,11 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             'total_audio_fragments_in_document': term.total_audio_fragments_in_document(document),
             'total_documents': term.total_documents()
         })
+    default_sort_key = 'first_start_offset_in_document'
+    terms_json = sorted(terms_json, key=lambda k: k[default_sort_key])
     response = HttpResponse(content=json.dumps({
         'default_size_key': 'total_documents',
+        'default_sort_key': default_sort_key,
         'sort_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'first_start_offset_in_document', 'key_description': 'First appearance'},

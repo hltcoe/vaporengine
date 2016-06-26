@@ -21,7 +21,7 @@ function addLabelEditorEventHandlers() {
 }
 
 
-function addSortControl(wordcloud_div_id, sort_keys) {
+function addSortControl(wordcloud_div_id, default_sort_key, sort_keys) {
   // Add sort options to select control
   for (var i in sort_keys) {
     $("#sort_key_select").append(
@@ -29,6 +29,8 @@ function addSortControl(wordcloud_div_id, sort_keys) {
         .text(sort_keys[i].key_description)
         .val(sort_keys[i].key_name));
   }
+
+  $("#sort_key_select").val(default_sort_key);
 
   // Dynamically added select options won't be displayed until we issue 'refresh' command
   $("#sort_key_select").selectpicker('refresh');
@@ -61,11 +63,12 @@ function addSortControl(wordcloud_div_id, sort_keys) {
 function createWordcloud(wordcloud_div_id, json_term_data_url, termVisualizer) {
   $.getJSON(json_term_data_url, function(data) {
     var default_size_key = data.default_size_key;
+    var default_sort_key = data.default_sort_key;
     var sort_keys = data.sort_keys;
     var terms = data.terms;
     var wordcloud_div = $("#" + wordcloud_div_id);
 
-    addSortControl(wordcloud_div_id, sort_keys);
+    addSortControl(wordcloud_div_id, default_sort_key, sort_keys);
 
     for (var termIndex in terms) {
       var term = terms[termIndex];
