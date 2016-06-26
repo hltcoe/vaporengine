@@ -4,6 +4,7 @@ import tempfile
 
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 import pysox
 
 from visualizer.models import Corpus, Document, Term
@@ -63,6 +64,7 @@ def term_audio_fragments_as_json(request, corpus_id, term_id):
         })
     return JsonResponse(audio_fragments_json, safe=False)
 
+@csrf_exempt
 def term_update(request, term_id):
     request_data = json.loads(request.body)
     term = Term.objects.get(id=term_id)
