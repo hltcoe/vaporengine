@@ -34,6 +34,8 @@ class Corpus(models.Model):
     audio_channels = models.IntegerField()
     audio_precision = models.IntegerField()
 
+    protected_corpus = models.BooleanField(default=False)
+
     def __unicode__(self):
         return self.name
 
