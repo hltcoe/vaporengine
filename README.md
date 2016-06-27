@@ -137,3 +137,16 @@ ZRTools data can be imported into VaporEngine by running the
 e.g.:
 
     ./manage.py zrtools_import DAPS ~/zr_datasets/daps
+
+
+Running VaporEngine
+===================
+
+The VaporEngine server is started using the command, which will start
+a web server on your local machine that is listening on port 8000:
+
+    ./manage.py runserver
+
+You can interact with VaporEngine by pointing your browser at the URL:
+
+  http://localhost:8000
