@@ -218,6 +218,7 @@ function updateTermLabel() {
 
     $("#term_" + term_id)
       // Update the term data attached to DOM element for the wordcloud term
+      .data("label", label)
       .data("term", term)
       // Update the term label shown in the word cloud
       .text(termLabelText(term));
