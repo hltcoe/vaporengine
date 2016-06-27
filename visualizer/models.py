@@ -34,6 +34,9 @@ class Corpus(models.Model):
     audio_channels = models.IntegerField()
     audio_precision = models.IntegerField()
 
+    def __unicode__(self):
+        return self.name
+
     def create_from_ctm_file(self, corpus_name, ctm_file_path, audio_directory, audio_extension):
         """Create a corpus from a CTM file and associated audio files
         """
