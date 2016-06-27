@@ -34,6 +34,88 @@ class Corpus(models.Model):
     audio_channels = models.IntegerField()
     audio_precision = models.IntegerField()
 
+    def create_from_ctm_file(self, corpus_name, ctm_file_path, audio_directory, audio_extension):
+        """Create a corpus from a CTM file and associated audio files
+        """
+        self.name = corpus_name
+
+        ctm_file = open(ctm_file_path, "r")
+
+        document_for_audio_identifier = {}
+        term_for_keyword = {}
+        zr_fragment_index = 0
+
+        for line in ctm_file:
+            if not line.strip():
+                # Ignore blank lines
+                continue
+            if line.strip()[0:2] == ';;':
+                # Ignore comments
+                continue
+            fields = line.split()
+            if len(fields) != 5 and len(fields) != 6:
+                logging.warning("Expected line of CTM file to have 5 or 6 fields, but found %d fields. Line: '%s'" % \
+                                (len(fields), line.split()))
+            audio_identifier = fields[0]
+            start_offset = int(float(fields[2]) * 100)
+            duration = int(float(fields[3]) * 100)
+            keyword = fields[4]
+            audio_path = os.path.join(audio_directory, audio_identifier + "." + audio_extension)
+            if not os.path.isfile(audio_path):
+                logging.warning("Unable to find audio file with path '%s'" % audio_path)
+
+            if not audio_identifier in document_for_audio_identifier:
+                # Set Corpus audio signal info from the first audio document
+                if len(document_for_audio_identifier) == 0:
+                    audio = pysox.CSoxStream(audio_path)
+                    signal_info = audio.get_signal().get_signalinfo()
+                    self.audio_rate = signal_info['rate']
+                    self.audio_channels = signal_info['channels']
+                    self.audio_precision = signal_info['precision']
+                    self.save()
+
+                document = Document()
+                document.corpus = self
+                document.document_index = len(document_for_audio_identifier)
+                document.audio_path = audio_path
+                document.audio_identifier = audio_identifier
+
+                if os.path.isfile(document.audio_path):
+                    si = pysox.CSoxStream(document.audio_path).get_signal().get_signalinfo()
+                    length_in_seconds = si['length'] / float(self.audio_rate * self.audio_channels)
+                    document.duration = int(length_in_seconds * 100)
+                else:
+                    document.duration = 0
+                    logging.warning("Unable to find audio file with path '%s'" % document.audio_path)
+
+                document.save()
+                document_for_audio_identifier[document.audio_identifier] = document
+            else:
+                document = document_for_audio_identifier[audio_identifier]
+
+            if not keyword in term_for_keyword:
+                term = Term()
+                term.label = keyword
+                term.zr_term_index = len(term_for_keyword)
+                term.save()
+                term_for_keyword[keyword] = term
+            else:
+                term = term_for_keyword[keyword]
+
+            audio_fragment = AudioFragment()
+            audio_fragment.document = document
+            audio_fragment.term = term
+            audio_fragment.zr_fragment_index = zr_fragment_index
+            audio_fragment.start_offset = start_offset
+            audio_fragment.end_offset = start_offset + duration
+            audio_fragment.duration = duration
+            audio_fragment.score = 0
+            audio_fragment.save()
+
+            zr_fragment_index += 1
+
+        ctm_file.close()
+
     def create_from_zr_output(self, corpus_name, audiofragments, clusters, filenames, \
                               audio_rate, audio_channels, audio_precision):
         """
