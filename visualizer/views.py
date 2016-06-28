@@ -3,7 +3,7 @@ import os
 import tempfile
 
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 import pysox
 
@@ -12,16 +12,23 @@ from visualizer.models import Corpus, Document, Term
 
 def corpus_wordcloud(request, corpus_id):
     corpus = Corpus.objects.get(id=corpus_id)
+    if corpus.protected_corpus and not request.user.is_authenticated():
+        return redirect('/admin/login/?next='+request.path)
     context = {'corpus': corpus}
     return render(request, "corpus_wordcloud.html", context)
 
 def corpus_document_list(request, corpus_id):
     corpus = Corpus.objects.get(id=corpus_id)
+    if corpus.protected_corpus and not request.user.is_authenticated():
+        return redirect('/admin/login/?next='+request.path)
     document_list = corpus.document_set.all()
     context = {'corpus': corpus, 'document_list': document_list}
     return render(request, "corpus_document_list.html", context)
 
 def document(request, corpus_id, document_id):
+    corpus = Corpus.objects.get(id=corpus_id)
+    if corpus.protected_corpus and not request.user.is_authenticated():
+        return redirect('/admin/login/?next='+request.path)
     context = {
         'corpus_id': corpus_id,
         'document_id': document_id,
