@@ -36,6 +36,8 @@ class Corpus(models.Model):
 
     protected_corpus = models.BooleanField(default=False)
 
+    OBJECTS_PER_BULK_OPERATION = 1000
+
     def __unicode__(self):
         return self.name
 
@@ -49,6 +51,8 @@ class Corpus(models.Model):
         document_for_audio_identifier = {}
         term_for_keyword = {}
         zr_fragment_index = 0
+
+        audio_fragments_for_bulk_commit = []
 
         for line in ctm_file:
             if not line.strip():
@@ -115,10 +119,15 @@ class Corpus(models.Model):
             audio_fragment.end_offset = start_offset + duration
             audio_fragment.duration = duration
             audio_fragment.score = 0
-            audio_fragment.save()
 
             zr_fragment_index += 1
 
+            audio_fragments_for_bulk_commit.append(audio_fragment)
+            if len(audio_fragments_for_bulk_commit) % Corpus.OBJECTS_PER_BULK_OPERATION == 0:
+                AudioFragment.objects.bulk_create(audio_fragments_for_bulk_commit)
+                audio_fragments_for_bulk_commit = []
+
+        AudioFragment.objects.bulk_create(audio_fragments_for_bulk_commit)
         ctm_file.close()
 
     def create_from_zr_output(self, corpus_name, audiofragments, clusters, filenames, \
