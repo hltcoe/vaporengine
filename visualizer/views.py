@@ -48,8 +48,29 @@ def document_audio_fragments_as_json(request, corpus_id, document_id):
 
 def document_wav_file(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)
-    audio_file = open(document.audio_path, 'rb')
-    response = HttpResponse(content=audio_file)
+    if os.path.splitext(document.audio_path)[1] == '.wav':
+        audio_file = open(document.audio_path, 'rb')
+        response = HttpResponse(content=audio_file)
+    else:
+        # Convert non-WAV files to WAV files using pysox
+        tmp_directory = tempfile.mkdtemp()
+        tmp_filename = os.path.join(tmp_directory, 'converted.wav')
+
+        infile = pysox.CSoxStream(document.audio_path)
+        outfile = pysox.CSoxStream(tmp_filename, 'w', infile.get_signal())
+        chain = pysox.CEffectsChain(infile, outfile)
+        chain.flow_effects()
+        infile.close()
+        outfile.close()
+
+        # Read in audio data from temporary file
+        wav_data = open(tmp_filename, 'rb').read()
+
+        # Clean up temporary files
+        os.remove(tmp_filename)
+        os.rmdir(tmp_directory)
+
+        response = HttpResponse(content=wav_data)
     response['Content-Type'] = 'audio/wav'
     return response
 
