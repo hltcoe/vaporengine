@@ -157,7 +157,7 @@ def wordcloud_json_for_corpus(request, corpus_id):
             'term_id': term.id,
             'corpus_id': corpus_id,
 
-            # Force conversion to from QuerySet to list to prevent JSON serialization error
+            # Force conversion from QuerySet to list to prevent JSON serialization error
             'audio_fragment_ids': list(term.audio_fragment_ids()),
 
             'total_audio_fragments': term.total_audio_fragments(),
@@ -193,7 +193,7 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             'term_id': term.id,
             'corpus_id': corpus_id,
 
-            # Force conversion to from QuerySet to list to prevent JSON serialization error
+            # Force conversion from QuerySet to list to prevent JSON serialization error
             'audio_fragment_ids': list(term.audio_fragment_ids()),
 
             'first_start_offset_in_document': term.first_start_offset_in_document(document),
