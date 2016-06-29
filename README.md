@@ -2,7 +2,8 @@ VaporEngine
 ===========
 
 VaporEngine is a web application that allows users to explore an audio
-corpus by listening to and annotating "(Pseudo)Terms".
+corpus by listening to and annotating similiar-sounding audio-snippets
+called "(Pseudo)Terms".
 
 
 Requirements
@@ -11,7 +12,7 @@ Requirements
 * Python 2.7
 * The SoX (Sound eXchange) audio library:
   http://sox.sourceforge.net
-* The Python packages listed in 'requirements.txt':
+* The Python packages listed in 'requirements.txt', including:
   * Django - https://www.djangoproject.com
   * pysox - https://pythonhosted.org/pysox/
 * An audio corpora that has been run through Aren Jansen's Zero Resource pipeline:
@@ -142,10 +143,12 @@ e.g.:
 Running VaporEngine
 ===================
 
-The VaporEngine server is started using the command, which will start
-a web server on your local machine that is listening on port 8000:
+The VaporEngine server is started using the command:
 
     ./manage.py runserver
+
+which will start a web server on your local machine that is listening
+on port 8000.
 
 You can interact with VaporEngine by pointing your browser at the URL:
 
