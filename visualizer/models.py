@@ -5,7 +5,7 @@ import logging
 import os
 import os.path
 
-from django.db import models
+from django.db import connection, models
 import pysox
 
 
@@ -44,6 +44,12 @@ class Corpus(models.Model):
     def create_from_ctm_file(self, corpus_name, ctm_file_path, audio_directory, audio_extension):
         """Create a corpus from a CTM file and associated audio files
         """
+        # When using SQLite on a hard disk, disabling synchronous writes
+        # on corpus creation increases ingest speed by up to x50.
+        if connection.vendor is u'sqlite':
+            cursor = connection.cursor()
+            cursor.execute('PRAGMA synchronous=OFF;')
+
         self.name = corpus_name
 
         ctm_file = open(ctm_file_path, "r")
@@ -147,6 +153,12 @@ class Corpus(models.Model):
         #   dedups: one line per PT cluster, containing list of node ids
         #           (correspond to nodes line #s)
         #   feats: one line per cut, list of (PTID,count) pairs, where PTID is the line # in dedups file
+
+        # When using SQLite on a hard disk, disabling synchronous writes
+        # on corpus creation increases ingest speed by up to x50.
+        if connection.vendor is u'sqlite':
+            cursor = connection.cursor()
+            cursor.execute('PRAGMA synchronous=OFF;')
 
         self.name = corpus_name
 
