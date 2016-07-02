@@ -46,7 +46,7 @@ class Corpus(models.Model):
         """
         # When using SQLite on a hard disk, disabling synchronous writes
         # on corpus creation increases ingest speed by up to x50.
-        if connection.vendor is u'sqlite':
+        if connection.vendor == u'sqlite':
             cursor = connection.cursor()
             cursor.execute('PRAGMA synchronous=OFF;')
 
@@ -156,7 +156,7 @@ class Corpus(models.Model):
 
         # When using SQLite on a hard disk, disabling synchronous writes
         # on corpus creation increases ingest speed by up to x50.
-        if connection.vendor is u'sqlite':
+        if connection.vendor == u'sqlite':
             cursor = connection.cursor()
             cursor.execute('PRAGMA synchronous=OFF;')
 
