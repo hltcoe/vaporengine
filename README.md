@@ -2,8 +2,21 @@ VaporEngine
 ===========
 
 VaporEngine is a web application that allows users to explore an audio
-corpus by listening to and annotating similiar-sounding audio-snippets
-called "(Pseudo)Terms".
+corpus that has been processed by a tool that finds "similar sounding"
+words or phrases within the corpus.
+
+VaporEngine was initially designed to be used with an audio corpus
+that had been processed with the **ZRTools** Zero-Resource Speech
+Discovery, Search and Evaluation Toolkit
+(https://github.com/arenjansen/ZRTools).
+
+VaporEngine is not tied to any particular algorithm for identifying
+"similar sounding" words or phrases.  VaporEngine takes as input:
+
+  - a corpus of audio documents
+  - data specifying which audio segments contain words/phrases
+  - data specifying which words/phrases should be clustered together
+    as "(Pseudo)Terms"
 
 
 Requirements
@@ -15,8 +28,6 @@ Requirements
 * The Python packages listed in 'requirements.txt', including:
   * Django - https://www.djangoproject.com
   * pysox - https://pythonhosted.org/pysox/
-* An audio corpora that has been run through Aren Jansen's Zero Resource pipeline:
-  https://github.com/arenjansen/ZRTools
 
 
 Installing Requirements
@@ -53,8 +64,8 @@ safely ignorable.
 Installing SoX and pysox - on RHEL on EC2
 -----------------------------------------
 
-These instructions are for an Amazon Web Services (AWS) instance of
-Red Hat Enterprise Linux (RHEL) 7.1.
+These instructions are for an Amazon Web Services (AWS) EC2 server
+instance running Red Hat Enterprise Linux (RHEL) 7.1.
 
 Install the Python development libraries using:
 
