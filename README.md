@@ -150,6 +150,26 @@ e.g.:
 
     ./manage.py zrtools_import DAPS ~/zr_datasets/daps
 
+If the ZRTools data was generated on a different system, the audio
+file paths in the ZRTools-generated file **files.lst** may not match
+the location of the audio files on the current system.  So, for
+example, **files.lst** could contain paths pointing to audio files in
+`/export/b01/cliu1/ZRTools-try/clean`, i.e. **files.lst** could
+contain lines like:
+
+    /export/b01/cliu1/ZRTools-try/clean/f10_script2_clean.wav
+    /export/b01/cliu1/ZRTools-try/clean/f1_script2_clean.wav
+
+while these audio files might be stored on the local system in the
+directory `/Users/charman/zr_datasets/daps_audio`.  When there is a
+mismatch between the original location of the files specified in
+**files.lst** and the current location of the files, the
+`zrtools_import` command can use the `--audio_directory` flag to
+specify the current location of the files, e.g.:
+
+    ./manage.py zrtools_import DAPS ~/zr_datasets/daps \
+      --audio_directory=/Users/charman/zr_datasets/daps_audio
+
 
 Running VaporEngine
 ===================
