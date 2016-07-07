@@ -270,6 +270,14 @@ class Document(models.Model):
         return Term.objects.filter(audiofragment__document=self).distinct().count()
 
 
+class DocumentTopic(models.Model):
+    """
+    """
+    label = models.TextField()
+    corpus = models.ForeignKey(Corpus)
+    documents = models.ManyToManyField(Document)
+
+
 class Term(models.Model):
     """
     """
