@@ -41,7 +41,8 @@ class Corpus(models.Model):
     def __unicode__(self):
         return self.name
 
-    def create_from_ctm_file(self, corpus_name, ctm_file_path, audio_directory, audio_extension):
+    def create_from_ctm_file(self, corpus_name, ctm_file_path, audio_directory, audio_extension,
+                             protect_corpus=False):
         """Create a corpus from a CTM file and associated audio files
         """
         # When using SQLite on a hard disk, disabling synchronous writes
@@ -51,6 +52,8 @@ class Corpus(models.Model):
             cursor.execute('PRAGMA synchronous=OFF;')
 
         self.name = corpus_name
+
+        self.protected_corpus = protect_corpus
 
         ctm_file = open(ctm_file_path, "r")
 
@@ -138,7 +141,8 @@ class Corpus(models.Model):
 
     def create_from_zr_output(self, corpus_name, audiofragments, clusters, filenames,
                               audio_rate, audio_channels, audio_precision,
-                              audio_directory=None, audio_extension=None):
+                              audio_directory=None, audio_extension=None,
+                              protect_corpus=False):
         """
         """
         # "Documentation" from Aren via Glen
@@ -167,6 +171,8 @@ class Corpus(models.Model):
         self.audio_rate = audio_rate
         self.audio_channels = audio_channels
         self.audio_precision = audio_precision
+
+        self.protected_corpus = protect_corpus
 
         self.save()
 

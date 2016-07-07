@@ -16,6 +16,9 @@ class Command(BaseCommand):
         parser.add_argument('--audio_extension',
                             help="File extension of audio files listed in CTM 'files.lst' (e.g. 'wav' or 'flac')",
                             default=None)
+        parser.add_argument('--protect_corpus',
+                            help='Restrict access to corpus to authenticated users',
+                            action='store_true')
     
     def handle(self, *args, **options):
         audiofragments_path = os.path.join(options['corpus_path'], 'matches/master_graph.nodes')
@@ -56,5 +59,6 @@ class Command(BaseCommand):
             audio_channels=signal_info['channels'],
             audio_precision=signal_info['precision'],
             audio_directory=options['audio_directory'],
-            audio_extension=options['audio_extension'])
+            audio_extension=options['audio_extension'],
+            protect_corpus=options['protect_corpus'])
         corpus.save()
