@@ -11,4 +11,20 @@
   {% endfor %}
 </div>
 
+{% if corpus.documenttopic_set.exists %}
+<h2>Topics</h2>
+<div>
+  {% for documenttopic in corpus.documenttopic_set.all|dictsort:"label" %}
+    <div>
+    <h5>{{ documenttopic.label }}</h5>
+    {% for document in documenttopic.documents.all %}
+    <span class="document_link">
+      <a href="{% url 'document' corpus.id document.id %}">{{ document.id|stringformat:"04d" }}</a>
+    </span>
+    {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
 {% endblock content %}
