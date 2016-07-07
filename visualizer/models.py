@@ -136,8 +136,9 @@ class Corpus(models.Model):
         AudioFragment.objects.bulk_create(audio_fragments_for_bulk_commit)
         ctm_file.close()
 
-    def create_from_zr_output(self, corpus_name, audiofragments, clusters, filenames, \
-                              audio_rate, audio_channels, audio_precision):
+    def create_from_zr_output(self, corpus_name, audiofragments, clusters, filenames,
+                              audio_rate, audio_channels, audio_precision,
+                              audio_directory=None, audio_extension=None):
         """
         """
         # "Documentation" from Aren via Glen
@@ -175,13 +176,18 @@ class Corpus(models.Model):
         document_for_audio_identifier = {}
         full_filenames = _slurp(filenames)
         for (document_index, full_filename) in enumerate(full_filenames):
-            basename = os.path.splitext(os.path.basename(full_filename))[0]
+            basename = os.path.splitext(os.path.basename(full_filename))[0].strip()
 
             document = Document()
             document.corpus = self
             document.document_index = document_index
             document.audio_identifier = basename
-            document.audio_path = full_filename.strip()
+            if audio_directory:
+                document.audio_path = os.path.join(audio_directory, os.path.basename(full_filename)).strip()
+            else:
+                document.audio_path = full_filename.strip()
+            if audio_extension:
+                document.audio_path += "." + audio_extension
 
             if os.path.isfile(document.audio_path):
                 si = pysox.CSoxStream(document.audio_path).get_signal().get_signalinfo()

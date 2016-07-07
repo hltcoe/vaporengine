@@ -10,6 +10,12 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('corpus_name', help='Name to give to audio corpus')
         parser.add_argument('corpus_path', help='Path to ZRTools output directory')
+        parser.add_argument('--audio_directory',
+                            help="Directory containing audio files listed in 'files.lst'",
+                            default=None)
+        parser.add_argument('--audio_extension',
+                            help="File extension of audio files listed in CTM 'files.lst' (e.g. 'wav' or 'flac')",
+                            default=None)
     
     def handle(self, *args, **options):
         audiofragments_path = os.path.join(options['corpus_path'], 'matches/master_graph.nodes')
@@ -24,6 +30,11 @@ class Command(BaseCommand):
             raise CommandError('Cannot find filename list file "%s"' % filenames_path)
 
         first_audio_filename = open(filenames_path, 'r').readline().strip()
+        if options['audio_directory']:
+            first_audio_filename = os.path.join(options['audio_directory'], os.path.basename(first_audio_filename))
+        if options['audio_extension']:
+            first_audio_filename += "." + options['audio_extension']
+
         if not os.path.isfile(first_audio_filename):
             raise CommandError('Cannot find audio file "%s" listed on first line of file "%s"' % \
                                (first_audio_filename, filenames_path))
@@ -43,5 +54,7 @@ class Command(BaseCommand):
             filenames=filenames_path,
             audio_rate=signal_info['rate'],
             audio_channels=signal_info['channels'],
-            audio_precision=signal_info['precision'])
+            audio_precision=signal_info['precision'],
+            audio_directory=options['audio_directory'],
+            audio_extension=options['audio_extension'])
         corpus.save()
