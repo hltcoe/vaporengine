@@ -156,7 +156,7 @@ def wordcloud_json_for_corpus(request, corpus_id):
     # With annotate(), we can compute the # of AudioFragments associated with each Term in a Corpus using
     # just a single SQL query for the entire Corpus.  This is an order-of-magnitude faster than making
     # a separate SQL call for each Term in the Corpus by calling term.total_audio_fragments() in a for loop.
-    terms = corpus.terms().annotate(Count('audiofragment'), Count('audiofragment__document'))
+    terms = corpus.terms().annotate(Count('audiofragment'), Count('audiofragment__document', distinct=True))
 
     # Create a mapping from each Term ID to the corresponding list of AudioFragment IDs, using a single SQL query.
     #
