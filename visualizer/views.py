@@ -201,8 +201,17 @@ def wordcloud_json_for_corpus(request, corpus_id):
 
 def wordcloud_json_for_document(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)
+
+    terms = document.associated_terms().annotate(audio_fragments_in_document=Count('audiofragment', distinct=True))
+
+    # Create a mapping from each Term ID to the corresponding list of AudioFragment IDs, using a single SQL query.
+    term_audiofragment_id_pairs = AudioFragment.objects.filter(document__corpus_id=corpus_id).values_list('term_id', 'id')
+    term_id_to_audiofragment_ids = collections.defaultdict(list)
+    for (term_id, audiofragment_id) in term_audiofragment_id_pairs:
+        term_id_to_audiofragment_ids[term_id].append(audiofragment_id)
+
     terms_json = []
-    for term in document.associated_terms():
+    for term in terms:
         terms_json.append({
             'label': term.label,
             'zr_term_index': term.zr_term_index,
@@ -210,12 +219,10 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             'term_id': term.id,
             'corpus_id': corpus_id,
 
-            # Force conversion from QuerySet to list to prevent JSON serialization error
-            'audio_fragment_ids': list(term.audio_fragment_ids()),
-
+            'audio_fragment_ids': term_id_to_audiofragment_ids[term.id],
             'first_start_offset_in_document': term.first_start_offset_in_document(document),
-            'total_audio_fragments': term.total_audio_fragments(),
-            'total_audio_fragments_in_document': term.total_audio_fragments_in_document(document),
+            'total_audio_fragments': len(term_id_to_audiofragment_ids[term.id]),
+            'total_audio_fragments_in_document': term.audio_fragments_in_document,
             'total_documents': term.total_documents()
         })
     default_sort_key = 'first_start_offset_in_document'
