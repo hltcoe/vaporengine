@@ -1,13 +1,15 @@
+import collections
 import json
 import os
 import tempfile
 
+from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 import pysox
 
-from visualizer.models import Corpus, Document, Term
+from visualizer.models import AudioFragment, Corpus, Document, Term
 
 
 def corpus_wordcloud(request, corpus_id):
@@ -148,8 +150,25 @@ def term_wav_file(request, corpus_id, term_id):
 
 def wordcloud_json_for_corpus(request, corpus_id):
     corpus = Corpus.objects.get(id=corpus_id)
+
+    # Use Django's annotate() to compute total # of Documents and AudioFragments associated with each Term.
+    #
+    # With annotate(), we can compute the # of AudioFragments associated with each Term in a Corpus using
+    # just a single SQL query for the entire Corpus.  This is an order-of-magnitude faster than making
+    # a separate SQL call for each Term in the Corpus by calling term.total_audio_fragments() in a for loop.
+    terms = corpus.terms().annotate(Count('audiofragment'), Count('audiofragment__document'))
+
+    # Create a mapping from each Term ID to the corresponding list of AudioFragment IDs, using a single SQL query.
+    #
+    # This is an order of magnitude faster than using a separate SQL query for each Term by calling
+    # term.audio_fragment_ids() in a for loop.
+    term_audiofragment_id_pairs = AudioFragment.objects.filter(document__corpus_id=corpus_id).values_list('term_id', 'id')
+    term_id_to_audiofragment_ids = collections.defaultdict(list)
+    for (term_id, audiofragment_id) in term_audiofragment_id_pairs:
+        term_id_to_audiofragment_ids[term_id].append(audiofragment_id)
+
     terms_json = []
-    for term in corpus.terms():
+    for term in terms:
         terms_json.append({
             'label': term.label,
             'zr_term_index': term.zr_term_index,
@@ -157,11 +176,9 @@ def wordcloud_json_for_corpus(request, corpus_id):
             'term_id': term.id,
             'corpus_id': corpus_id,
 
-            # Force conversion from QuerySet to list to prevent JSON serialization error
-            'audio_fragment_ids': list(term.audio_fragment_ids()),
-
-            'total_audio_fragments': term.total_audio_fragments(),
-            'total_documents': term.total_documents()
+            'audio_fragment_ids': term_id_to_audiofragment_ids[term.id],
+            'total_audio_fragments': term.audiofragment__count,
+            'total_documents': term.audiofragment__document__count,
         })
     default_sort_key = 'label'
     terms_json = sorted(terms_json, key=lambda k: k[default_sort_key])
