@@ -3,7 +3,7 @@ import json
 import os
 import tempfile
 
-from django.db.models import Count
+from django.db.models import Count, Min
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
@@ -203,7 +203,8 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
     corpus = Corpus.objects.get(id=corpus_id)
     document = Document.objects.get(id=document_id)
 
-    terms = document.associated_terms().annotate(audio_fragments_in_document=Count('audiofragment', distinct=True))
+    terms = document.associated_terms().annotate(audio_fragments_in_document=Count('audiofragment', distinct=True),
+                                                 first_audiofragment_start_offset=Min('audiofragment__start_offset'))
 
     # Create a mapping from Term ID to # of Documents Term appears in, using a single SQL query
     term_id_and_document_counts = corpus.terms().annotate(document_count=Count('audiofragment__document', distinct=True)).values_list('id', 'document_count')
@@ -226,10 +227,24 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             'term_id': term.id,
             'corpus_id': corpus_id,
 
+            # Unoptimized code:
+            #   'audio_fragment_ids': list(term.audio_fragment_ids()),
             'audio_fragment_ids': term_id_to_audiofragment_ids[term.id],
-            'first_start_offset_in_document': term.first_start_offset_in_document(document),
+
+            # Unoptimized code:
+            #   'first_start_offset_in_document': term.first_start_offset_in_document(document),
+            'first_start_offset_in_document': term.first_audiofragment_start_offset/100.0,
+
+            # Unoptimized code:
+            #   'total_audio_fragments': term.total_audio_fragments(),
             'total_audio_fragments': len(term_id_to_audiofragment_ids[term.id]),
+
+            # Unoptimized code:
+            #   'total_audio_fragments_in_document': term.total_audio_fragments_in_document(document),
             'total_audio_fragments_in_document': term.audio_fragments_in_document,
+
+            # Unoptimized code:
+            #   'total_documents': term.total_documents(),
             'total_documents': term_id_to_document_count[term.id],
         })
     default_sort_key = 'first_start_offset_in_document'
