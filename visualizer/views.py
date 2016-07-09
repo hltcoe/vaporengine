@@ -200,9 +200,16 @@ def wordcloud_json_for_corpus(request, corpus_id):
     return response
 
 def wordcloud_json_for_document(request, corpus_id, document_id):
+    corpus = Corpus.objects.get(id=corpus_id)
     document = Document.objects.get(id=document_id)
 
     terms = document.associated_terms().annotate(audio_fragments_in_document=Count('audiofragment', distinct=True))
+
+    # Create a mapping from Term ID to # of Documents Term appears in, using a single SQL query
+    term_id_and_document_counts = corpus.terms().annotate(document_count=Count('audiofragment__document', distinct=True)).values_list('id', 'document_count')
+    term_id_to_document_count = {}
+    for (term_id, document_count) in term_id_and_document_counts:
+        term_id_to_document_count[term_id] = document_count
 
     # Create a mapping from each Term ID to the corresponding list of AudioFragment IDs, using a single SQL query.
     term_audiofragment_id_pairs = AudioFragment.objects.filter(document__corpus_id=corpus_id).values_list('term_id', 'id')
@@ -223,7 +230,7 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             'first_start_offset_in_document': term.first_start_offset_in_document(document),
             'total_audio_fragments': len(term_id_to_audiofragment_ids[term.id]),
             'total_audio_fragments_in_document': term.audio_fragments_in_document,
-            'total_documents': term.total_documents()
+            'total_documents': term_id_to_document_count[term.id],
         })
     default_sort_key = 'first_start_offset_in_document'
     terms_json = sorted(terms_json, key=lambda k: k[default_sort_key])
