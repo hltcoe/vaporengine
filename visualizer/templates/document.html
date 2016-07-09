@@ -6,7 +6,7 @@
       var waveformVisualizer = new WaveformVisualizer(
         'document_visualizer',
         { height: 96, scrollParent: true },
-        { controlsResizeCallback: updateBodyPaddingWhenControlsChangeSize }
+        { controlsResizeCallback: updateBodyPaddingTop }
       );
       waveformVisualizer.addControlsAndLoadAudio(
         $('#document_audio_controls'),
@@ -42,12 +42,12 @@
       var termVisualizer = new WaveformVisualizer(
         'term_visualizer',
         { height: 96 },
-        { controlsResizeCallback: updateBodyPaddingWhenControlsChangeSize }
+        { controlsResizeCallback: updateBodyPaddingTop }
       );
       termVisualizer.addControls($('#term_audio_controls'));
 
       // Update padding of body element after adding navigation controls
-      updateBodyPaddingWhenControlsChangeSize();
+      updateBodyPaddingTop();
 
       addLabelEditorEventHandlers();
 

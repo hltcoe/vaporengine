@@ -6,12 +6,12 @@
       var waveformVisualizer = new WaveformVisualizer(
         'waveform_visualizer',
         {},
-        { controlsResizeCallback: updateBodyPaddingWhenControlsChangeSize }
+        { controlsResizeCallback: updateBodyPaddingTop }
       );
       waveformVisualizer.addControls($('#pt_snippets_audio_player'));
 
       // Update padding of body element after adding navigation controls
-      updateBodyPaddingWhenControlsChangeSize();
+      updateBodyPaddingTop();
 
       addLabelEditorEventHandlers();
 
