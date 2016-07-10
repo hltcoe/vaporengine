@@ -173,6 +173,7 @@ def wordcloud_json_for_corpus(request, corpus_id):
             'label': term.label,
             'zr_term_index': term.zr_term_index,
 
+            'id': term.id,
             'term_id': term.id,
             'corpus_id': corpus_id,
 
@@ -180,21 +181,25 @@ def wordcloud_json_for_corpus(request, corpus_id):
             'total_audio_fragments': term.audiofragment__count,
             'total_documents': term.audiofragment__document__count,
         })
-    default_sort_key = 'label'
-    terms_json = sorted(terms_json, key=lambda k: k[default_sort_key])
+    response = HttpResponse(content=json.dumps({
+        'terms': terms_json
+    }))
+    response['Content-Type'] = 'application/json'
+    return response
+
+def wordcloud_params_for_corpus(request):
     response = HttpResponse(content=json.dumps({
         'default_size_key': 'total_documents',
         'size_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'},
         ],
-        'default_sort_key': default_sort_key,
+        'default_sort_key': 'label',
         'sort_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'label', 'key_description': 'Label'},
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'}
         ],
-        'terms': terms_json
     }))
     response['Content-Type'] = 'application/json'
     return response

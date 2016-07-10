@@ -13,11 +13,18 @@
       // Update padding of body element after adding navigation controls
       updateBodyPaddingTop();
 
-      addLabelEditorEventHandlers();
+      $.getJSON("{% url 'wordcloud_params_for_corpus' %}", function(wordcloud_params) {
+        var termCloudCollection = new TermCloudCollection();
+        termCloudCollection.url = "{% url 'wordcloud_json_for_corpus' corpus.id %}";
+        var termCloud = new TermCloud({collection: termCloudCollection});
 
-      createWordcloud('wordcloud_location',
-                      "{% url 'wordcloud_json_for_corpus' corpus.id %}",
-                      waveformVisualizer);
+        TermCloudControls.addAudioPlaybackEventHandler(termCloud, waveformVisualizer);
+        TermCloudControls.addLabelEditorEventHandlers(termCloud);
+        TermCloudControls.addSizeControl(termCloud, wordcloud_params.default_size_key, wordcloud_params.size_keys);
+        TermCloudControls.addSortControl(termCloud, wordcloud_params.default_sort_key, wordcloud_params.sort_keys);
+
+        termCloudCollection.fetch();
+      });
     });
   </script>
 {% endblock head_scripts %}
@@ -52,16 +59,6 @@
             </select>
           </div>
 
-          <!--
-          <div class="btn-group">
-            <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" id="sort_menu">
-              Sort <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" id="sort_menu_items">
-            </ul>
-          </div>
-          -->
-
           <div class="form-group">
             <div id="waveform_visualizer_document_list" style="padding-left: 1em;"></div>
           </div>
@@ -70,6 +67,8 @@
     </div>
   </nav>
 
-  <div id="wordcloud_location"></div>
+  <div id="termcloud">
+    <div class="termcloud_terms"></div>
+  </div>
 
 {% endblock content %}

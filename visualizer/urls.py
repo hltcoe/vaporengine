@@ -5,14 +5,15 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
 
-#    url(r'^corpus_wordcloud_params', views.wordcloud_params_for_corpus, name='wordcloud_params_for_corpus'),
+    url(r'^corpus_wordcloud_params', views.wordcloud_params_for_corpus, name='wordcloud_params_for_corpus'),
     url(r'^document_wordcloud_params', views.wordcloud_params_for_document, name='wordcloud_params_for_document'),
 
+    url(r'^\d+/terms.json/(?P<term_id>\d+)', views.term_update, name='term_update_corpus_termcloud'),
     url(r'^(?P<corpus_id>\d+)/terms.json', views.wordcloud_json_for_corpus, name='wordcloud_json_for_corpus'),
     url(r'^(?P<corpus_id>\d+)/document/(?P<document_id>\d+)/audio_fragments.json',
         views.document_audio_fragments_as_json, name='document_audio_fragments_as_json'),
 
-    url(r'^\d+/document/\d+/terms.json/(?P<term_id>\d+)', views.term_update, name='term_update_backbone'),
+    url(r'^\d+/document/\d+/terms.json/(?P<term_id>\d+)', views.term_update, name='term_update_document_termcloud'),
     url(r'^(?P<corpus_id>\d+)/document/(?P<document_id>\d+)/terms.json',
         views.wordcloud_json_for_document, name='wordcloud_json_for_document'),
     url(r'^(?P<corpus_id>\d+)/document/(?P<document_id>\d+)/', views.document, name='document'),
