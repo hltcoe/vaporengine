@@ -61,7 +61,38 @@ var TermCloudControls = {
   },
 
   addSortControl: function(termCloud, default_sort_key, sort_keys) {
-    termCloud.collection.comparator = default_sort_key;
+    function getComparatorForSortKey(sortKey) {
+      if (sortKey == "label") {
+        return sortByLabel;
+      }
+      else {
+        return sortKey;
+      }
+    }
+
+    function sortByLabel(a, b) {
+      // Terms with labels will always come before terms without labels
+      var a_label = a.attributes.label;
+      var b_label = b.attributes.label;
+
+      if (a_label.length == 0 && b_label.length > 0) {
+        return 1;
+      }
+      else if (a_label.length > 0 && b_label.length == 0) {
+        return -1;
+      }
+      else if (a_label < b_label) {
+        return -1;
+      }
+      else if (a_label > b_label) {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    }
+
+    termCloud.collection.comparator = getComparatorForSortKey(default_sort_key);
     termCloud.collection.sort();
 
     termCloud.sort_key = default_sort_key;
@@ -83,7 +114,7 @@ var TermCloudControls = {
     $("#sort_key_select").on('change',
                              function(event) {
                                var sort_key = $(this).val();
-                               termCloud.collection.comparator = sort_key;
+                               termCloud.collection.comparator = getComparatorForSortKey(sort_key);
                                termCloud.collection.sort();
                                termCloud.render();
                              });
