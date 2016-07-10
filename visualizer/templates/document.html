@@ -51,9 +51,16 @@
 
       addLabelEditorEventHandlers();
 
+/*
       createWordcloud('wordcloud_div',
                       "{% url 'wordcloud_json_for_document' corpus_id document_id %}",
                       termVisualizer);
+*/
+
+      var termCloudCollection = new TermCloudCollection();
+      termCloudCollection.url = "{% url 'wordcloud_json_for_document' corpus_id document_id %}";
+      var termCloud = new TermCloud({collection: termCloudCollection});
+      termCloudCollection.fetch();
     });
   </script>
 {% endblock head_scripts %}
@@ -124,6 +131,10 @@
 
     </div>
   </nav>
+
+  <div id="termcloud">
+    <div class="termcloud_terms"></div>
+  </div>
 
   <div id="wordcloud_div"></div>
 
