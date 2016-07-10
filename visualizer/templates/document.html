@@ -49,14 +49,6 @@
       // Update padding of body element after adding navigation controls
       updateBodyPaddingTop();
 
-//      addLabelEditorEventHandlers();
-
-/*
-      createWordcloud('wordcloud_div',
-                      "{% url 'wordcloud_json_for_document' corpus_id document_id %}",
-                      termVisualizer);
-*/
-
       $.getJSON("{% url 'wordcloud_params_for_document' %}", function(wordcloud_params) {
         var termCloudCollection = new TermCloudCollection();
         termCloudCollection.url = "{% url 'wordcloud_json_for_document' corpus_id document_id %}";
@@ -120,16 +112,6 @@
               </select>
             </div>
 
-            <!--
-            <div class="btn-group">
-              <button class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" id="sort_menu">
-                Sort <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" id="sort_menu_items">
-              </ul>
-            </div>
-            -->
-
             <div class="form-group">
               <div id="term_visualizer_document_list" style="padding-left: 1em;"></div>
             </div>
@@ -143,10 +125,5 @@
   <div id="termcloud">
     <div class="termcloud_terms"></div>
   </div>
-
-  <div id="wordcloud_div"></div>
-
-  <div id="wordcloud_location"></div>
-
 
 {% endblock content %}
