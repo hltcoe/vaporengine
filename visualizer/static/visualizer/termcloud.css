@@ -1,16 +1,3 @@
-/*
-  CSS rules specific to VaporEngine wordclouds
-
-  The Vennclouds file 'dynamic_wordclouds.css' is used for other
-  projects than VaporEngine.  CSS rules that are common to all
-  implementations of Vennclouds should go in 'dynamic_wordclouds.css'.
-*/
-
-/* Hide drop-down boxes for selecting Left and Right datasets */
-#wordcloud_location thead {
-    display: none;
-}
-
 span.active_wordcloud_token {
     background-color: pink;
 }
