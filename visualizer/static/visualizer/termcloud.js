@@ -45,7 +45,19 @@ var TermCloud = Backbone.View.extend({
       var item = new TermCloudItemView({model: model});
       var item_el = item.render().$el;
 
+      // Adjust size of word based on size_key
       item_el.css('font-size', Math.sqrt(model.attributes[this.size_key]) + 'em');
+
+      // Add tooltip
+      var tooltip_text = "";
+      for (var i in this.sort_keys) {
+        tooltip_text += this.sort_keys[i].key_description + ": " + model.attributes[this.sort_keys[i].key_name] + "\n";
+      }
+      item_el
+        .attr('data-placement', 'bottom')
+        .attr('data-toggle', 'tooltip')
+        .attr('title', tooltip_text)
+        .tooltip();
 
       $list.append(item_el);
     }, this);
