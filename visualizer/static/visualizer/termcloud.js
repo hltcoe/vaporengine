@@ -20,6 +20,8 @@ var TermCloudItemView = Backbone.View.extend({
   className: 'wordcloud_token',
 
   render: function() {
+    this.$el.attr('id', 'termcloud_item_' + this.model.attributes.term_id);
+
     // Add CSS classes for each audio_fragment_id
     var span_classes = [];
     for (var i = 0; i < this.model.attributes.audio_fragment_ids.length; i++) {
@@ -35,6 +37,25 @@ var TermCloudItemView = Backbone.View.extend({
 
 var TermCloud = Backbone.View.extend({
   el: '#termcloud',
+
+  events: {
+    'click .wordcloud_token': 'onTermClick'
+  },
+  onTermClick: function(event) {
+    // Update active term.  There can be only one active term at a time
+    this.$(".active_wordcloud_token").removeClass("active_wordcloud_token");
+    $(event.currentTarget).addClass("active_wordcloud_token");
+
+    // Retrieve the model associated with the ItemView that was
+    // clicked on, using the strategy described in this blog post:
+    //   https://lostechies.com/derickbailey/2011/10/11/backbone-js-getting-the-model-for-a-clicked-element/
+    var cid = $(event.currentTarget).data('cid');
+    var model = this.collection.get(cid);
+
+    // Trigger custom event
+    this.trigger('click_model', model);
+  },
+
   initialize: function() {
     this.listenTo(this.collection, 'sync', this.render);
   },
@@ -44,6 +65,12 @@ var TermCloud = Backbone.View.extend({
     this.collection.each(function(model) {
       var item = new TermCloudItemView({model: model});
       var item_el = item.render().$el;
+
+      // Save Backbone.js client id (http://backbonejs.org/#Model-cid)
+      // as jQuery data attribute.  We can use the cid to retrieve a
+      // model from a collection, using:
+      //   collection.get(cid)
+      item_el.data('cid', model.cid);
 
       // Adjust size of word based on size_key
       item_el.css('font-size', Math.sqrt(model.attributes[this.size_key]) + 'em');

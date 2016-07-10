@@ -1,4 +1,41 @@
 var TermCloudControls = {
+  addAudioPlaybackEventHandler: function(termCloud, termVisualizer) {
+    // Add event handler for when user clicks on item in TermCloud
+    termCloud.on('click_model', function(model) {
+      // Load and play audio file for this term
+      termVisualizer.loadAndPlayURL('/visualizer/' + model.attributes.corpus_id + '/term/' + model.attributes.term_id + '.wav');
+    });
+  },
+
+  addLabelEditorEventHandlers: function(termCloud) {
+    function updateTermLabel() {
+      var label = $("#term_label").val().trim();
+      var term_model = $('#term_label').data('term_model');
+      term_model.attributes.label = label;
+//      term_model.save();
+    }
+
+    // Add event handler for when user clicks on item in TermCloud
+    termCloud.on('click_model', function(model) {
+      // Update text box for editing the label of the active term
+      $('#term_label')
+        .data('term_model', model)
+        .val(termLabelText(model.attributes));
+    });
+
+    // Add event handler when label in text box is updated
+    $("#term_label")
+      .focusout(function() {
+        updateTermLabel();
+      })
+      .keydown(function(e) {
+        // Update annotation when users hit enter
+        if (e.keyCode === 13) {
+          updateTermLabel();
+        }
+    });
+  },
+
   addSizeControl: function(termCloud, default_size_key, size_keys) {
     termCloud.size_key = default_size_key;
     termCloud.size_keys = size_keys;

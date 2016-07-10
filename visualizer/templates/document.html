@@ -62,6 +62,8 @@
         termCloudCollection.url = "{% url 'wordcloud_json_for_document' corpus_id document_id %}";
         var termCloud = new TermCloud({collection: termCloudCollection});
 
+        TermCloudControls.addAudioPlaybackEventHandler(termCloud, termVisualizer);
+        TermCloudControls.addLabelEditorEventHandlers(termCloud);
         TermCloudControls.addSizeControl(termCloud, wordcloud_params.default_size_key, wordcloud_params.size_keys);
         TermCloudControls.addSortControl(termCloud, wordcloud_params.default_sort_key, wordcloud_params.sort_keys);
 
