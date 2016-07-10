@@ -49,7 +49,7 @@
       // Update padding of body element after adding navigation controls
       updateBodyPaddingTop();
 
-      addLabelEditorEventHandlers();
+//      addLabelEditorEventHandlers();
 
 /*
       createWordcloud('wordcloud_div',
@@ -57,10 +57,16 @@
                       termVisualizer);
 */
 
-      var termCloudCollection = new TermCloudCollection();
-      termCloudCollection.url = "{% url 'wordcloud_json_for_document' corpus_id document_id %}";
-      var termCloud = new TermCloud({collection: termCloudCollection});
-      termCloudCollection.fetch();
+      $.getJSON("{% url 'wordcloud_params_for_document' %}", function(wordcloud_params) {
+        var termCloudCollection = new TermCloudCollection();
+        termCloudCollection.url = "{% url 'wordcloud_json_for_document' corpus_id document_id %}";
+        var termCloud = new TermCloud({collection: termCloudCollection});
+
+        TermCloudControls.addSizeControl(termCloud, wordcloud_params.default_size_key, wordcloud_params.size_keys);
+        TermCloudControls.addSortControl(termCloud, wordcloud_params.default_sort_key, wordcloud_params.sort_keys);
+
+        termCloudCollection.fetch();
+      });
     });
   </script>
 {% endblock head_scripts %}

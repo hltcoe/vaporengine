@@ -43,9 +43,28 @@ var TermCloud = Backbone.View.extend({
 
     this.collection.each(function(model) {
       var item = new TermCloudItemView({model: model});
-      $list.append(item.render().$el);
+      var item_el = item.render().$el;
+
+      item_el.css('font-size', Math.sqrt(model.attributes[this.size_key]) + 'em');
+
+      $list.append(item_el);
     }, this);
 
     return this;
-  }
+  },
+
+  size_key: '',
+  size_keys: [],
+  sort_key: '',
+  sort_keys: []
 });
+
+
+function termLabelText(term) {
+  if (term.label) {
+    return term.label;
+  }
+  else {
+    return "T" + term.zr_term_index;
+  }
+}

@@ -247,8 +247,13 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             #   'total_documents': term.total_documents(),
             'total_documents': term_id_to_document_count[term.id],
         })
-    default_sort_key = 'first_start_offset_in_document'
-    terms_json = sorted(terms_json, key=lambda k: k[default_sort_key])
+    response = HttpResponse(content=json.dumps({
+        'terms': terms_json
+    }))
+    response['Content-Type'] = 'application/json'
+    return response
+
+def wordcloud_params_for_document(request):
     response = HttpResponse(content=json.dumps({
         'default_size_key': 'total_documents',
         'size_keys': [
@@ -256,7 +261,7 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'},
             {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurences in document'}
         ],
-        'default_sort_key': default_sort_key,
+        'default_sort_key': 'first_start_offset_in_document',
         'sort_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'first_start_offset_in_document', 'key_description': 'First appearance'},
@@ -264,7 +269,6 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'},
             {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurences in document'}
         ],
-        'terms': terms_json
     }))
     response['Content-Type'] = 'application/json'
     return response
