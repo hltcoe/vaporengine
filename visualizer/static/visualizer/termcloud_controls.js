@@ -12,7 +12,7 @@ var TermCloudControls = {
       var label = $("#term_label").val().trim();
       var term_model = $('#term_label').data('term_model');
       term_model.attributes.label = label;
-//      term_model.save();
+      term_model.save();
     }
 
     // Add event handler for when user clicks on item in TermCloud

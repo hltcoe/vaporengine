@@ -224,6 +224,7 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             'label': term.label,
             'zr_term_index': term.zr_term_index,
 
+            'id': term.id,
             'term_id': term.id,
             'corpus_id': corpus_id,
 
