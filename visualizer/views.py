@@ -121,14 +121,10 @@ def term_wav_file(request, corpus_id, term_id):
     # an "IOError: No such file" exception.
     outfile = pysox.CSoxStream(tmp_filename, 'w', sox_signal_info)
 
-    print "audio_for_term('%s'):" % term.id
     for audio_fragment in audio_fragments:
         START_OFFSET = bytes("%f" % (audio_fragment.start_offset / 100.0))
         DURATION = bytes("%f" % (audio_fragment.duration / 100.0))
         input_filename = audio_fragment.document.audio_path
-
-        print "  [%s] (%d-%d)" % (input_filename, audio_fragment.start_offset, audio_fragment.end_offset)
-
         infile = pysox.CSoxStream(input_filename)
         chain = pysox.CEffectsChain(infile, outfile)
         chain.add_effect(pysox.CEffect('trim', [START_OFFSET, DURATION]))
