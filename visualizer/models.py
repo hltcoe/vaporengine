@@ -200,6 +200,8 @@ class Corpus(models.Model):
                 si = pysox.CSoxStream(document.audio_path).get_signal().get_signalinfo()
                 length_in_seconds = si['length'] / float(audio_rate * audio_channels)
                 document.duration = int(length_in_seconds * 100)
+                if document.duration == 0:
+                    logging.warning("Audio file '%s' has length 0" % document.audio_path)
             else:
                 document.duration = 0
                 logging.warning("Unable to find audio file with path '%s'" % document.audio_path)
