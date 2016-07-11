@@ -246,6 +246,12 @@ class Corpus(models.Model):
     def terms(self):
         return Term.objects.filter(audiofragment__document__corpus=self).distinct()
 
+    def total_audio_fragments(self):
+        return AudioFragment.objects.filter(document__corpus=self).distinct().count()
+
+    def total_terms(self):
+        return self.terms().count()
+
 class Document(models.Model):
     """An audio Document associated with an audio file
     """

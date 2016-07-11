@@ -14,6 +14,14 @@
     <li>
       <a href="{% url 'corpus_document_list' corpus.id %}">Corpus Document List</a>
     </li>
+    <li>
+      {{corpus.document_set.count}} Documents,
+      {% if corpus.documenttopic_set.count %}
+      {{corpus.documenttopic_set.count}} Document Topics,
+      {% endif %}
+      {{corpus.total_terms}} Terms,
+      {{corpus.total_audio_fragments}} Utterances
+    </li>
   </ul>
   {% endif %}
   {% endfor %}
