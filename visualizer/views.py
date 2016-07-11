@@ -1,5 +1,6 @@
 import collections
 import json
+import math
 import os
 import tempfile
 
@@ -203,6 +204,7 @@ def wordcloud_params_for_corpus(request):
 def wordcloud_json_for_document(request, corpus_id, document_id):
     corpus = Corpus.objects.get(id=corpus_id)
     document = Document.objects.get(id=document_id)
+    total_documents = corpus.document_set.count()
 
     terms = document.associated_terms().annotate(audio_fragments_in_document=Count('audiofragment', distinct=True),
                                                  first_audiofragment_start_offset=Min('audiofragment__start_offset'))
@@ -219,8 +221,10 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
     for (term_id, audiofragment_id) in term_audiofragment_id_pairs:
         term_id_to_audiofragment_ids[term_id].append(audiofragment_id)
 
+
     terms_json = []
     for term in terms:
+        tf_idf = term.audio_fragments_in_document * math.log(total_documents / (1.0 + term_id_to_document_count[term.id]))
         terms_json.append({
             'label': term.label,
             'zr_term_index': term.zr_term_index,
@@ -236,6 +240,8 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
             # Unoptimized code:
             #   'first_start_offset_in_document': term.first_start_offset_in_document(document),
             'first_start_offset_in_document': term.first_audiofragment_start_offset/100.0,
+
+            'tf_idf': tf_idf,
 
             # Unoptimized code:
             #   'total_audio_fragments': term.total_audio_fragments(),
@@ -261,7 +267,8 @@ def wordcloud_params_for_document(request):
         'size_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'},
-            {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurences in document'}
+            {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurences in document'},
+            {'key_name': 'tf_idf', 'key_description': 'TF-IDF'},
         ],
         'default_sort_key': 'first_start_offset_in_document',
         'sort_keys': [
@@ -269,7 +276,8 @@ def wordcloud_params_for_document(request):
             {'key_name': 'first_start_offset_in_document', 'key_description': 'First appearance'},
             {'key_name': 'label', 'key_description': 'Label'},
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'},
-            {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurences in document'}
+            {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurences in document'},
+            {'key_name': 'tf_idf', 'key_description': 'TF-IDF'},
         ],
     }))
     response['Content-Type'] = 'application/json'
