@@ -70,6 +70,50 @@ var TermCloudControls = {
       }
     }
 
+    function getReverseComparatorForSortKey(sortKey) {
+      if (sortKey == "label") {
+        return reverseSortByLabel;
+      }
+      else {
+        return function(a, b) {
+          var a_attribute = a.attributes[sortKey];
+          var b_attribute = b.attributes[sortKey];
+
+          if (a_attribute < b_attribute) {
+            return 1;
+          }
+          else if (a_attribute > b_attribute) {
+            return -1;
+          }
+          else {
+            return 0;
+          }
+        }
+      };
+    }
+
+    function reverseSortByLabel(a, b) {
+      // Terms with labels will always come before terms without labels
+      var a_label = a.attributes.label;
+      var b_label = b.attributes.label;
+
+      if (a_label.length == 0 && b_label.length > 0) {
+        return 1;
+      }
+      else if (a_label.length > 0 && b_label.length == 0) {
+        return -1;
+      }
+      else if (a_label < b_label) {
+        return 1;
+      }
+      else if (a_label > b_label) {
+        return -1;
+      }
+      else {
+        return 0;
+      }
+    }
+
     function sortByLabel(a, b) {
       // Terms with labels will always come before terms without labels
       var a_label = a.attributes.label;
@@ -92,6 +136,20 @@ var TermCloudControls = {
       }
     }
 
+    function updateSortComparator() {
+      var sort_key = $('#sort_key_select').val();
+
+      if ($('#sort_direction').data('sort_reversed')) {
+        termCloud.collection.comparator = getReverseComparatorForSortKey(sort_key);
+      }
+      else {
+        termCloud.collection.comparator = getComparatorForSortKey(sort_key);
+      }
+
+      termCloud.collection.sort();
+      termCloud.render();
+    }
+
     termCloud.collection.comparator = getComparatorForSortKey(default_sort_key);
     termCloud.collection.sort();
 
@@ -111,13 +169,22 @@ var TermCloudControls = {
     // Dynamically added select options won't be displayed until we issue 'refresh' command
     $("#sort_key_select").selectpicker('refresh');
 
-    $("#sort_key_select").on('change',
-                             function(event) {
-                               var sort_key = $(this).val();
-                               termCloud.collection.comparator = getComparatorForSortKey(sort_key);
-                               termCloud.collection.sort();
-                               termCloud.render();
-                             });
+    $("#sort_key_select").on('change', updateSortComparator);
+
+    $("#sort_direction").on('click',
+                            function(event) {
+                              if ($(this).data('sort_reversed')) {
+                                $(this).data('sort_reversed', false);
+                                $(this).removeClass('glyphicon-arrow-down');
+                                $(this).addClass('glyphicon-arrow-up');
+                              }
+                              else {
+                                $(this).data('sort_reversed', true);
+                                $(this).removeClass('glyphicon-arrow-up');
+                                $(this).addClass('glyphicon-arrow-down');
+                              }
+                              updateSortComparator();
+                            });
   }
 };
 
