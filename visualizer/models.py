@@ -6,6 +6,7 @@ import os
 import os.path
 
 from django.db import connection, models
+from django.db.models import Sum
 import pysox
 
 
@@ -242,6 +243,15 @@ class Corpus(models.Model):
                 audio_fragment.duration = audio_fragment.end_offset - audio_fragment.start_offset
                 audio_fragment.score = score
                 audio_fragment.save()
+
+    def duration_as_hh_mm_ss(self):
+        m, s = divmod(self.duration_in_seconds(), 60)
+        h, m = divmod(m, 60)
+        return "%d:%02d:%02d" % (h, m, s)
+
+    def duration_in_seconds(self):
+        h = Corpus.objects.filter(id=self.id).aggregate(Sum('document__duration'))
+        return h['document__duration__sum'] / 100.0
 
     def terms(self):
         return Term.objects.filter(audiofragment__document__corpus=self).distinct()

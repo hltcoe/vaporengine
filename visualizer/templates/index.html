@@ -17,6 +17,7 @@
     </li>
     <li>
       {{corpus.document_set.count|intcomma}} Documents /
+      {{corpus.duration_as_hh_mm_ss}} duration /
       {% if corpus.documenttopic_set.count %}
       {{corpus.documenttopic_set.count|intcomma}} Document Topics /
       {% endif %}
