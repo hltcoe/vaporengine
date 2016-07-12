@@ -11,7 +11,7 @@ var TermCloudControls = {
 
   addLabelEditorEventHandlers: function(termCloud) {
     function updateTermLabel() {
-      var label = $("#term_label").val().trim();
+      var label = $('#term_label').val().trim();
       var term_model = $('#term_label').data('term_model');
 
       // TermCloud needs to keep track of the active term when re-rendering
@@ -31,7 +31,7 @@ var TermCloudControls = {
     });
 
     // Add event handler when label in text box is updated
-    $("#term_label")
+    $('#term_label')
       .focusout(function() {
         updateTermLabel();
       })
@@ -49,19 +49,19 @@ var TermCloudControls = {
 
     // Add size options to select control
     for (var i in size_keys) {
-      $("#size_key_select").append(
+      $('#size_key_select').append(
         $('<option>')
           .text(size_keys[i].key_description)
           .val(size_keys[i].key_name));
     }
 
-    $("#size_key_select").val(default_size_key);
+    $('#size_key_select').val(default_size_key);
 
     // Dynamically added select options won't be displayed until we issue 'refresh' command
-    $("#size_key_select").selectpicker('refresh');
+    $('#size_key_select').selectpicker('refresh');
 
-    $("#size_key_select").on('change', function(event) {
-      var size_key = $("#size_key_select").val();
+    $('#size_key_select').on('change', function(event) {
+      var size_key = $('#size_key_select').val();
       termCloud.size_key = size_key;
       termCloud.updateFontSizeFunction();
       termCloud.render();
@@ -70,7 +70,7 @@ var TermCloudControls = {
 
   addSortControl: function(termCloud, default_sort_key, sort_keys) {
     function getComparatorForSortKey(sortKey) {
-      if (sortKey === "label") {
+      if (sortKey === 'label') {
         return sortByLabel;
       }
       else {
@@ -79,7 +79,7 @@ var TermCloudControls = {
     }
 
     function getReverseComparatorForSortKey(sortKey) {
-      if (sortKey === "label") {
+      if (sortKey === 'label') {
         return reverseSortByLabel;
       }
       else {
@@ -166,20 +166,20 @@ var TermCloudControls = {
 
     // Add sort options to select control
     for (var i in sort_keys) {
-      $("#sort_key_select").append(
+      $('#sort_key_select').append(
         $('<option>')
           .text(sort_keys[i].key_description)
           .val(sort_keys[i].key_name));
     }
 
-    $("#sort_key_select").val(default_sort_key);
+    $('#sort_key_select').val(default_sort_key);
 
     // Dynamically added select options won't be displayed until we issue 'refresh' command
-    $("#sort_key_select").selectpicker('refresh');
+    $('#sort_key_select').selectpicker('refresh');
 
-    $("#sort_key_select").on('change', updateSortComparator);
+    $('#sort_key_select').on('change', updateSortComparator);
 
-    $("#sort_direction").on('click',
+    $('#sort_direction').on('click',
                             function(event) {
                               if ($(this).data('sort_reversed')) {
                                 $(this).data('sort_reversed', false);

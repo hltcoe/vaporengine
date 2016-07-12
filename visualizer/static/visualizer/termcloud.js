@@ -27,9 +27,9 @@ var TermCloudItemView = Backbone.View.extend({
     // Add CSS classes for each audio_fragment_id
     var span_classes = [];
     for (var i = 0; i < this.model.attributes.audio_fragment_ids.length; i++) {
-      span_classes.push("audio_fragment_span_" + this.model.attributes.audio_fragment_ids[i]);
+      span_classes.push('audio_fragment_span_' + this.model.attributes.audio_fragment_ids[i]);
     }
-    this.$el.addClass(span_classes.join(" "));
+    this.$el.addClass(span_classes.join(' '));
 
     this.$el.text(termLabelText(this.model.attributes));
 
@@ -47,8 +47,8 @@ var TermCloud = Backbone.View.extend({
   },
   onTermClick: function(event) {
     // Update active term.  There can be only one active term at a time
-    this.$(".active_wordcloud_token").removeClass("active_wordcloud_token");
-    $(event.currentTarget).addClass("active_wordcloud_token");
+    this.$('.active_wordcloud_token').removeClass('active_wordcloud_token');
+    $(event.currentTarget).addClass('active_wordcloud_token');
 
     // Retrieve the model associated with the ItemView that was
     // clicked on, using the strategy described in this blog post:
@@ -89,9 +89,9 @@ var TermCloud = Backbone.View.extend({
       item_el.css('font-size', this.fontSizeFunction(model));
 
       // Add tooltip
-      var tooltip_text = "";
+      var tooltip_text = '';
       for (var i in this.sort_keys) {
-        tooltip_text += this.sort_keys[i].key_description + ": " + model.attributes[this.sort_keys[i].key_name] + "\n";
+        tooltip_text += this.sort_keys[i].key_description + ': ' + model.attributes[this.sort_keys[i].key_name] + '\n';
       }
       item_el
         .attr('data-placement', 'bottom')
@@ -147,6 +147,6 @@ function termLabelText(term) {
     return term.label;
   }
   else {
-    return "T" + term.zr_term_index;
+    return 'T' + term.zr_term_index;
   }
 }
