@@ -36,6 +36,8 @@ var TermCloudItemView = Backbone.View.extend({
 });
 
 var TermCloud = Backbone.View.extend({
+  activeTermCloudItemModel: null,
+
   el: '#termcloud',
 
   events: {
@@ -94,6 +96,10 @@ var TermCloud = Backbone.View.extend({
         .attr('data-toggle', 'tooltip')
         .attr('title', tooltip_text)
         .tooltip();
+
+      if (this.activeTermCloudItemModel == model) {
+        item_el.addClass('active_wordcloud_token');
+      }
 
       $list.append(item_el);
     }, this);

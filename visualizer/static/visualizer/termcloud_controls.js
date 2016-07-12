@@ -11,6 +11,10 @@ var TermCloudControls = {
     function updateTermLabel() {
       var label = $("#term_label").val().trim();
       var term_model = $('#term_label').data('term_model');
+
+      // TermCloud needs to keep track of the active term when re-rendering
+      termCloud.activeTermCloudItemModel = term_model;
+
       term_model.attributes.label = label;
       term_model.save();
       term_model.collection.sort();
