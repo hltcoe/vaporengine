@@ -56,6 +56,9 @@ var TermCloud = Backbone.View.extend({
     var cid = $(event.currentTarget).data('cid');
     var model = this.collection.get(cid);
 
+    // TermCloud needs to keep track of the active term when re-rendering
+    this.activeTermCloudItemModel = model;
+
     // Trigger custom event
     this.trigger('click_model', model);
   },

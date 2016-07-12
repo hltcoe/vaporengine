@@ -12,21 +12,15 @@ var TermCloudControls = {
   addLabelEditorEventHandlers: function(termCloud) {
     function updateTermLabel() {
       var label = $('#term_label').val().trim();
-      var term_model = $('#term_label').data('term_model');
-
-      // TermCloud needs to keep track of the active term when re-rendering
-      termCloud.activeTermCloudItemModel = term_model;
-
-      term_model.attributes.label = label;
-      term_model.save();
-      term_model.collection.sort();
+      termCloud.activeTermCloudItemModel.attributes.label = label;
+      termCloud.activeTermCloudItemModel.save();
+      termCloud.collection.sort();
     }
 
     // Add event handler for when user clicks on item in TermCloud
     termCloud.on('click_model', function(model) {
       // Update text box for editing the label of the active term
       $('#term_label')
-        .data('term_model', model)
         .val(termLabelText(model.attributes));
     });
 
