@@ -1,3 +1,5 @@
+/* globals termLabelText */
+
 var TermCloudControls = {
   addAudioPlaybackEventHandler: function(termCloud, termVisualizer) {
     // Add event handler for when user clicks on item in TermCloud
@@ -68,7 +70,7 @@ var TermCloudControls = {
 
   addSortControl: function(termCloud, default_sort_key, sort_keys) {
     function getComparatorForSortKey(sortKey) {
-      if (sortKey == "label") {
+      if (sortKey === "label") {
         return sortByLabel;
       }
       else {
@@ -77,7 +79,7 @@ var TermCloudControls = {
     }
 
     function getReverseComparatorForSortKey(sortKey) {
-      if (sortKey == "label") {
+      if (sortKey === "label") {
         return reverseSortByLabel;
       }
       else {
@@ -94,8 +96,8 @@ var TermCloudControls = {
           else {
             return 0;
           }
-        }
-      };
+        };
+      }
     }
 
     function reverseSortByLabel(a, b) {
@@ -103,10 +105,10 @@ var TermCloudControls = {
       var a_label = a.attributes.label;
       var b_label = b.attributes.label;
 
-      if (a_label.length == 0 && b_label.length > 0) {
+      if (a_label.length === 0 && b_label.length > 0) {
         return 1;
       }
-      else if (a_label.length > 0 && b_label.length == 0) {
+      else if (a_label.length > 0 && b_label.length === 0) {
         return -1;
       }
       else if (a_label < b_label) {
@@ -125,10 +127,10 @@ var TermCloudControls = {
       var a_label = a.attributes.label;
       var b_label = b.attributes.label;
 
-      if (a_label.length == 0 && b_label.length > 0) {
+      if (a_label.length === 0 && b_label.length > 0) {
         return 1;
       }
-      else if (a_label.length > 0 && b_label.length == 0) {
+      else if (a_label.length > 0 && b_label.length === 0) {
         return -1;
       }
       else if (a_label < b_label) {

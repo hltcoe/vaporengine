@@ -1,3 +1,5 @@
+/* globals Backbone */
+
 /*
  *
  */
@@ -97,7 +99,7 @@ var TermCloud = Backbone.View.extend({
         .attr('title', tooltip_text)
         .tooltip();
 
-      if (this.activeTermCloudItemModel == model) {
+      if (this.activeTermCloudItemModel === model) {
         item_el.addClass('active_wordcloud_token');
       }
 
@@ -111,7 +113,7 @@ var TermCloud = Backbone.View.extend({
    */
   updateFontSizeFunction: function() {
     // Don't update fontSizeFunction if collection is empty
-    if (this.collection.length == 0) {
+    if (this.collection.length === 0) {
       return;
     }
 
