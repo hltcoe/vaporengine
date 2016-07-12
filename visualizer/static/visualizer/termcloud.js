@@ -56,12 +56,21 @@ var TermCloud = Backbone.View.extend({
     this.trigger('click_model', model);
   },
 
+  /** fontSizeFunction should take a TermCloudItemModel instance and returns a CSS font size value.
+   */
+  fontSizeFunction: function(termCloudItemModel) {
+    return '1em';
+  },
+
   initialize: function() {
+    this.listenTo(this.collection, 'sync', this.updateFontSizeFunction);
     this.listenTo(this.collection, 'sync', this.render);
   },
   render: function() {
+    // Remove all items from TermCloud
     var $list = this.$('div.termcloud_terms').empty();
 
+    // Add items to TermCloud
     this.collection.each(function(model) {
       var item = new TermCloudItemView({model: model});
       var item_el = item.render().$el;
@@ -72,8 +81,8 @@ var TermCloud = Backbone.View.extend({
       //   collection.get(cid)
       item_el.data('cid', model.cid);
 
-      // Adjust size of word based on size_key
-      item_el.css('font-size', Math.sqrt(model.attributes[this.size_key]) + 'em');
+      // Adjust size of word
+      item_el.css('font-size', this.fontSizeFunction(model));
 
       // Add tooltip
       var tooltip_text = "";
@@ -90,6 +99,32 @@ var TermCloud = Backbone.View.extend({
     }, this);
 
     return this;
+  },
+
+  /** Updates the fontSizeFunction based on the attribute values of model instances in the TermCloudCollection
+   */
+  updateFontSizeFunction: function() {
+    // Don't update fontSizeFunction if collection is empty
+    if (this.collection.length == 0) {
+      return;
+    }
+
+    var attribute = this.size_key;
+    var modelWithMaxAttribute = this.collection.max(function(m) { return m.attributes[attribute]; });
+    var maxAttributeValue = modelWithMaxAttribute.attributes[attribute];
+
+    if (maxAttributeValue > 40) {
+      // Scale font size using cube root
+      this.fontSizeFunction = function(m) {
+        return Math.cbrt(m.attributes[attribute]) + 'em';
+      };
+    }
+    else {
+      // Scale font size using square root
+      this.fontSizeFunction = function(m) {
+        return Math.sqrt(m.attributes[attribute]) + 'em';
+      };
+    }
   },
 
   size_key: '',

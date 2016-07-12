@@ -56,6 +56,7 @@ var TermCloudControls = {
     $("#size_key_select").on('change', function(event) {
       var size_key = $("#size_key_select").val();
       termCloud.size_key = size_key;
+      termCloud.updateFontSizeFunction();
       termCloud.render();
     });
   },
