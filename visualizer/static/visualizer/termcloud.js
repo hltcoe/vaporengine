@@ -1,8 +1,26 @@
+/** TermCloud - a wordcloud of Terms - implemented with Backbone.js Models+Views
+ *
+ * There are two JS files for working with TermClouds - 'termcloud.js' and
+ * 'termcloud_controls.js'.  The 'termcloud.js' file contains the Backbone.js
+ * Model and View implementations.  The 'termcloud_controls.js' file implements
+ * controls (buttons and menus) for manipulating TermClouds.  The control code
+ * can "reach in" and manipulate TermCloud objects, but the TermCloud code
+ * should not "reach out" (or depend on or have any awareness of) the control
+ * code.
+ *
+ * If you are unfamiliar with Backbone.js, start by reading the documentation
+ * and "Backbone, The Primer":
+ *   http://backbonejs.org
+ *   https://github.com/jashkenas/backbone/wiki/Backbone%2C-The-Primer
+ *
+ * Dependencies:
+ *   Backbone.js
+ *   jQuery
+ *   Bootstrap    - TermCloud.render() uses Bootstrap tooltips
+ */
+
 /* globals Backbone */
 
-/*
- *
- */
 
 var TermCloudItemModel = Backbone.Model.extend({
 });

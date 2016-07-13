@@ -1,3 +1,19 @@
+/** TermCloudControls - widgets for manipulating TermClouds
+ *
+ * There are two JS files for working with TermClouds - 'termcloud.js' and
+ * 'termcloud_controls.js'.  The 'termcloud.js' file contains the Backbone.js
+ * Model and View implementations.  The 'termcloud_controls.js' file implements
+ * controls (buttons and menus) for manipulating TermClouds.  The control code
+ * can "reach in" and manipulate TermCloud objects, but the TermCloud code
+ * should not "reach out" (or depend on or have any awareness of) the control
+ * code.
+ *
+ * Dependencies:
+ *   Backbone.js
+ *   jQuery
+ *   Bootstrap    - TermCloud.render() uses Bootstrap tooltips
+ */
+
 /* globals termLabelText */
 
 var TermCloudControls = {
