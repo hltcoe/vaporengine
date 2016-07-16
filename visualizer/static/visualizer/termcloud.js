@@ -161,8 +161,6 @@ var TermCloud = Backbone.View.extend({
   },
 
   size_key: '',
-  size_keys: [],
-  sort_key: '',
   sort_keys: []
 });
 

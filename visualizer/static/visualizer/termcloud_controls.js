@@ -55,7 +55,6 @@ var TermCloudControls = {
 
   addSizeControl: function(termCloud, default_size_key, size_keys) {
     termCloud.size_key = default_size_key;
-    termCloud.size_keys = size_keys;
 
     // Add size options to select control
     for (var i in size_keys) {
@@ -142,7 +141,6 @@ var TermCloudControls = {
     termCloud.collection.comparator = getComparatorForSortKey(default_sort_key);
     termCloud.collection.sort();
 
-    termCloud.sort_key = default_sort_key;
     termCloud.sort_keys = sort_keys;
 
     // Add sort options to select control
