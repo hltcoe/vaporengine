@@ -49,6 +49,10 @@ var TermCloudItemView = Backbone.View.extend({
     }
     this.$el.addClass(span_classes.join(' '));
 
+    if (this.model.attributes.css_class) {
+      this.$el.addClass(this.model.attributes.css_class);
+    }
+
     this.$el.text(termLabelText(this.model.attributes));
 
     return this;
