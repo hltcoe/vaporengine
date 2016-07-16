@@ -43,17 +43,16 @@ def run():
     #      Discriminating:  col05233  1.2%, col02138  0.5%, col10646  0.4%, col02139  0.4%, col00162  0.3%
     #   ...
     #   --------------------------------------------------------------------------------
-    topic_info_file = os.path.join(os.getenv("HOME"), "zr_datasets/switchboard_dtw0.80_OLAPTHR0.97/cluster_2.log")
+    topic_info_file = os.path.join(os.getenv("HOME"), "zr_datasets/switchboard_dtw0.80_OLAPTHR0.97/cluster_2.nfeatures.log")
     topic_info_lines = codecs.open(topic_info_file, encoding="utf-8").readlines()
 
     for (line_index, line) in enumerate(topic_info_lines):
         m = re.search('Cluster\s+(\d+)', line)
         if m:
             topic_label_index = int(m.group(1))
-            print "topic_label_index: %d" % topic_label_index
+            print "\nTopic: %s (#%d)" % (topic_labels[topic_label_index], topic_label_index)
 
             descriptive_line = topic_info_lines[line_index+1]
-
             # Sample score_line: '  col05233  1.8%, col02138  0.8%, col10646  0.6%, col02139  0.6%, col05340  0.4%  '
             score_line = descriptive_line.split(':')[1]
             for score_string in score_line.split(','):
@@ -61,15 +60,16 @@ def run():
                 # zr_term_index is 0-indexed, but 'colXXXX' is 1-indexed
                 zr_term_index = int(m.group(1)) - 1
                 score = float(m.group(2))
-                print "Descriptive: zr_term_index=%d, score=%f" % (zr_term_index, score)
-                document_topic = DocumentTopic.objects.get(corpus=corpus, label=topic_labels[int(topic_label_index)])
-                term = Term.objects.get(corpus=corpus, zr_term_index=zr_term_index)
-                dtti = DocumentTopicTermInfo()
-                dtti.document_topic = document_topic
-                dtti.term = term
-                dtti.category = 'Descriptive'
-                dtti.score = score
-                dtti.save()
+                if score != 0:
+                    document_topic = DocumentTopic.objects.get(corpus=corpus, label=topic_labels[int(topic_label_index)])
+                    term = Term.objects.get(corpus=corpus, zr_term_index=zr_term_index)
+                    dtti = DocumentTopicTermInfo()
+                    dtti.document_topic = document_topic
+                    dtti.term = term
+                    dtti.category = 'Descriptive'
+                    dtti.score = score
+                    dtti.save()
+                    print "Descriptive: zr_term_index=%d, score=%f, Term.id=%d" % (zr_term_index, score, term.id)
 
             discriminating_line = topic_info_lines[line_index+2]
             score_line = discriminating_line.split(':')[1]
@@ -77,12 +77,13 @@ def run():
                 m = re.search('col(\d+)\s+(\d+\.?\d*)', score_string)
                 zr_term_index = int(m.group(1)) - 1
                 score = float(m.group(2))
-                print "Discriminating: zr_term_index=%d, score=%f" % (zr_term_index, score)
-                document_topic = DocumentTopic.objects.get(corpus=corpus, label=topic_labels[int(topic_label_index)])
-                term = Term.objects.get(corpus=corpus, zr_term_index=zr_term_index)
-                dtti = DocumentTopicTermInfo()
-                dtti.document_topic = document_topic
-                dtti.term = term
-                dtti.category = 'Discriminating'
-                dtti.score = score
-                dtti.save()
+                if score != 0:
+                    document_topic = DocumentTopic.objects.get(corpus=corpus, label=topic_labels[int(topic_label_index)])
+                    term = Term.objects.get(corpus=corpus, zr_term_index=zr_term_index)
+                    dtti = DocumentTopicTermInfo()
+                    dtti.document_topic = document_topic
+                    dtti.term = term
+                    dtti.category = 'Discriminating'
+                    dtti.score = score
+                    dtti.save()
+                    print "Discriminating: zr_term_index=%d, score=%f, Term.id=%d" % (zr_term_index, score, term.id)
