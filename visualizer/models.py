@@ -298,6 +298,21 @@ class DocumentTopic(models.Model):
     corpus = models.ForeignKey(Corpus)
     documents = models.ManyToManyField(Document)
 
+    def term_info_categories(self):
+        return self.documenttopicterminfo_set.values_list('category',flat=True).distinct()
+
+    def terms(self):
+        return Term.objects.filter(audiofragment__document__documenttopic=self).distinct()
+
+
+class DocumentTopicTermInfo(models.Model):
+    """Information about a Term that is relevant to a particular DocumentTopic
+    """
+    document_topic = models.ForeignKey(DocumentTopic)
+    term = models.ForeignKey('Term')
+    category = models.CharField(max_length=20, db_index=True)
+    score = models.FloatField()
+
 
 class Term(models.Model):
     """
