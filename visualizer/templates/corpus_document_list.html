@@ -4,7 +4,7 @@
 
 <h1>{{ corpus.name }}</h1>
 
-<h2>Document List</h2>
+<h2>{{ document_list.count }} Documents</h2>
 <div>
   {% for document in document_list %}
   <span class="document_link">
@@ -14,11 +14,15 @@
 </div>
 
 {% if corpus.documenttopic_set.exists %}
-<h2>Topics</h2>
+<h2>{{ corpus.documenttopic_set.count }} Topics</h2>
 <div>
   {% for documenttopic in corpus.documenttopic_set.all|dictsort:"label" %}
     <div>
-    <h5>{{ documenttopic.label }}</h5>
+    <h5>
+      <a href="{% url 'document_topic' corpus.id documenttopic.id %}">{{ documenttopic.label }}</a>
+      /
+      {{ documenttopic.documents.count }} Documents
+    </h5>
     {% for document in documenttopic.documents.all %}
     <span class="document_link">
       <a href="{% url 'document' corpus.id document.id %}">{{ document.id|stringformat:"04d" }}</a>

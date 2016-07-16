@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 import pysox
 
-from visualizer.models import AudioFragment, Corpus, Document, Term
+from visualizer.models import AudioFragment, Corpus, Document, DocumentTopic, Term
 
 
 def corpus_wordcloud(request, corpus_id):
@@ -48,6 +48,18 @@ def document_audio_fragments_as_json(request, corpus_id, document_id):
             'end_offset': audio_fragment.end_offset
         })
     return JsonResponse(audio_fragments_json, safe=False)
+
+def document_topic(request, corpus_id, document_topic_id):
+    corpus = Corpus.objects.get(id=corpus_id)
+    document_topic = DocumentTopic.objects.get(id=document_topic_id)
+
+    if corpus.protected_corpus and not request.user.is_authenticated():
+        return redirect('/login/?next='+request.path)
+    context = {
+        'corpus_id': corpus_id,
+        'document_topic': document_topic,
+    }
+    return render(request, "document_topic.html", context)
 
 def document_wav_file(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)
@@ -221,7 +233,6 @@ def wordcloud_json_for_document(request, corpus_id, document_id):
     for (term_id, audiofragment_id) in term_audiofragment_id_pairs:
         term_id_to_audiofragment_ids[term_id].append(audiofragment_id)
 
-
     terms_json = []
     for term in terms:
         tf_idf = term.audio_fragments_in_document * math.log(total_documents / (1.0 + term_id_to_document_count[term.id]))
@@ -280,5 +291,80 @@ def wordcloud_params_for_document(request):
             {'key_name': 'tf_idf', 'key_description': 'TF-IDF'},
         ],
     }))
+    response['Content-Type'] = 'application/json'
+    return response
+
+def wordcloud_json_for_document_topic(request, corpus_id, document_topic_id):
+    corpus = Corpus.objects.get(id=corpus_id)
+    document_topic = DocumentTopic.objects.get(id=document_topic_id)
+    total_documents = corpus.document_set.count()
+
+    terms = document_topic.terms().annotate(Count('audiofragment'), Count('audiofragment__document', distinct=True))
+
+    # Create a mapping from each Term ID to the corresponding list of AudioFragment IDs, using a single SQL query.
+    term_audiofragment_id_pairs = AudioFragment.objects.filter(document__corpus_id=corpus_id).values_list('term_id', 'id')
+    term_id_to_audiofragment_ids = collections.defaultdict(list)
+    for (term_id, audiofragment_id) in term_audiofragment_id_pairs:
+        term_id_to_audiofragment_ids[term_id].append(audiofragment_id)
+
+    term_id_to_dttis = collections.defaultdict(list)
+    for dtti in document_topic.documenttopicterminfo_set.all():
+        term_id_to_dttis[dtti.term_id].append(dtti)
+
+    category_name_to_index = {}
+    for index, category in enumerate(document_topic.term_info_categories()):
+        category_name_to_index[category] = index
+
+    terms_json = []
+    for term in terms:
+        term_json = {
+            'label': term.label,
+            'zr_term_index': term.zr_term_index,
+
+            'css_class': '',
+
+            'id': term.id,
+            'term_id': term.id,
+            'corpus_id': corpus_id,
+
+            'audio_fragment_ids': term_id_to_audiofragment_ids[term.id],
+
+            'total_audio_fragments': term.audiofragment__count,
+            'total_documents': term.audiofragment__document__count,
+        }
+        if term_id_to_dttis[term.id]:
+            for dtti in term_id_to_dttis[term.id]:
+                term_json['css_class'] += 'term_info_category_%d ' % category_name_to_index[dtti.category]
+                term_json['term_info_' + dtti.category] = dtti.score
+        terms_json.append(term_json)
+    response = HttpResponse(content=json.dumps({
+        'terms': terms_json
+    }))
+    response['Content-Type'] = 'application/json'
+    return response
+
+def wordcloud_params_for_document_topic(request, document_topic_id):
+    document_topic = DocumentTopic.objects.get(id=document_topic_id)
+    wordcloud_params = {
+        'default_size_key': 'total_documents',
+        'size_keys': [
+            {'key_name': 'total_documents', 'key_description': 'Topic Documents appeared in'},
+            {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in Topic Documents'},
+        ],
+        'default_sort_key': 'total_audio_fragments',
+        'sort_keys': [
+            {'key_name': 'total_documents', 'key_description': 'Topic Documents appeared in'},
+            {'key_name': 'label', 'key_description': 'Label'},
+            {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in Topic Documents'}
+        ],
+    }
+    for category in document_topic.term_info_categories():
+        wordcloud_params['sort_keys'].append({
+            'key_name': 'term_info_' + category,
+            'key_description': category,
+        })
+        # Set default_sort_key to sort by category IFF a category exists
+        wordcloud_params['default_sort_key'] = 'term_info_' + category
+    response = HttpResponse(content=json.dumps(wordcloud_params))
     response['Content-Type'] = 'application/json'
     return response

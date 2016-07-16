@@ -1,0 +1,106 @@
+{% extends "base_wordcloud.html" %}
+{% load humanize %}
+
+{% block head_style %}
+<style>
+  .term_info_category_0 {
+    background-color: #FFFF6D;
+  }
+  .term_info_category_1 {
+    background-color: #B6DBFF;
+  }
+  .term_info_category_0.term_info_category_1 {
+    background-color: #FFFF6D;
+    background-image: repeating-linear-gradient(-45deg, transparent, transparent 25px, #B6DBFF 25px, #B6DBFF 50px);
+    font-style: italic;
+  }
+  .term_info_category_2 {
+    background-color: #FFB6DB;
+  }
+  .term_info_category_3 {
+    background-color: #24FF24;
+  }
+</style>
+{% endblock head_style %}
+
+{% block head_scripts %}
+  <script>
+    $(document).ready(function() {
+      var waveformVisualizer = new WaveformVisualizer(
+        'waveform_visualizer',
+        {},
+        { controlsResizeCallback: updateBodyPaddingTop }
+      );
+      waveformVisualizer.addControls($('#pt_snippets_audio_player'));
+
+      // Update padding of body element after adding navigation controls
+      updateBodyPaddingTop();
+
+      $.getJSON("{% url 'wordcloud_params_for_document_topic' document_topic.id %}", function(wordcloud_params) {
+        var termCloudCollection = new TermCloudCollection();
+        termCloudCollection.url = "{% url 'wordcloud_json_for_document_topic' corpus_id document_topic.id %}";
+        var termCloud = new TermCloud({collection: termCloudCollection});
+
+        TermCloudControls.addAudioPlaybackEventHandler(termCloud, waveformVisualizer);
+        TermCloudControls.addLabelEditorEventHandlers(termCloud);
+        TermCloudControls.addSizeControl(termCloud, wordcloud_params.default_size_key, wordcloud_params.size_keys);
+        TermCloudControls.addSortControl(termCloud, wordcloud_params.default_sort_key, wordcloud_params.sort_keys);
+
+        termCloudCollection.fetch();
+      });
+    });
+  </script>
+{% endblock head_scripts %}
+
+{% block content %}
+
+<div class="container">
+  <nav id="waveform_navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em;">
+        <div id="waveform_visualizer"></div>
+      </div>
+      <div>
+        <div class="form-inline">
+          <div class="form-group">
+            <span id="pt_snippets_audio_player"></span>
+          </div>
+          <div class="form-group">
+            <label for="term_label">Label</label>
+            <input id="term_label"></input>
+          </div>
+
+          <div class="form-group">
+            <label for="sort_key_select">Sort (<span id="sort_direction" class="glyphicon glyphicon-arrow-up"></span>):</label>
+            <select id="sort_key_select" class="selectpicker" data-width="fit" data-style="btn-default btn-xs">
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="size_key_select">Word size:</label>
+            <select id="size_key_select" class="selectpicker" data-width="fit" data-style="btn-default btn-xs">
+            </select>
+          </div>
+
+          <div class="form-group">
+            <div id="waveform_visualizer_document_list" style="padding-left: 1em;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div>
+    <b>Document Topic:</b>
+    {{ document_topic.label }} /
+    {{ document_topic.documents.count|intcomma }} Documents /
+    {{ document_topic.terms.count|intcomma }} Terms
+  </div>
+
+  <hr />
+
+  <div id="termcloud">
+    <div class="termcloud_terms"></div>
+  </div>
+
+{% endblock content %}
