@@ -332,7 +332,7 @@ def wordcloud_json_for_document_topic(request, corpus_id, document_topic_id):
             'total_audio_fragments': term.audiofragment__count,
             'total_documents': term.audiofragment__document__count,
         }
-        if term_id_to_dttis[term.id]:
+        if term.id in term_id_to_dttis:
             for dtti in term_id_to_dttis[term.id]:
                 term_json['css_class'] += 'term_info_category_%d ' % category_name_to_index[dtti.category]
                 term_json['term_info_' + dtti.category] = dtti.score
