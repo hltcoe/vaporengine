@@ -80,78 +80,49 @@ var TermCloudControls = {
 
   addSortControl: function(termCloud, default_sort_key, sort_keys) {
     function getComparatorForSortKey(sortKey) {
-      if (sortKey === 'label') {
-        return sortByLabel;
-      }
-      else {
-        return sortKey;
-      }
+      return function(a, b) {
+        var a_attribute = a.attributes[sortKey];
+        var b_attribute = b.attributes[sortKey];
+
+        if ((a_attribute === '' || a_attribute === undefined) && b_attribute) {
+          return 1;
+        }
+        else if (a_attribute && (b_attribute === '' || b_attribute === undefined)) {
+          return -1;
+        }
+        else if (a_attribute < b_attribute) {
+          return -1;
+        }
+        else if (a_attribute > b_attribute) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      };
     }
 
     function getReverseComparatorForSortKey(sortKey) {
-      if (sortKey === 'label') {
-        return reverseSortByLabel;
-      }
-      else {
-        return function(a, b) {
-          var a_attribute = a.attributes[sortKey];
-          var b_attribute = b.attributes[sortKey];
+      return function(a, b) {
+        var a_attribute = a.attributes[sortKey];
+        var b_attribute = b.attributes[sortKey];
 
-          if (a_attribute < b_attribute) {
-            return 1;
-          }
-          else if (a_attribute > b_attribute) {
-            return -1;
-          }
-          else {
-            return 0;
-          }
-        };
-      }
-    }
-
-    function reverseSortByLabel(a, b) {
-      // Terms with labels will always come before terms without labels
-      var a_label = a.attributes.label;
-      var b_label = b.attributes.label;
-
-      if (a_label.length === 0 && b_label.length > 0) {
-        return 1;
-      }
-      else if (a_label.length > 0 && b_label.length === 0) {
-        return -1;
-      }
-      else if (a_label < b_label) {
-        return 1;
-      }
-      else if (a_label > b_label) {
-        return -1;
-      }
-      else {
-        return 0;
-      }
-    }
-
-    function sortByLabel(a, b) {
-      // Terms with labels will always come before terms without labels
-      var a_label = a.attributes.label;
-      var b_label = b.attributes.label;
-
-      if (a_label.length === 0 && b_label.length > 0) {
-        return 1;
-      }
-      else if (a_label.length > 0 && b_label.length === 0) {
-        return -1;
-      }
-      else if (a_label < b_label) {
-        return -1;
-      }
-      else if (a_label > b_label) {
-        return 1;
-      }
-      else {
-        return 0;
-      }
+        if ((a_attribute === '' || a_attribute === undefined) && b_attribute) {
+          return 1;
+        }
+        else if (a_attribute && (b_attribute === '' || b_attribute === undefined)) {
+          return -1;
+        }
+        else if (a_attribute < b_attribute) {
+          return 1;
+        }
+        else if (a_attribute > b_attribute) {
+          return -1;
+        }
+        else {
+          return 0;
+        }
+      };
     }
 
     function updateSortComparator() {
