@@ -304,6 +304,9 @@ class DocumentTopic(models.Model):
     def terms(self):
         return Term.objects.filter(audiofragment__document__documenttopic=self).distinct()
 
+    def terms_with_document_topic_info(self):
+        return Term.objects.filter(documenttopicterminfo__document_topic=self).distinct()
+
 
 class DocumentTopicTermInfo(models.Model):
     """Information about a Term that is relevant to a particular DocumentTopic

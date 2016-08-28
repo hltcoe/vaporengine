@@ -299,7 +299,8 @@ def wordcloud_json_for_document_topic(request, corpus_id, document_topic_id):
     document_topic = DocumentTopic.objects.get(id=document_topic_id)
     total_documents = corpus.document_set.count()
 
-    terms = document_topic.terms().annotate(Count('audiofragment'), Count('audiofragment__document', distinct=True))
+#    terms = document_topic.terms().annotate(Count('audiofragment'), Count('audiofragment__document', distinct=True))
+    terms = document_topic.terms_with_document_topic_info().annotate(Count('audiofragment'), Count('audiofragment__document', distinct=True))
 
     # Create a mapping from each Term ID to the corresponding list of AudioFragment IDs, using a single SQL query.
     term_audiofragment_id_pairs = AudioFragment.objects.filter(document__corpus_id=corpus_id).values_list('term_id', 'id')
