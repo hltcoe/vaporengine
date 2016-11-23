@@ -43,15 +43,8 @@ var TermCloudControls = {
     });
 
     // Add event handler when label in text box is updated
-    $('#term_label')
-      .focusout(function() {
-        updateTermLabel();
-      })
-      .keydown(function(e) {
-        // Update annotation when users hit enter
-        if (e.keyCode === 13) {
-          updateTermLabel();
-        }
+    $('#term_label').change(function() {
+      updateTermLabel();
     });
   },
 
