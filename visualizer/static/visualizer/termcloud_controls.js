@@ -31,6 +31,8 @@ var TermCloudControls = {
       termCloud.activeTermCloudItemModel.attributes.label = label;
       termCloud.activeTermCloudItemModel.save();
       termCloud.collection.sort();
+      $('#term_label_feedback').show();
+      $('#term_label_feedback').delay(1000).fadeOut();
     }
 
     // Add event handler for when user clicks on item in TermCloud
