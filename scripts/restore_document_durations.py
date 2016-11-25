@@ -14,3 +14,4 @@ def run():
         for document_audio_identifier in data[corpus_name]:
             document = corpus.document_set.filter(audio_identifier=document_audio_identifier).first()
             document.duration = data[corpus_name][document_audio_identifier]
+            document.save()
