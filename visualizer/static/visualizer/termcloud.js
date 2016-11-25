@@ -96,8 +96,12 @@ var TermCloud = Backbone.View.extend({
     this.listenTo(this.collection, 'sync', this.render);
   },
   render: function() {
+    this.trigger('render_start');
+
     // Remove all items from TermCloud
     var $list = this.$('div.termcloud_terms').empty();
+
+    var termCloudItemList = [];
 
     // Add items to TermCloud
     this.collection.each(function(model) {
@@ -128,8 +132,12 @@ var TermCloud = Backbone.View.extend({
         item_el.addClass('active_wordcloud_token');
       }
 
-      $list.append(item_el);
+      termCloudItemList.push(item_el);
     }, this);
+
+    $list.append(termCloudItemList);
+
+    this.trigger('render_stop');
 
     return this;
   },
