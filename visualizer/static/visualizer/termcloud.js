@@ -101,6 +101,7 @@ var TermCloud = Backbone.View.extend({
     // Remove all items from TermCloud
     var $list = this.$('div.termcloud_terms').empty();
 
+    var collectionLength = this.collection.length;
     var termCloudItemList = [];
 
     // Add items to TermCloud
@@ -117,16 +118,25 @@ var TermCloud = Backbone.View.extend({
       // Adjust size of word
       item_el.css('font-size', this.fontSizeFunction(model));
 
-      // Add tooltip
-      var tooltip_text = '';
+      var titleText = '';
       for (var i in this.sort_keys) {
-        tooltip_text += this.sort_keys[i].key_description + ': ' + model.attributes[this.sort_keys[i].key_name] + '\n';
+        titleText += this.sort_keys[i].key_description + ': ' + model.attributes[this.sort_keys[i].key_name] + '\n';
       }
       item_el
-        .attr('data-placement', 'bottom')
-        .attr('data-toggle', 'tooltip')
-        .attr('title', tooltip_text)
-        .tooltip();
+        .attr('title', titleText);
+
+      // Add a Bootstrap tooltip if the collection size is small enough.
+      //
+      // Adding a Bootstrap tooltip is a relatively expensive rendering
+      // operation.  If the collection is too large, we skip adding the
+      // tooltip, which makes the UI more responsive (though slightly
+      // less attractive).
+      if (collectionLength < 5000) {
+        item_el
+          .attr('data-placement', 'bottom')
+          .attr('data-toggle', 'tooltip')
+          .tooltip();
+      }
 
       if (this.activeTermCloudItemModel === model) {
         item_el.addClass('active_wordcloud_token');
