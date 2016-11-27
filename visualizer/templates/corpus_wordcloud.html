@@ -1,6 +1,9 @@
 {% extends "base_wordcloud.html" %}
+{% load staticfiles %}
 
 {% block head_scripts %}
+  <link rel="stylesheet" href="{% static "visualizer/progress_spinner.css" %}" />
+
   <script>
     $(document).ready(function() {
       var waveformVisualizer = new WaveformVisualizer(
@@ -22,6 +25,10 @@
         TermCloudControls.addLabelEditorEventHandlers(termCloud);
         TermCloudControls.addSizeControl(termCloud, wordcloud_params.default_size_key, wordcloud_params.size_keys);
         TermCloudControls.addSortControl(termCloud, wordcloud_params.default_sort_key, wordcloud_params.sort_keys);
+
+        termCloud.once('render_stop', function() {
+          $('#progress_spinner').hide();
+        });
 
         termCloudCollection.fetch();
       });
@@ -68,6 +75,23 @@
       </div>
     </div>
   </nav>
+
+  <div id="progress_spinner">
+    <div class='progress-spinner-css' style='transform:scale(0.2);'>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(0deg) translate(0,-60px);transform:rotate(0deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(30deg) translate(0,-60px);transform:rotate(30deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(60deg) translate(0,-60px);transform:rotate(60deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(90deg) translate(0,-60px);transform:rotate(90deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(120deg) translate(0,-60px);transform:rotate(120deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(150deg) translate(0,-60px);transform:rotate(150deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(180deg) translate(0,-60px);transform:rotate(180deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(210deg) translate(0,-60px);transform:rotate(210deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(240deg) translate(0,-60px);transform:rotate(240deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(270deg) translate(0,-60px);transform:rotate(270deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(300deg) translate(0,-60px);transform:rotate(300deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+      <div style='top:80px;left:93px;width:14px;height:40px;background:#000000;-webkit-transform:rotate(330deg) translate(0,-60px);transform:rotate(330deg) translate(0,-60px);border-radius:10px;position:absolute;'></div>
+    </div>
+  </div>
 
   <div id="termcloud">
     <div class="termcloud_terms"></div>
