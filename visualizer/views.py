@@ -30,11 +30,13 @@ def corpus_document_list(request, corpus_id):
 
 def document(request, corpus_id, document_id):
     corpus = Corpus.objects.get(id=corpus_id)
+    document = Document.objects.get(id=document_id)
     if corpus.protected_corpus and not request.user.is_authenticated():
         return redirect('/login/?next='+request.path)
     context = {
         'corpus_id': corpus_id,
         'document_id': document_id,
+        'document_duration': document.duration_in_seconds()
     }
     return render(request, "document.html", context)
 
