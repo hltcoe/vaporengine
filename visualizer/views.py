@@ -63,6 +63,26 @@ def document_topic(request, corpus_id, document_topic_id):
     }
     return render(request, "document_topic.html", context)
 
+def document_topic_json_for_document(request, corpus_id, document_id):
+    corpus = Corpus.objects.get(id=corpus_id)
+    document = Document.objects.get(id=document_id)
+    document_topic_json = {}
+    for dt in corpus.documenttopic_set.all():
+        document_topic_json[dt.id] = { 'label': dt.label }
+    for dt in document.documenttopic_set.all():
+        document_topic_json[dt.id]['selected'] = True
+    return JsonResponse(document_topic_json)
+
+@csrf_exempt
+def document_topic_for_document_update(request, corpus_id, document_id):
+    document = Document.objects.get(id=document_id)
+    dt = DocumentTopic.objects.get(id=request.POST['document_topic_id'])
+    if request.POST['action'] == 'add':
+        document.documenttopic_set.add(dt)
+    else:
+        document.documenttopic_set.remove(dt)
+    return JsonResponse({})
+
 def document_wav_file(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)
     if os.path.splitext(document.audio_path)[1] == '.wav':

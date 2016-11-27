@@ -61,6 +61,50 @@
 
         termCloudCollection.fetch();
       });
+
+      $.getJSON("{% url 'document_topic_json_for_document' corpus_id document_id %}", function(document_topics) {
+        function toggleDocumentTopicButton(event) {
+          console.log('toggleDocumentTopicButton');
+
+          if ($(this).hasClass('active')) {
+            $(this).addClass('btn-default');
+            $(this).removeClass('active btn-primary');
+            $.post("{% url 'document_topic_for_document_update' corpus_id document_id %}",
+                   {
+                     'action': 'remove',
+                     'document_topic_id': event.data.document_topic_id
+                   });
+          }
+          else {
+            $(this).addClass('active btn-primary');
+            $(this).removeClass('btn-default');
+            $.post("{% url 'document_topic_for_document_update' corpus_id document_id %}",
+                   {
+                     'action': 'add',
+                     'document_topic_id': event.data.document_topic_id
+                   });
+          }
+        }
+        console.log('DT JSON for Document');
+
+        dt_buttons = []
+        for (dt_id in document_topics) {
+          dt_button = $('<button>').addClass('btn btn-xs')
+                                   .click({'document_topic_id': dt_id}, toggleDocumentTopicButton)
+                                   .css('margin-left', '1em')
+                                   .css('margin-right', '1em')
+                                   .css('margin-bottom', '0.2em')
+                                   .text(document_topics[dt_id].label);
+          if (document_topics[dt_id]['selected']) {
+            dt_button.addClass('active btn-primary');
+          }
+          else {
+            dt_button.addClass('btn-default');
+          }
+          dt_buttons.push(dt_button);
+        }
+        $('#document_topics').append(dt_buttons);
+      });
     });
   </script>
 {% endblock head_scripts %}
@@ -126,6 +170,9 @@
 
     </div>
   </nav>
+
+  <div id="document_topics">
+  </div>
 
   <div id="termcloud">
     <div class="termcloud_terms"></div>
