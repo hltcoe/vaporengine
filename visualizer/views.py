@@ -36,6 +36,7 @@ def document(request, corpus_id, document_id):
     context = {
         'corpus_id': corpus_id,
         'document_id': document_id,
+        'document_audio_identifier': document.audio_identifier,
         'document_duration': document.duration_in_seconds()
     }
     return render(request, "document.html", context)
