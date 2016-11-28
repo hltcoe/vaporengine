@@ -117,6 +117,22 @@ def index(request):
     context = {'current_corpora': current_corpora}
     return render(request, "index.html", context)
 
+def lorelei_situation_frames_json(request, corpus_id):
+    corpus = Corpus.objects.get(id=corpus_id)
+    situation_frames = []
+    for document in corpus.document_set.all():
+        dt_labels = document.documenttopic_set.values_list('label', flat=True)
+        for dt_label in dt_labels:
+            situation_frame = {}
+            situation_frame['DocumentID'] = document.audio_identifier
+            situation_frame['Type'] = dt_label
+            situation_frame['TypeConfidence'] = 1.0
+            situation_frames.append(situation_frame)
+    pretty_json = json.dumps(situation_frames, indent=2, ensure_ascii=False, sort_keys=True) + u'\n'
+    response = HttpResponse(content=pretty_json)
+    response['Content-Type'] = 'application/json'
+    return response
+
 def term_audio_fragments_as_json(request, corpus_id, term_id):
     term = Term.objects.get(id=term_id)
 
