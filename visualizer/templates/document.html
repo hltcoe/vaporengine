@@ -5,6 +5,11 @@
 {% endblock title %}
 
 {% block head_scripts %}
+  <style>
+    body {
+      padding-top: 120px;
+    }
+  </style>
   <script>
     $(document).ready(function() {
       var waveformVisualizer = new WaveformVisualizer(
@@ -25,6 +30,7 @@
         $('.audio_fragment_span_' + marker.id).removeClass('playover');
       });
 
+      /*
       $.getJSON("{% url 'document_audio_fragments_as_json' corpus_id document_id %}", function(audio_fragments) {
         waveformVisualizer.wavesurfer.on('ready', function() {
           for (var i = 0; i < audio_fragments.length; i++) {
@@ -65,6 +71,7 @@
 
         termCloudCollection.fetch();
       });
+      */
 
       $.getJSON("{% url 'document_topic_json_for_document' corpus_id document_id %}", function(document_topics) {
         function toggleDocumentTopicButton(event) {
@@ -131,6 +138,7 @@
         </div>
       </div>
 
+      <!--
       <div class="row">
         <div class="col-md-1 text-right" style="padding-top: 20px;">
           <span id="term_audio_controls"></span>
@@ -171,15 +179,149 @@
           </div>
         </div>
       </div>
-
+      -->
     </div>
   </nav>
 
-  <div id="document_topics">
+  <div>
+    <div style="padding-bottom: 1em;">
+      Please select one or more labels for this audio document:
+    </div>
+    <div id="document_topics">
+    </div>
   </div>
 
   <div id="termcloud">
     <div class="termcloud_terms"></div>
+  </div>
+
+  <hr />
+
+  <h4><a href="{% url 'corpus_document_list' corpus_id %}">Back to <b>Document List</b></a></h4>
+
+  <hr />
+
+  <div>
+    <table class="table table-bordered">
+      <tr>
+        <th>
+          Label
+        </th>
+        <th>
+          Description
+        </th>
+      </tr>
+      <tr>
+        <td>
+          Civil Unrest or Widespread Crime
+        </td>
+        <td>
+          Any issue involving violent unrest, including riots,
+          insurgencies, looting, etc. or wide-spread criminal
+          activity.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Elections and Politics
+        </td>
+        <td>
+          Any issue involving voting, including pre-election campaigns
+          and polls and post-election results, or other political
+          events.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Evacuation
+        </td>
+        <td>
+          Any issue involving the evacuation of people from a specific
+          danger zone.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Food Supply
+        </td>
+        <td>
+          Any issue involving food supply, including lack of food/food
+          sources.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Infrastructure
+        </td>
+        <td>
+          Any issue involving buildings (schools, government offices,
+          factories, places of worship, etc), transportation
+          infrastructure (roads, train lines, bridges, etc) or other
+          civil or community infrastructure damaged or not
+          operational.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Medical Assistance
+        </td>
+        <td>
+          Any issue involving disease or injury requiring or
+          suggesting the need for medical assistance.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Shelter
+        </td>
+        <td>
+          Any issue involving the availability of shelter, including
+          destruction of homes, unsafe shelter conditions, etc.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Terrorism or other Extreme Violence
+        </td>
+        <td>
+          Any issue involving extreme violence, terrorism, or
+          terrorist activities.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Urgent Rescue
+        </td>
+        <td>
+          Any issue involving an urgent need for emergency aid to
+          remove individuals or groups from immediate peril.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Utilities, Energy, or Sanitation
+        </td>
+        <td>
+          Any issue involving utilities/services interrupted or
+          restored. This includes issues involving facilities that
+          supply utilities, energy or sanitation; it also includes
+          issues/needs regarding electricity or disruption, lack of
+          waste removal, sewage problems, etc.
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Water Supply
+        </td>
+        <td>
+          Any issue involving water supply, including lack of water,
+          contamination of water, etc. This type includes issues
+          involving dietary water and agricultural water, but it does
+          not include things like flash floods (unless the flood
+          affects the supply of dietary or agricultural water).
+        </td>
+      </tr>
+    </table>
   </div>
 
 {% endblock content %}
