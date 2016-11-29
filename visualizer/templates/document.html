@@ -197,7 +197,11 @@
 
   <hr />
 
-  <h4><a href="{% url 'corpus_document_list' corpus_id %}">Back to <b>Document List</b></a></h4>
+  <div style="font-size: 1.1em; font-weight: bold;">
+    <a href="{% url 'document' corpus_id previous_document_id %}">Previous Document</a> |
+    <a href="{% url 'document' corpus_id next_document_id %}">Next Document</a> |
+    <a href="{% url 'corpus_document_list' corpus_id %}">Document List</a>
+  </div>
 
   <hr />
 

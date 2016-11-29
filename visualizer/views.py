@@ -33,11 +33,27 @@ def document(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)
     if corpus.protected_corpus and not request.user.is_authenticated():
         return redirect('/login/?next='+request.path)
+
+    last_document_index = corpus.document_set.order_by('document_index').last().document_index
+    if document.document_index == 0:
+        previous_document_index = last_document_index
+    else:
+        previous_document_index = document.document_index - 1
+    previous_document_id = corpus.document_set.filter(document_index=previous_document_index).first().id
+
+    if document.document_index == last_document_index:
+        next_document_index = 0
+    else:
+        next_document_index = document.document_index + 1
+    next_document_id = corpus.document_set.filter(document_index=next_document_index).first().id
+
     context = {
         'corpus_id': corpus_id,
         'document_id': document_id,
         'document_audio_identifier': document.audio_identifier,
-        'document_duration': document.duration_in_seconds()
+        'document_duration': document.duration_in_seconds(),
+        'next_document_id': next_document_id,
+        'previous_document_id': previous_document_id
     }
     return render(request, "document.html", context)
 
