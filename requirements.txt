@@ -1,3 +1,3 @@
-django>=1.9.5
-django-extensions
+django>=1.10.3
+django-extensions>=1.7.5
 pysox>=0.3.6.alpha
