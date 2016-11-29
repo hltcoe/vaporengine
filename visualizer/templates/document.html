@@ -125,13 +125,16 @@
   <nav id="waveform_navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-1 text-right" style="padding-top: 20px;">
+        <div class="col-md-2 text-right" style="padding-top: 20px;">
           <div id="document_audio_controls"></div>
-          <div id="document_duration" style="font-size: 0.8em; margin-top: 0.5em;">
+          <div style="font-size: 0.8em; margin-top: 0.5em;">
+            {{ document_audio_identifier }}
+          </div>
+          <div id="document_duration" style="font-size: 0.8em;">
             {{ document_duration }}s
           </div>
         </div>
-        <div class="col-md-11">
+        <div class="col-md-10">
           <div style="border: 1px solid #C0C0C0; margin-top: 0.5em; margin-bottom: 0.5em;">
             <div id="document_visualizer" title="{{ document_audio_identifier }}"></div>
           </div>
