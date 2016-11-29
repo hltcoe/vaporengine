@@ -24,7 +24,7 @@ def corpus_document_list(request, corpus_id):
     corpus = Corpus.objects.get(id=corpus_id)
     if corpus.protected_corpus and not request.user.is_authenticated():
         return redirect('/login/?next='+request.path)
-    document_list = corpus.document_set.all()
+    document_list = corpus.document_set.order_by('document_index')
     context = {'corpus': corpus, 'document_list': document_list}
     return render(request, "corpus_document_list.html", context)
 
