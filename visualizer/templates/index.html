@@ -21,8 +21,7 @@
       {% if corpus.documenttopic_set.count %}
       {{corpus.documenttopic_set.count|intcomma}} Document Topics /
       {% endif %}
-      {{corpus.total_terms|intcomma}} Terms /
-      {{corpus.total_audio_fragments|intcomma}} Utterances
+      {{corpus.total_terms|intcomma}} Terms
     </li>
   </ul>
   {% endif %}
