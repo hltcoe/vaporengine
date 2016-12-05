@@ -6,6 +6,8 @@
 
   <script>
     $(document).ready(function() {
+      $('#sort_direction').data('sort_reversed', true);
+
       var waveformVisualizer = new WaveformVisualizer(
         'waveform_visualizer',
         {},
@@ -110,7 +112,7 @@
           </div>
 
           <div class="form-group">
-            <label for="sort_key_select">Sort (<span id="sort_direction" class="glyphicon glyphicon-arrow-up"></span>):</label>
+            <label for="sort_key_select">Sort (<span id="sort_direction" class="glyphicon glyphicon-arrow-down"></span>):</label>
             <select id="sort_key_select" class="selectpicker" data-width="fit" data-style="btn-default btn-xs">
             </select>
           </div>
@@ -156,5 +158,6 @@
   <div id="termcloud">
     <div class="termcloud_terms"></div>
   </div>
+
 
 {% endblock content %}
