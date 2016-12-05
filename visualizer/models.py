@@ -352,6 +352,14 @@ class Term(models.Model):
         return Document.objects.filter(audiofragment__term=self).distinct().count()
 
 
+class TermCategory(models.Model):
+    """
+    """
+    name = models.TextField()
+    corpus = models.ForeignKey(Corpus)
+    terms = models.ManyToManyField(Term)
+
+
 def _slurp(fname, encoding='utf-8'):
     # Some of the source files have the unicode characters \u2028
     # (line separator) and \u2029 (paragraph separator)
