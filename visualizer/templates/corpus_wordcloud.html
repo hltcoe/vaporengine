@@ -26,12 +26,65 @@
         TermCloudControls.addSizeControl(termCloud, wordcloud_params.default_size_key, wordcloud_params.size_keys);
         TermCloudControls.addSortControl(termCloud, wordcloud_params.default_sort_key, wordcloud_params.sort_keys);
 
+        termCloud.on('click_model', updateTermCategories);
+
         termCloud.once('render_stop', function() {
           $('#progress_spinner').hide();
         });
 
         termCloudCollection.fetch();
       });
+
+
+      function updateTermCategories(model) {
+        var term_id = model.id;
+
+        $.getJSON("/visualizer/{{ corpus.id }}/term/" + term_id + "/category.json", function(term_categories) {
+          function toggleTermCategoryButton(event) {
+            console.log('toggleTermCategoryButton');
+
+            if ($(this).hasClass('active')) {
+              $(this).addClass('btn-default');
+              $(this).removeClass('active btn-primary');
+              $.post("/visualizer/{{ corpus.id }}/term/" + term_id + "/category_update",
+                     {
+                       'action': 'remove',
+                       'term_category_id': event.data.term_category_id
+                     });
+            }
+            else {
+              $(this).addClass('active btn-primary');
+              $(this).removeClass('btn-default');
+              $.post("/visualizer/{{ corpus.id }}/term/" + term_id + "/category_update",
+                     {
+                       'action': 'add',
+                       'term_category_id': event.data.term_category_id
+                     });
+            }
+          }
+
+          tc_buttons = []
+          for (tc_id in term_categories) {
+            tc_button = $('<button>').addClass('btn btn-xs')
+                                     .click({'term_category_id': tc_id}, toggleTermCategoryButton)
+                                     .css('margin-left', '1em')
+                                     .css('margin-right', '1em')
+                                     .css('margin-bottom', '0.2em')
+                                     .text(term_categories[tc_id].name);
+            if (term_categories[tc_id]['selected']) {
+              tc_button.addClass('active btn-primary');
+            }
+            else {
+              tc_button.addClass('btn-default');
+            }
+            tc_buttons.push(tc_button);
+          }
+          $('#term_categories').empty(tc_buttons);
+          $('#term_categories').append($('<div>').css('padding-bottom', '1em')
+                                                 .text('Please select one or more labels for this term:'));
+          $('#term_categories').append(tc_buttons);
+        });
+      }
     });
   </script>
 {% endblock head_scripts %}
@@ -69,12 +122,19 @@
           </div>
 
           <div class="form-group">
-            <div id="waveform_visualizer_document_list" style="padding-left: 1em;"></div>
+            <div id="waveform_visualizer_document_list" style="padding-left: 1em; display: none;"></div>
           </div>
         </div>
       </div>
     </div>
   </nav>
+
+  <div>
+    <div id="term_categories">
+    </div>
+  </div>
+
+  <hr />
 
   <div id="progress_spinner">
     <div class='progress-spinner-css' style='transform:scale(0.2);'>

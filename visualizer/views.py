@@ -10,7 +10,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 import pysox
 
-from visualizer.models import AudioFragment, Corpus, Document, DocumentTopic, Term
+from visualizer.models import AudioFragment, Corpus, Document, DocumentTopic, Term, TermCategory
 
 
 def corpus_wordcloud(request, corpus_id):
@@ -163,6 +163,27 @@ def term_audio_fragments_as_json(request, corpus_id, term_id):
     return JsonResponse(audio_fragments_json, safe=False)
 
 @csrf_exempt
+def term_category_for_term_update(request, corpus_id, term_id):
+    term  = Term.objects.get(id=term_id)
+    tc = TermCategory.objects.get(id=request.POST['term_category_id'])
+    if request.POST['action'] == 'add':
+        term.termcategory_set.add(tc)
+    else:
+        term.termcategory_set.remove(tc)
+    return JsonResponse({})
+
+def term_category_json_for_term(request, corpus_id, term_id):
+    corpus = Corpus.objects.get(id=corpus_id)
+    term = Term.objects.get(id=term_id)
+    term_category_json = {}
+    for tc in corpus.termcategory_set.all():
+        term_category_json[tc.id] = { 'name': tc.name }
+    for tc in term.termcategory_set.all():
+        term_category_json[tc.id]['selected'] = True
+    return JsonResponse(term_category_json)
+
+
+@csrf_exempt
 def term_update(request, term_id):
     request_data = json.loads(request.body)
     term = Term.objects.get(id=term_id)
@@ -220,7 +241,7 @@ def wordcloud_json_for_corpus(request, corpus_id):
     # With annotate(), we can compute the # of AudioFragments associated with each Term in a Corpus using
     # just a single SQL query for the entire Corpus.  This is an order-of-magnitude faster than making
     # a separate SQL call for each Term in the Corpus by calling term.total_audio_fragments() in a for loop.
-    terms = corpus.terms().annotate(Count('audiofragment'), Count('audiofragment__document', distinct=True))
+    terms = corpus.terms().annotate(Count('audiofragment'), Count('audiofragment__document', distinct=True)).order_by('-audiofragment__count')[0:100]
 
     # Create a mapping from each Term ID to the corresponding list of AudioFragment IDs, using a single SQL query.
     #

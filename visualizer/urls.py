@@ -10,6 +10,11 @@ urlpatterns = [
     url(r'^document_topic_wordcloud_params/(?P<document_topic_id>\d+)', views.wordcloud_params_for_document_topic,
         name='wordcloud_params_for_document_topic'),
 
+    url(r'^(?P<corpus_id>\d+)/term/(?P<term_id>\d+)/category_update', views.term_category_for_term_update,
+        name='term_category_for_term_update'),
+    url(r'^(?P<corpus_id>\d+)/term/(?P<term_id>\d+)/category.json', views.term_category_json_for_term,
+        name='term_category_json_for_term'),
+
     url(r'^\d+/terms.json/(?P<term_id>\d+)', views.term_update, name='term_update_corpus_termcloud'),
     url(r'^(?P<corpus_id>\d+)/terms.json', views.wordcloud_json_for_corpus, name='wordcloud_json_for_corpus'),
     url(r'^(?P<corpus_id>\d+)/lorelei_situation_frames.json', views.lorelei_situation_frames_json,
