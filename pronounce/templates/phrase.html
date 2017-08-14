@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% load staticfiles %}
+  <link rel="stylesheet" href="{% static "visualizer/jquery-ui-1.10.4/css/ui-lightness/jquery-ui-1.10.4.css" %}" />
+  <link rel="stylesheet" href="{% static "visualizer/bootstrap-3.3.7/css/bootstrap.css" %}" />
+  <link rel="stylesheet" href="{% static "visualizer/bootstrap-3.3.7/css/bootstrap-theme.css" %}" />
+
+  <style>
+    body {
+      padding-top: 2em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div style="font-size: 1.1em; font-weight: bold;">
+      <a href="{% url 'phrase' phrase_corpus_id previous_phrase_id %}">Previous Phrase</a> |
+      <a href="{% url 'index' %}">Home</a> |
+      <a href="{% url 'phrase' phrase_corpus_id next_phrase_id %}">Next Phrase</a>
+    </div>
+
+    <hr>
+
+    <div>
+      {{ phrase.phrase_text }}
+    </div>
+  </div>
+</body>
+</html>
