@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
+from ipware.ip import get_real_ip
 
 from pronounce.models import Phrase, PhraseCorpus, PhrasePresentation
 
@@ -32,6 +33,7 @@ def phrase(request, phrase_corpus_id, phrase_id):
     # Record when phrase was presented to the user
     pp = PhrasePresentation()
     pp.phrase = phrase
+    pp.ip_address = get_real_ip(request)
     pp.save()
     
     context = {
