@@ -27,4 +27,4 @@ class Phrase(models.Model):
 class PhrasePresentation(models.Model):
     """Records when a Phrase was presented to an NI"""
     phrase = models.ForeignKey(Phrase)
-    updated_at = models.DateField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)

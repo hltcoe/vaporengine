@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 
-from pronounce.models import Phrase, PhraseCorpus
+from pronounce.models import Phrase, PhraseCorpus, PhrasePresentation
 
 
 def index(request):
