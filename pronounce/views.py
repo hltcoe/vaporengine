@@ -34,7 +34,6 @@ def phrase(request, phrase_corpus_id, phrase_id):
     pp = PhrasePresentation()
     pp.phrase = phrase
     pp.ip_address = get_ip(request)
-    import ipdb; ipdb.set_trace()
     pp.save()
     
     context = {
