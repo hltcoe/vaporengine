@@ -1,12 +1,9 @@
-{% for phrase_corpus in phrase_corpora %}
-<h3>{{ phrase_corpus.title }}</h3>
 <div style="margin-left: 2em;">
-  {% for phrase in phrase_corpus.phrase_set.all %}
-  <p>
-    <a href="{% url 'phrase' phrase_corpus.id phrase.id %}">
-      {{ phrase.utterance_identifier }}
+{% for phrase_corpus in phrase_corpora %}
+  <h3>
+    <a href="{% url 'phrase' phrase_corpus.id phrase_corpus.phrase_set.first.id %}">
+      {{ phrase_corpus.title }}
     </a>
-  </p>
-  {% endfor %}
-</div>
+  </h3>
 {% endfor %}
+</div>
