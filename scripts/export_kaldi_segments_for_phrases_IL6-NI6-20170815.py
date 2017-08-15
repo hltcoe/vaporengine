@@ -12,7 +12,7 @@ def run():
     pps = PhrasePresentation.objects.filter(phrase__phrase_corpus=pc).order_by('updated_at')
 
     # t0 = 2017-08-15 10:10am EDT
-    t0 = datetime(2017, 8, 15, 14, 10, 15, 0, tzinfo=timezone('UTC'))
+    t0 = datetime(2017, 8, 15, 14, 10, 0, 0, tzinfo=timezone('UTC'))
 
     for (i, pp) in enumerate(pps):
         if i < len(pps)-1:
