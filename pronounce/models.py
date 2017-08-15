@@ -10,9 +10,10 @@ class PhraseCorpus(models.Model):
 class Phrase(models.Model):
     phrase_corpus = models.ForeignKey(PhraseCorpus)
     
-    utterance_identifier = models.TextField()
-    phrase_text = models.TextField()
+    utterance_identifier = models.TextField(db_index=True)
     phrase_index = models.IntegerField()
+    phrase_text = models.TextField()
+    transliteration = models.TextField(null=True)
 
     def create_from_line(self, line):
         # Input data files have the form:
