@@ -115,6 +115,21 @@
         }
         $('#document_topics').append(dt_buttons);
       });
+
+      $(document).keyup(function(event) {
+        var isEscape = false;
+        if ("key" in event) {
+          isEscape = (event.key == "Escape" || event.key == "Esc");
+        } else {
+          isEscape = (event.keyCode == 27);
+        }
+        if (isEscape) {
+          waveformVisualizer.playPause();
+          if (waveformVisualizer.wavesurfer.backend.isPaused()) {
+            waveformVisualizer.wavesurfer.skip(-5);
+          }
+        }
+      });
     });
   </script>
 {% endblock head_scripts %}
