@@ -11,7 +11,7 @@ def index(request):
     context = {
         'phrase_corpora': PhraseCorpus.objects.all()
     }
-    return render(request, 'index.html', context)
+    return render(request, 'pronounce_index.html', context)
 
 def phrase(request, phrase_corpus_id, phrase_id):
     phrase_corpus = PhraseCorpus.objects.get(id=phrase_corpus_id)
