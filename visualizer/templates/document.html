@@ -126,7 +126,7 @@
         }
         if (isEscape) {
           waveformVisualizer.playPause();
-          if (waveformVisualizer.wavesurfer.backend.isPaused()) {
+          if (!waveformVisualizer.wavesurfer.backend.isPaused()) {
             waveformVisualizer.wavesurfer.skip(-0.5);
           }
         }
