@@ -10,7 +10,15 @@ from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 import pysox
 
-from visualizer.models import AudioFragment, Corpus, Document, DocumentTopic, Term, TermCategory
+from visualizer.models import (
+    AudioFragment,
+    Corpus,
+    Document,
+    DocumentTopic,
+    DocumentTranscript,
+    Term,
+    TermCategory
+)
 
 
 def corpus_wordcloud(request, corpus_id):
@@ -47,13 +55,16 @@ def document(request, corpus_id, document_id):
         next_document_index = document.document_index + 1
     next_document_id = corpus.document_set.filter(document_index=next_document_index).first().id
 
+    document_transcript, _ = document.documenttranscript_set.get_or_create()
+
     context = {
         'corpus_id': corpus_id,
         'document_id': document_id,
         'document_audio_identifier': document.audio_identifier,
         'document_duration': document.duration_in_seconds(),
         'next_document_id': next_document_id,
-        'previous_document_id': previous_document_id
+        'previous_document_id': previous_document_id,
+        'document_transcript': document_transcript,
     }
     return render(request, "document.html", context)
 
@@ -99,6 +110,16 @@ def document_topic_for_document_update(request, corpus_id, document_id):
     else:
         document.documenttopic_set.remove(dt)
     return JsonResponse({})
+
+@csrf_exempt
+def document_transcript_update(request, corpus_id, document_id, document_transcript_id):
+    document_transcript = DocumentTranscript.objects.get(id=document_transcript_id)
+    if 'action' in request.POST and request.POST['action'] == 'update':
+        document_transcript.text = request.POST['document_transcript_text']
+        document_transcript.save()
+        return JsonResponse({})
+    else:
+        return JsonResponse({'text': document_transcript.text})
 
 def document_wav_file(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)

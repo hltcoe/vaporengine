@@ -308,6 +308,11 @@ class DocumentTopic(models.Model):
         return Term.objects.filter(documenttopicterminfo__document_topic=self).distinct()
 
 
+class DocumentTranscript(models.Model):
+    document = models.ForeignKey(Document)
+    text = models.TextField()
+
+
 class DocumentTopicTermInfo(models.Model):
     """Information about a Term that is relevant to a particular DocumentTopic
     """

@@ -116,6 +116,7 @@
         $('#document_topics').append(dt_buttons);
       });
 
+      // Escape key plays/pauses audio; rewinds by 5 seconds on pause
       $(document).keyup(function(event) {
         var isEscape = false;
         if ("key" in event) {
@@ -129,6 +130,33 @@
             waveformVisualizer.wavesurfer.skip(-5);
           }
         }
+      });
+
+      // Retrieve transcript text
+      $.getJSON("{% url 'document_transcript_update' corpus_id document_id document_transcript.id %}",
+                function(document_transcript) {
+                  $('#document_transcript').text(document_transcript.text);
+                });
+
+      //
+      $('#document_transcript').keyup(function(event) {
+        var isEnter = false;
+        if ("key" in event) {
+          isEnter = (event.key == "Enter");
+        } else {
+          isEnter = (event.keyCode == 13);
+        }
+        if (isEnter) {
+          var currentTime = Math.round(100 * waveformVisualizer.wavesurfer.getCurrentTime()) / 100;
+          $('#document_transcript').insertAtCaret('[' + currentTime + '] ');
+        }
+
+        // Save updated transcript text to server
+        $.post("{% url 'document_transcript_update' corpus_id document_id document_transcript.id %}",
+               {
+                 'action': 'update',
+                 'document_transcript_text': event.target.value
+               });
       });
     });
   </script>
@@ -199,6 +227,15 @@
       -->
     </div>
   </nav>
+
+  <div>
+    <p>
+      Press the <b>Esc</b> to Start or Stop the audio
+    </p>
+    <textarea id="document_transcript" rows="6" cols="80"></textarea>
+  </div>
+
+  <hr />
 
   <div>
     <div style="padding-bottom: 1em;">

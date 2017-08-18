@@ -22,6 +22,9 @@ urlpatterns = [
     url(r'^(?P<corpus_id>\d+)/document/(?P<document_id>\d+)/audio_fragments.json',
         views.document_audio_fragments_as_json, name='document_audio_fragments_as_json'),
 
+    url(r'^(?P<corpus_id>\d+)/document/(?P<document_id>\d+)/transcript/(?P<document_transcript_id>\d+)',
+        views.document_transcript_update, name='document_transcript_update'),
+
     url(r'^\d+/document/\d+/terms.json/(?P<term_id>\d+)', views.term_update, name='term_update_document_termcloud'),
     url(r'^(?P<corpus_id>\d+)/document/(?P<document_id>\d+)/terms.json',
         views.wordcloud_json_for_document, name='wordcloud_json_for_document'),
