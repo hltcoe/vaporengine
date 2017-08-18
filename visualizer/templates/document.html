@@ -116,7 +116,7 @@
         $('#document_topics').append(dt_buttons);
       });
 
-      // Escape key plays/pauses audio; rewinds by 5 seconds on pause
+      // Escape key plays/pauses audio; rewinds by 0.5 seconds on pause
       $(document).keyup(function(event) {
         var isEscape = false;
         if ("key" in event) {
@@ -127,7 +127,7 @@
         if (isEscape) {
           waveformVisualizer.playPause();
           if (waveformVisualizer.wavesurfer.backend.isPaused()) {
-            waveformVisualizer.wavesurfer.skip(-5);
+            waveformVisualizer.wavesurfer.skip(-0.5);
           }
         }
       });
