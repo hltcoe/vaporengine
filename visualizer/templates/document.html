@@ -119,16 +119,19 @@
       // Escape key plays/pauses audio; rewinds by 1.5 seconds on pause
       $(document).keyup(function(event) {
         var isEscape = false;
+        var isF1 = false;
         if ("key" in event) {
           isEscape = (event.key == "Escape" || event.key == "Esc");
+          isF1 = (event.key == "F1");
         } else {
           isEscape = (event.keyCode == 27);
+          isF1 = (event.keyCode == 112);
         }
         if (isEscape) {
           waveformVisualizer.playPause();
-          if (!waveformVisualizer.wavesurfer.backend.isPaused()) {
-            waveformVisualizer.wavesurfer.skip(-1.5);
-          }
+        }
+        else if (isF1) {
+          waveformVisualizer.wavesurfer.skip(-1.5);
         }
       });
 
@@ -230,7 +233,8 @@
 
   <div>
     <p>
-      Press the <b>Esc</b> to Start or Stop the audio
+      Press <b>Esc</b> to Start or Stop the audio.
+      Press <b>F1</b> to rewind the audio by 1.5s.
     </p>
     <textarea id="document_transcript" rows="6" cols="80"></textarea>
   </div>
