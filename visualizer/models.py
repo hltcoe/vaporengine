@@ -327,6 +327,7 @@ class DocumentTopicTermInfo(models.Model):
     score = models.FloatField()
 
 class Place(models.Model):
+    corpus = models.ForeignKey(Corpus)
     kb_id = models.TextField()
     english_name = models.TextField(null=True)
     native_name = models.TextField(null=True)
