@@ -16,6 +16,7 @@ from visualizer.models import (
     Document,
     DocumentTopic,
     DocumentTranscript,
+    SituationFrameLabel,
     Term,
     TermCategory
 )
@@ -109,9 +110,9 @@ def document_topic_for_document_update(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)
     dt = DocumentTopic.objects.get(id=request.POST['document_topic_id'])
     if request.POST['action'] == 'add':
-        document.documenttopic_set.add(dt)
+        SituationFrameLabel.objects.update_or_create(document=document, documenttopic=dt)
     else:
-        document.documenttopic_set.remove(dt)
+        SituationFrameLabel.objects.filter(document=document, documenttopic=dt).delete()
     return JsonResponse({})
 
 @csrf_exempt

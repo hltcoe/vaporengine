@@ -297,7 +297,11 @@ class DocumentTopic(models.Model):
     label = models.TextField()
     description = models.TextField(default='')
     corpus = models.ForeignKey(Corpus)
-    documents = models.ManyToManyField(Document)
+    documents = models.ManyToManyField(
+        Document,
+        through='SituationFrameLabel',
+        through_fields=('documenttopic', 'document'),
+    )
 
     def term_info_categories(self):
         return self.documenttopicterminfo_set.values_list('category',flat=True).distinct()
@@ -322,6 +326,9 @@ class DocumentTopicTermInfo(models.Model):
     category = models.CharField(max_length=20, db_index=True)
     score = models.FloatField()
 
+class SituationFrameLabel(models.Model):
+    document = models.ForeignKey(Document)
+    documenttopic = models.ForeignKey(DocumentTopic)
 
 class Term(models.Model):
     """
