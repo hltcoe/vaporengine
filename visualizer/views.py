@@ -160,16 +160,17 @@ def index(request):
 
 def lorelei_situation_frames_json(request, corpus_id):
     corpus = Corpus.objects.get(id=corpus_id)
-    situation_frames = []
+    situation_frames_json = []
     for document in corpus.document_set.all():
-        dt_labels = document.documenttopic_set.values_list('label', flat=True)
-        for dt_label in dt_labels:
-            situation_frame = {}
-            situation_frame['DocumentID'] = document.audio_identifier
-            situation_frame['Type'] = dt_label
-            situation_frame['TypeConfidence'] = 1.0
-            situation_frames.append(situation_frame)
-    pretty_json = json.dumps(situation_frames, indent=2, ensure_ascii=False, sort_keys=True) + u'\n'
+        for sfl in document.situationframelabel_set.all():
+            sfl_json = {}
+            sfl_json['DocumentID'] = document.audio_identifier
+            sfl_json['Type'] = sfl.documenttopic.label
+            sfl_json['TypeConfidence'] = 1.0
+            if sfl.place:
+                sfl_json['Place_KB_ID'] = sfl.place.kb_id
+            situation_frames_json.append(sfl_json)
+    pretty_json = json.dumps(situation_frames_json, indent=2, ensure_ascii=False, sort_keys=True) + u'\n'
     response = HttpResponse(content=pretty_json)
     response['Content-Type'] = 'application/json'
     return response
