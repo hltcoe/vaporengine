@@ -335,6 +335,8 @@ class SituationFrameLabel(models.Model):
     document = models.ForeignKey(Document)
     documenttopic = models.ForeignKey(DocumentTopic)
     place = models.ForeignKey(Place, null=True)
+    status = models.TextField(null=True)
+    resolution = models.TextField(null=True)
 
 class Term(models.Model):
     """
