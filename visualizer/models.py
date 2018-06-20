@@ -326,9 +326,15 @@ class DocumentTopicTermInfo(models.Model):
     category = models.CharField(max_length=20, db_index=True)
     score = models.FloatField()
 
+class Place(models.Model):
+    kb_id = models.TextField()
+    english_name = models.TextField(null=True)
+    native_name = models.TextField(null=True)
+    
 class SituationFrameLabel(models.Model):
     document = models.ForeignKey(Document)
     documenttopic = models.ForeignKey(DocumentTopic)
+    place = models.ForeignKey(Place, null=True)
 
 class Term(models.Model):
     """
