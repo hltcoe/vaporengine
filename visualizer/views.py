@@ -175,6 +175,30 @@ def lorelei_situation_frames_json(request, corpus_id):
     response['Content-Type'] = 'application/json'
     return response
 
+def place_english_autocomplete_json(request, corpus_id):
+    corpus = Corpus.objects.get(id=corpus_id)
+    term = request.GET['term']
+
+    place_json = []
+    for place in corpus.place_set.filter(english_name__icontains=term):
+        place_json.append({
+            'label': place.english_name,
+            'value': place.kb_id
+        })
+    return JsonResponse(place_json, safe=False)
+
+def place_native_autocomplete_json(request, corpus_id):
+    corpus = Corpus.objects.get(id=corpus_id)
+    term = request.GET['term']
+
+    place_json = []
+    for place in corpus.place_set.filter(native_name__icontains=term):
+        place_json.append({
+            'label': place.native_name,
+            'value': place.kb_id
+        })
+    return JsonResponse(place_json, safe=False)
+
 def term_audio_fragments_as_json(request, corpus_id, term_id):
     term = Term.objects.get(id=term_id)
 

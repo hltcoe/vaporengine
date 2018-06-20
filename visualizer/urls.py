@@ -17,6 +17,10 @@ urlpatterns = [
 
     url(r'^\d+/terms.json/(?P<term_id>\d+)', views.term_update, name='term_update_corpus_termcloud'),
     url(r'^(?P<corpus_id>\d+)/terms.json', views.wordcloud_json_for_corpus, name='wordcloud_json_for_corpus'),
+    url(r'^(?P<corpus_id>\d+)/place_english_autocomplete.json', views.place_english_autocomplete_json,
+        name='place_english_autocomplete_json'),
+    url(r'^(?P<corpus_id>\d+)/place_native_autocomplete.json', views.place_native_autocomplete_json,
+        name='place_native_autocomplete_json'),
     url(r'^(?P<corpus_id>\d+)/lorelei_situation_frames.json', views.lorelei_situation_frames_json,
         name='lorelei_situation_frames_json'),
     url(r'^(?P<corpus_id>\d+)/document/(?P<document_id>\d+)/audio_fragments.json',
