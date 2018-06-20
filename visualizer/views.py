@@ -96,7 +96,10 @@ def document_topic_json_for_document(request, corpus_id, document_id):
     document = Document.objects.get(id=document_id)
     document_topic_json = {}
     for dt in corpus.documenttopic_set.all():
-        document_topic_json[dt.id] = { 'label': dt.label }
+        document_topic_json[dt.id] = {
+            'label': dt.label,
+            'description': dt.description
+        }
     for dt in document.documenttopic_set.all():
         document_topic_json[dt.id]['selected'] = True
     return JsonResponse(document_topic_json)

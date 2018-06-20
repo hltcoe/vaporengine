@@ -295,6 +295,7 @@ class DocumentTopic(models.Model):
     """
     """
     label = models.TextField()
+    description = models.TextField(default='')
     corpus = models.ForeignKey(Corpus)
     documents = models.ManyToManyField(Document)
 
