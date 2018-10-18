@@ -242,7 +242,7 @@ def wordcloud_params_for_corpus(request):
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'},
         ],
-        'default_sort_key': 'label',
+        'default_sort_key': 'total_audio_fragments',
         'sort_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'label', 'key_description': 'Label'},
