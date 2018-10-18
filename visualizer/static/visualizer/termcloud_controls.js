@@ -133,7 +133,8 @@ var TermCloudControls = {
       termCloud.render();
     }
 
-    termCloud.collection.comparator = getComparatorForSortKey(default_sort_key);
+    $('#sort_direction').data('sort_reversed', true);
+    termCloud.collection.comparator = getReverseComparatorForSortKey(default_sort_key);
     termCloud.collection.sort();
 
     termCloud.sort_keys = sort_keys;

@@ -317,16 +317,16 @@ def wordcloud_params_for_document(request):
         'size_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'},
-            {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurences in document'},
+            {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurrences in document'},
             {'key_name': 'tf_idf', 'key_description': 'TF-IDF'},
         ],
-        'default_sort_key': 'first_start_offset_in_document',
+        'default_sort_key': 'total_audio_fragments',
         'sort_keys': [
             {'key_name': 'total_documents', 'key_description': 'Documents appeared in'},
             {'key_name': 'first_start_offset_in_document', 'key_description': 'First appearance'},
             {'key_name': 'label', 'key_description': 'Label'},
             {'key_name': 'total_audio_fragments', 'key_description': 'Occurrences in corpus'},
-            {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurences in document'},
+            {'key_name': 'total_audio_fragments_in_document', 'key_description': 'Occurrences in document'},
             {'key_name': 'tf_idf', 'key_description': 'TF-IDF'},
         ],
     }))
